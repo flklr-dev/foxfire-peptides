@@ -1,0 +1,48 @@
+# Environment & secrets
+.env
+wp-config.php
+wp-config-local.php
+
+# WordPress core (managed by Docker volume — not committed)
+/wordpress/
+/wp-admin/
+/wp-includes/
+/*.php
+!wp-content/
+
+# Uploads & generated files
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/backup*/
+wp-content/advanced-cache.php
+wp-content/object-cache.php
+wp-content/debug.log
+
+# Plugins installed via Composer/WP-CLI (keep custom plugins committed)
+wp-content/plugins/akismet/
+wp-content/plugins/hello.php
+wp-content/plugins/woocommerce/
+wp-content/plugins/advanced-custom-fields*/
+
+# Parent themes installed via WP-CLI (custom child theme IS committed)
+wp-content/themes/storefront/
+wp-content/themes/twenty*/
+
+# OS & editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.log
+
+# Node (if added later for theme tooling)
+node_modules/
+dist/
+package-lock.json
+
+# Docker volumes (data lives in named volumes, not bind mounts)
+# wp-content/themes/ and custom code ARE committed
+scripts/.store-config-inner.unix.sh

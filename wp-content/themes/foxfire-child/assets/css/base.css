@@ -1,0 +1,171 @@
+/**
+ * Foxfire Peptides — Global base styles
+ */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	font-family: var(--font-body);
+	font-size: var(--font-size-base);
+	font-weight: var(--font-weight-normal);
+	line-height: var(--line-height-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.site-title,
+.entry-title,
+.woocommerce-products-header__title {
+	font-family: var(--font-heading);
+	font-weight: var(--font-weight-bold);
+	line-height: var(--line-height-heading);
+	color: var(--color-text);
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+h5 { font-size: var(--font-size-lg); }
+h6 { font-size: var(--font-size-base); }
+
+p,
+ul,
+ol {
+	margin-top: 0;
+	margin-bottom: var(--space-3);
+}
+
+a {
+	color: var(--color-accent-primary);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 2px;
+	transition: color var(--transition-fast);
+}
+
+a:hover,
+a:focus {
+	color: var(--color-accent-primary-hover);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	outline: none;
+	box-shadow: var(--focus-ring);
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Skip link (added in Chunk 1D; style reserved here) */
+.skip-link.screen-reader-text:focus {
+	clip: auto;
+	height: auto;
+	width: auto;
+	display: block;
+	position: absolute;
+	left: var(--space-3);
+	top: var(--space-3);
+	z-index: 100000;
+	padding: var(--space-2) var(--space-3);
+	background: var(--color-bg);
+	color: var(--color-text);
+	border: 2px solid var(--color-accent-primary);
+	border-radius: var(--radius-sm);
+	font-size: var(--font-size-base);
+}
+
+/* Content width is constrained by the shared container in shell.css
+   (#content > .col-full) so body content lines up with the header and footer. */
+
+/* Flat surfaces — no nested-card aesthetic */
+.card,
+.woocommerce .product,
+.woocommerce ul.products li.product {
+	box-shadow: var(--shadow-none);
+}
+
+/* Secondary button pattern (for non-WC contexts) */
+.ff-btn-secondary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: var(--size-touch-min);
+	padding: 0 var(--space-4);
+	border: 2px solid var(--color-structure);
+	border-radius: var(--radius-md);
+	background: transparent;
+	color: var(--color-text);
+	font-family: var(--font-body);
+	font-size: var(--font-size-base);
+	font-weight: var(--font-weight-semibold);
+	line-height: 1;
+	text-decoration: none;
+	cursor: pointer;
+	transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.ff-btn-secondary:hover,
+.ff-btn-secondary:focus {
+	border-color: var(--color-accent-primary);
+	color: var(--color-accent-primary);
+}
+
+/* Trust / status badges (token-level; used in later chunks) */
+.ff-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: var(--space-1) var(--space-2);
+	border-radius: var(--radius-sm);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+	line-height: var(--line-height-tight);
+}
+
+.ff-badge--sale {
+	background-color: var(--color-accent-primary);
+	color: var(--color-text-inverse);
+}
+
+.ff-badge--trust,
+.ff-badge--stock {
+	background-color: var(--color-accent-secondary-bg);
+	color: var(--color-accent-secondary);
+}
+
+.ff-badge--info {
+	background-color: var(--color-bg-subtle);
+	color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+	body {
+		font-size: var(--font-size-base); /* never below 16px on mobile */
+	}
+
+	h1 { font-size: var(--font-size-3xl); }
+	h2 { font-size: var(--font-size-2xl); }
+	h3 { font-size: var(--font-size-xl); }
+}

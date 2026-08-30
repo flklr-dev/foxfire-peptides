@@ -1,0 +1,80 @@
+<?php
+/**
+ * The template for displaying product content within loops (Chunk 1F).
+ *
+ * @package Foxfire_Child
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+global $product;
+
+if ( empty( $product ) || ! $product->is_visible() ) {
+	return;
+}
+
+$product_id = $product->get_id();
+$categories = wc_get_product_category_list( $product_id, ', ' );
+$batch_lot  = function_exists( 'foxfire_get_product_batch_lot' ) ? foxfire_get_product_batch_lot( $product_id ) : '';
+$classes    = wc_get_product_class( array( 'ff-product-card' ), $product );
+?>
+
+<li <?php wc_product_class( $classes, $product ); ?>>
+	<div class="ff-product-card__inner">
+		<div class="ff-product-card__media">
+			<?php
+			if ( function_exists( 'foxfire_render_product_card_badges' ) ) {
+				foxfire_render_product_card_badges();
+			}
+			?>
+			<a href="<?php the_permalink(); ?>" class="ff-product-card__image-link" tabindex="-1" aria-hidden="true">
+				<?php
+				if ( has_post_thumbnail( $product_id ) ) {
+					echo get_the_post_thumbnail(
+						$product_id,
+						'woocommerce_thumbnail',
+						array(
+							'class' => 'ff-product-card__img',
+							'alt'   => the_title_attribute( array( 'echo' => false ) ),
+						)
+					);
+				} else {
+					echo wc_placeholder_img( 'woocommerce_thumbnail' );
+				}
+				?>
+			</a>
+		</div>
+
+		<div class="ff-product-card__body">
+			<?php
+			$terms = get_the_terms( $product_id, 'product_cat' );
+			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) :
+				$first_cat = reset( $terms );
+				$cat_name  = str_replace( ' (TBD)', '', $first_cat->name );
+				?>
+				<span class="ff-product-card__category"><?php echo esc_html( $cat_name ); ?></span>
+			<?php endif; ?>
+
+			<h2 class="ff-product-card__title">
+				<a href="<?php the_permalink(); ?>" class="ff-product-card__title-link">
+					<?php the_title(); ?>
+				</a>
+			</h2>
+
+			<?php if ( ! empty( $batch_lot ) ) : ?>
+				<div class="ff-product-card__batch">
+					<span class="ff-product-card__batch-label"><?php esc_html_e( 'Batch:', 'foxfire-child' ); ?></span>
+					<span class="ff-product-card__batch-value"><?php echo esc_html( $batch_lot ); ?></span>
+				</div>
+			<?php endif; ?>
+
+			<div class="ff-product-card__price">
+				<?php echo $product->get_price_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+
+			<div class="ff-product-card__action">
+				<?php woocommerce_template_loop_add_to_cart(); ?>
+			</div>
+		</div>
+	</div>
+</li>

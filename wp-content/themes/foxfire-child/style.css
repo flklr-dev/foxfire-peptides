@@ -1,0 +1,13 @@
+/*
+Theme Name: Foxfire Peptides
+Theme URI: https://foxfire-peptides.local
+Description: Child theme for Foxfire Peptides — extends Storefront with brand design tokens.
+Author: Kit D.
+Template: storefront
+Version: 1.2.0
+Text Domain: foxfire-child
+Requires at least: 6.9
+Requires PHP: 8.2
+*/
+
+/* Styles are enqueued via assets/css/*.css — see functions.php */
