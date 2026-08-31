@@ -91,6 +91,21 @@
 		navToggle.addEventListener('click', toggleNav);
 	}
 
+	var navCloseBtn = document.querySelector('[data-ff-nav-close]');
+	if (navCloseBtn) {
+		navCloseBtn.addEventListener('click', closeNav);
+	}
+
+	// Close nav when clicking on internal links within the drawer on mobile
+	if (navPanel) {
+		navPanel.addEventListener('click', function (event) {
+			var link = event.target.closest('a');
+			if (link && !isDesktop()) {
+				closeNav();
+			}
+		});
+	}
+
 	submenuToggles.forEach(function (button) {
 		button.addEventListener('click', function () {
 			if (!isDesktop()) {

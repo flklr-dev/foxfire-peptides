@@ -49,6 +49,7 @@ function foxfire_shell_replace_storefront_masthead(): void {
 
 	remove_action( 'storefront_footer', 'storefront_footer_widgets', 10 );
 	remove_action( 'storefront_footer', 'storefront_credit', 20 );
+	remove_action( 'storefront_footer', 'storefront_handheld_footer_bar', 999 );
 	add_action( 'storefront_footer', 'foxfire_render_site_footer', 10 );
 }
 add_action( 'wp', 'foxfire_shell_replace_storefront_masthead' );

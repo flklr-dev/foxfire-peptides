@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Enqueue homepage-specific stylesheet on front page.
+ * Enqueue homepage-specific assets on the front page.
  */
 function foxfire_homepage_enqueue_assets(): void {
 	if ( ! is_front_page() && ! is_home() ) {
@@ -16,11 +16,21 @@ function foxfire_homepage_enqueue_assets(): void {
 	}
 
 	$css_file = FOXFIRE_CHILD_DIR . '/assets/css/homepage.css';
+	$js_file  = FOXFIRE_CHILD_DIR . '/assets/js/homepage.js';
+
 	wp_enqueue_style(
 		'foxfire-homepage',
 		FOXFIRE_CHILD_URI . '/assets/css/homepage.css',
 		array( 'foxfire-base', 'foxfire-woocommerce' ),
 		file_exists( $css_file ) ? (string) filemtime( $css_file ) : FOXFIRE_CHILD_VERSION
+	);
+
+	wp_enqueue_script(
+		'foxfire-homepage',
+		FOXFIRE_CHILD_URI . '/assets/js/homepage.js',
+		array(),
+		file_exists( $js_file ) ? (string) filemtime( $js_file ) : FOXFIRE_CHILD_VERSION,
+		true
 	);
 }
 add_action( 'wp_enqueue_scripts', 'foxfire_homepage_enqueue_assets', 30 );
@@ -31,7 +41,7 @@ add_action( 'wp_enqueue_scripts', 'foxfire_homepage_enqueue_assets', 30 );
  * @param int $limit Number of products to return.
  * @return WP_Query
  */
-function foxfire_get_homepage_products( int $limit = 4 ): WP_Query {
+function foxfire_get_homepage_products( int $limit = 8 ): WP_Query {
 	return new WP_Query(
 		array(
 			'post_type'      => 'product',

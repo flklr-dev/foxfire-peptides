@@ -18,6 +18,9 @@ require_once FOXFIRE_CHILD_DIR . '/inc/shop.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/pdp.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/homepage.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/testing-coa.php';
+require_once FOXFIRE_CHILD_DIR . '/inc/cart.php';
+require_once FOXFIRE_CHILD_DIR . '/inc/checkout.php';
+require_once FOXFIRE_CHILD_DIR . '/inc/account.php';
 
 /**
  * Enqueue parent theme, fonts, and Foxfire design system styles.

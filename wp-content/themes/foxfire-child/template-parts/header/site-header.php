@@ -18,6 +18,17 @@ $cart_count   = foxfire_get_cart_count();
 $nav_panel_id = 'ff-primary-nav';
 ?>
 
+<?php
+$home_url    = home_url( '/' );
+$is_home     = is_front_page() || is_home();
+$is_shop     = ( function_exists( 'is_shop' ) && is_shop() ) || ( function_exists( 'is_product_taxonomy' ) && is_product_taxonomy() ) || ( function_exists( 'is_singular' ) && is_singular( 'product' ) );
+$is_testing  = is_page( 'testing-coa' ) || ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'testing-coa' ) );
+$is_about    = is_page( 'about' ) || ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'about' ) );
+$is_contact  = is_page( 'contact' ) || ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'contact' ) );
+$is_account  = function_exists( 'is_account_page' ) && is_account_page();
+$is_cart     = function_exists( 'is_cart' ) && is_cart();
+?>
+
 <a class="skip-link screen-reader-text" href="#main-content">
 	<?php esc_html_e( 'Skip to content', 'foxfire-child' ); ?>
 </a>
@@ -50,77 +61,71 @@ $nav_panel_id = 'ff-primary-nav';
 			<span class="ff-nav-toggle__label"><?php esc_html_e( 'Menu', 'foxfire-child' ); ?></span>
 		</button>
 
-		<!-- Main Nav Wrap -->
+		<!-- Main Nav Wrap (Mobile Slide-out Drawer & Desktop Horizontal Nav) -->
 		<div class="ff-site-header__nav-wrap" data-ff-nav-panel>
+			<div class="ff-mobile-nav__header">
+				<div class="ff-mobile-nav__brand">
+					<span class="ff-site-header__logo-mark" aria-hidden="true">FF</span>
+					<span class="ff-mobile-nav__title"><?php bloginfo( 'name' ); ?></span>
+				</div>
+				<button
+					type="button"
+					class="ff-mobile-nav__close"
+					aria-label="<?php esc_attr_e( 'Close navigation menu', 'foxfire-child' ); ?>"
+					data-ff-nav-close
+				>
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
+			</div>
+
 			<nav
 				id="<?php echo esc_attr( $nav_panel_id ); ?>"
 				class="ff-primary-nav"
 				aria-label="<?php esc_attr_e( 'Primary', 'foxfire-child' ); ?>"
 			>
 				<ul class="ff-primary-nav__list">
-					<li class="ff-primary-nav__item ff-primary-nav__item--has-dropdown">
-						<div class="ff-primary-nav__shop-row">
-							<a class="ff-primary-nav__link" href="<?php echo esc_url( $shop_url ); ?>">
-								<?php esc_html_e( 'Shop', 'foxfire-child' ); ?>
-							</a>
-							<button
-								type="button"
-								class="ff-primary-nav__submenu-toggle"
-								aria-expanded="false"
-								aria-controls="ff-shop-categories"
-								data-ff-submenu-toggle
-							>
-								<span class="screen-reader-text"><?php esc_html_e( 'Show product categories', 'foxfire-child' ); ?></span>
-								<span class="ff-primary-nav__submenu-icon" aria-hidden="true"></span>
-							</button>
-						</div>
-						<ul id="ff-shop-categories" class="ff-primary-nav__dropdown" data-ff-submenu>
-							<?php if ( ! empty( $categories ) ) : ?>
-								<?php foreach ( $categories as $category ) : ?>
-									<?php if ( ! $category instanceof WP_Term ) : ?>
-										<?php continue; ?>
-									<?php endif; ?>
-									<li>
-										<a href="<?php echo esc_url( get_term_link( $category ) ); ?>">
-											<?php echo esc_html( foxfire_get_category_display_name( $category->name ) ); ?>
-										</a>
-									</li>
-								<?php endforeach; ?>
-							<?php else : ?>
-								<li class="ff-primary-nav__dropdown-note">
-									<span><?php esc_html_e( 'Categories coming soon', 'foxfire-child' ); ?></span>
-								</li>
-							<?php endif; ?>
-						</ul>
+					<li class="ff-primary-nav__item">
+						<a class="ff-primary-nav__link <?php echo $is_home ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $home_url ); ?>">
+							<?php esc_html_e( 'Home', 'foxfire-child' ); ?>
+						</a>
 					</li>
 
 					<li class="ff-primary-nav__item">
-						<a class="ff-primary-nav__link" href="<?php echo esc_url( $testing_url ); ?>">
+						<a class="ff-primary-nav__link <?php echo $is_shop ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $shop_url ); ?>">
+							<?php esc_html_e( 'Shop', 'foxfire-child' ); ?>
+						</a>
+					</li>
+
+					<li class="ff-primary-nav__item">
+						<a class="ff-primary-nav__link <?php echo $is_testing ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $testing_url ); ?>">
 							<?php esc_html_e( 'Testing/COA', 'foxfire-child' ); ?>
 						</a>
 					</li>
 
 					<li class="ff-primary-nav__item">
-						<a class="ff-primary-nav__link" href="<?php echo esc_url( $about_url ); ?>">
+						<a class="ff-primary-nav__link <?php echo $is_about ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $about_url ); ?>">
 							<?php esc_html_e( 'About', 'foxfire-child' ); ?>
 						</a>
 					</li>
 
 					<li class="ff-primary-nav__item">
-						<a class="ff-primary-nav__link" href="<?php echo esc_url( $contact_url ); ?>">
+						<a class="ff-primary-nav__link <?php echo $is_contact ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $contact_url ); ?>">
 							<?php esc_html_e( 'Contact', 'foxfire-child' ); ?>
 						</a>
 					</li>
 
 					<!-- Mobile Drawer Only Links -->
 					<li class="ff-primary-nav__item ff-primary-nav__item--mobile-only">
-						<a class="ff-primary-nav__link" href="<?php echo esc_url( $account_url ); ?>">
+						<a class="ff-primary-nav__link <?php echo $is_account ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $account_url ); ?>">
 							<?php esc_html_e( 'Account', 'foxfire-child' ); ?>
 						</a>
 					</li>
 
 					<li class="ff-primary-nav__item ff-primary-nav__item--mobile-only">
-						<a class="ff-primary-nav__link" href="<?php echo esc_url( $cart_url ); ?>">
+						<a class="ff-primary-nav__link <?php echo $is_cart ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $cart_url ); ?>">
 							<span><?php esc_html_e( 'Cart', 'foxfire-child' ); ?></span>
 							<?php foxfire_render_cart_count_badge(); ?>
 						</a>
@@ -131,7 +136,7 @@ $nav_panel_id = 'ff-primary-nav';
 			<!-- Header Actions (Account Icon + Solid Fox Orange Cart Button) -->
 			<div class="ff-site-header__actions">
 				<a
-					class="ff-header-account-btn"
+					class="ff-header-account-btn <?php echo $is_account ? 'is-active' : ''; ?>"
 					href="<?php echo esc_url( $account_url ); ?>"
 					aria-label="<?php esc_attr_e( 'My Account', 'foxfire-child' ); ?>"
 					title="<?php esc_attr_e( 'My Account', 'foxfire-child' ); ?>"
@@ -143,7 +148,7 @@ $nav_panel_id = 'ff-primary-nav';
 				</a>
 
 				<a
-					class="ff-header-cart-btn ff-header-cart-btn--primary"
+					class="ff-header-cart-btn ff-header-cart-btn--primary <?php echo $is_cart ? 'is-active' : ''; ?>"
 					href="<?php echo esc_url( $cart_url ); ?>"
 					aria-label="<?php esc_attr_e( 'View shopping cart', 'foxfire-child' ); ?>"
 				>

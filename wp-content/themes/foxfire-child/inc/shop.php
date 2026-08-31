@@ -168,3 +168,16 @@ function foxfire_loop_columns(): int {
 	return 3;
 }
 add_filter( 'loop_shop_columns', 'foxfire_loop_columns', 20 );
+
+/**
+ * Ensure all product card action buttons display "Add to Cart" across simple and variable products.
+ *
+ * @param string $text Button text.
+ * @param WC_Product $product Product object.
+ * @return string
+ */
+function foxfire_custom_add_to_cart_text( string $text, WC_Product $product ): string {
+	return __( 'Add to Cart', 'foxfire-child' );
+}
+add_filter( 'woocommerce_product_add_to_cart_text', 'foxfire_custom_add_to_cart_text', 20, 2 );
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'foxfire_custom_add_to_cart_text', 20, 2 );

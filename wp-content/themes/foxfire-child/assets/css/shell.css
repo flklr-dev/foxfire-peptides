@@ -89,10 +89,66 @@
 	}
 }
 
-/* --- Header shell --- */
-.ff-site-header {
+/* --- Fix: Storefront sets `.site { overflow-x: hidden }` which breaks
+   `position: sticky` on all descendants. `overflow: clip` still clips
+   horizontal overflow but does NOT create a scroll container, so sticky
+   works as expected. ------------------------------------------------------- */
+#page.site,
+.hfeed.site {
+	overflow-x: clip;
+}
+
+/* Suppress Storefront default mobile bottom navigation bar */
+.storefront-handheld-footer-bar,
+.storefront-handheld-footer-bar ul {
+	display: none !important;
+}
+
+/* --- Header shell (Sticky) --- */
+#masthead.site-header,
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
 	width: 100%;
-	background: var(--color-bg);
+	margin-bottom: 0 !important;
+	padding: 0 !important;
+	border: none !important;
+	background: transparent !important;
+}
+
+body.ff-nav-is-open #masthead.site-header,
+body.ff-nav-is-open .site-header {
+	z-index: 99999 !important;
+}
+
+.ff-site-header {
+	position: relative;
+	width: 100%;
+	background-color: rgba(255, 255, 255, 0.98);
+	border-bottom: 1px solid var(--color-border);
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+	transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+@media (min-width: 1024px) {
+	.ff-site-header {
+		background-color: rgba(255, 255, 255, 0.96);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+	}
+}
+
+.admin-bar #masthead.site-header,
+.admin-bar .site-header {
+	top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+	.admin-bar #masthead.site-header,
+	.admin-bar .site-header {
+		top: 46px;
+	}
 }
 
 .ff-site-header__inner {
@@ -209,22 +265,72 @@
 	transform: rotate(-45deg);
 }
 
-/* Nav panel — mobile first (collapsed) */
+/* Mobile Drawer Header */
+.ff-mobile-nav__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: var(--space-3);
+	margin-bottom: var(--space-3);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.ff-mobile-nav__brand {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.ff-mobile-nav__title {
+	font-family: var(--font-heading);
+	font-size: var(--font-size-base);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-text);
+}
+
+.ff-mobile-nav__close {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 1.5px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background: #ffffff;
+	color: var(--color-text);
+	cursor: pointer;
+	transition: all var(--transition-fast);
+}
+
+.ff-mobile-nav__close:hover,
+.ff-mobile-nav__close:focus {
+	border-color: var(--color-accent-primary);
+	color: var(--color-accent-primary);
+	background: rgba(232, 90, 12, 0.05);
+}
+
+/* Nav panel — mobile first (full-height slide-out drawer) */
 .ff-site-header__nav-wrap {
 	position: fixed;
-	inset: 0 0 0 auto;
-	z-index: 99990;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	height: 100vh;
+	height: 100dvh;
+	z-index: 99995;
 	display: flex;
 	flex-direction: column;
-	width: min(100%, 22rem);
+	width: min(85vw, 20rem);
 	max-width: 100%;
-	padding: var(--space-5) var(--space-3) var(--space-4);
-	background: var(--color-bg);
+	padding: var(--space-4) var(--space-4) var(--space-5);
+	background: #ffffff;
 	border-left: 1px solid var(--color-border);
-	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+	box-shadow: -6px 0 32px rgba(0, 0, 0, 0.18);
 	transform: translateX(100%);
-	transition: transform var(--transition-fast);
+	transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	visibility: hidden;
 }
 
@@ -237,10 +343,12 @@
 	position: fixed;
 	inset: 0;
 	z-index: 99980;
-	background: rgba(0, 0, 0, 0.35);
+	background: rgba(16, 19, 24, 0.45);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
 	opacity: 0;
 	visibility: hidden;
-	transition: opacity var(--transition-fast), visibility var(--transition-fast);
+	transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
 .ff-nav-is-open .ff-nav-backdrop {
@@ -268,11 +376,14 @@
 	font-size: var(--font-size-lg);
 	font-weight: var(--font-weight-semibold);
 	text-decoration: none;
+	transition: color var(--transition-fast);
 }
 
 .ff-primary-nav__link:hover,
-.ff-primary-nav__link:focus {
-	color: var(--color-accent-primary);
+.ff-primary-nav__link:focus,
+.ff-primary-nav__link.is-active,
+.ff-primary-nav__link--active {
+	color: var(--color-accent-primary) !important;
 	text-decoration: none;
 }
 
@@ -387,7 +498,8 @@
 }
 
 .ff-header-account-btn:hover,
-.ff-header-account-btn:focus {
+.ff-header-account-btn:focus,
+.ff-header-account-btn.is-active {
 	border-color: var(--color-accent-primary);
 	color: var(--color-accent-primary) !important;
 	background: rgba(232, 90, 12, 0.05);
@@ -458,8 +570,8 @@
 #colophon .ff-site-footer a,
 .ff-site-footer a {
 	color: var(--color-text-inverse);
-	text-decoration: underline;
-	text-underline-offset: 2px;
+	text-decoration: none;
+	transition: color var(--transition-fast), text-decoration var(--transition-fast);
 }
 
 #colophon .ff-site-footer a:hover,
@@ -467,7 +579,8 @@
 .ff-site-footer a:hover,
 .ff-site-footer a:focus {
 	color: #ffffff;
-	text-decoration: none;
+	text-decoration: underline;
+	text-underline-offset: 3px;
 }
 
 #colophon .ff-site-footer,
@@ -573,6 +686,10 @@
 		display: none;
 	}
 
+	.ff-mobile-nav__header {
+		display: none !important;
+	}
+
 	.ff-site-header__nav-wrap {
 		position: static;
 		display: flex;
@@ -582,6 +699,7 @@
 		justify-content: flex-end;
 		gap: var(--space-4);
 		width: auto;
+		height: auto;
 		max-width: none;
 		padding: 0;
 		border: none;
@@ -622,8 +740,21 @@
 		display: inline-flex;
 		align-items: center;
 		min-height: 38px;
-		padding: 0 var(--space-1);
+		padding: 0 0.5rem;
 		font-size: var(--font-size-base);
+		position: relative;
+	}
+
+	.ff-primary-nav__link.is-active::after,
+	.ff-primary-nav__link--active::after {
+		content: "";
+		position: absolute;
+		bottom: 2px;
+		left: 0.5rem;
+		right: 0.5rem;
+		height: 2px;
+		background-color: var(--color-accent-primary);
+		border-radius: 2px;
 	}
 
 	.ff-primary-nav__submenu-toggle {
@@ -631,27 +762,7 @@
 	}
 
 	.ff-primary-nav__dropdown {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		z-index: 100;
-		min-width: 14rem;
-		margin-top: var(--space-1);
-		padding: var(--space-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		background: var(--color-bg);
-		box-shadow: var(--shadow-sm);
-	}
-
-	.ff-primary-nav__dropdown a {
-		padding: var(--space-2) var(--space-3);
-		border-radius: var(--radius-sm);
-	}
-
-	.ff-primary-nav__dropdown a:hover,
-	.ff-primary-nav__dropdown a:focus {
-		background: var(--color-bg-subtle);
+		display: none !important;
 	}
 
 	.ff-primary-nav__item--mobile-only,
@@ -664,8 +775,8 @@
 		flex: 0 0 auto;
 		display: flex;
 		align-items: center;
-		gap: var(--space-3);
-		margin-left: var(--space-3);
+		gap: var(--space-2);
+		margin-left: var(--space-4);
 	}
 
 	.ff-site-footer__inner {
