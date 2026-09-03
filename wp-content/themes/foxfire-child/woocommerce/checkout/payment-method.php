@@ -18,10 +18,12 @@ defined( 'ABSPATH' ) || exit;
 		</label>
 
 		<div class="ff-payment-icon" aria-hidden="true">
-			<?php if ( 'bacs' === $gateway->id ) : ?>
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="21" x2="21" y2="21"></line><line x1="3" y1="10" x2="21" y2="10"></line><polyline points="5 10 5 21"></polyline><polyline points="19 10 19 21"></polyline><polyline points="10 10 10 21"></polyline><polyline points="14 10 14 21"></polyline><polygon points="12 2 20 7 4 7"></polygon></svg>
-			<?php elseif ( 'cod' === $gateway->id || 'cheque' === $gateway->id ) : ?>
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+			<?php if ( 'bacs' === $gateway->id || 'card_test' === $gateway->id ) : ?>
+				<!-- Credit / Debit Card Icon -->
+				<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+			<?php elseif ( 'cod' === $gateway->id || 'cod_test' === $gateway->id ) : ?>
+				<!-- Cash on Delivery Icon -->
+				<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
 			<?php else : ?>
 				<?php echo $gateway->get_icon(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<?php endif; ?>

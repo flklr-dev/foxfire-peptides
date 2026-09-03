@@ -3,7 +3,8 @@
  * Testing & COA Page module — Chunk 1I.
  *
  * Provides data querying for catalog batch/lot references, COA document
- * linking, template routing, and asset enqueues per DESIGN.md §12 and PRD §5.2.
+ * linking, template routing, and asset enqueues per DESIGN.md §6 & §12.
+ * Streamlined and simplified per client requirements.
  *
  * @package Foxfire_Child
  */
@@ -99,28 +100,31 @@ function foxfire_get_coa_catalog_items(): array {
 		$product_id = $product->get_id();
 		$batch_lot  = function_exists( 'foxfire_get_product_batch_lot' ) ? foxfire_get_product_batch_lot( $product_id ) : '';
 		$coa_url    = function_exists( 'foxfire_get_product_coa_url' ) ? foxfire_get_product_coa_url( $product_id ) : '';
-		$coa_label  = function_exists( 'foxfire_get_product_coa_label' ) ? foxfire_get_product_coa_label( $product_id ) : __( 'View Certificate', 'foxfire-child' );
+		$coa_label  = function_exists( 'foxfire_get_product_coa_label' ) ? foxfire_get_product_coa_label( $product_id ) : __( 'View COA Report', 'foxfire-child' );
 
-		// Clean default fallback values if empty
 		if ( empty( $batch_lot ) ) {
 			$batch_lot = 'FF-' . strtoupper( substr( md5( (string) $product_id ), 0, 6 ) );
 		}
 
 		if ( empty( $coa_url ) ) {
-			$coa_url = '#';
+			$coa_url = '';
+		}
+
+		$testing_summary = function_exists( 'foxfire_get_product_testing_summary' ) ? foxfire_get_product_testing_summary( $product_id ) : __( 'Information Available', 'foxfire-child' );
+		if ( empty( $testing_summary ) || 'Purity & Identity Verified' === $testing_summary ) {
+			$testing_summary = __( 'Information Available', 'foxfire-child' );
 		}
 
 		$items[] = array(
-			'id'          => $product_id,
-			'name'        => $product->get_name(),
-			'sku'         => $product->get_sku() ?: 'FF-SEQ-' . str_pad( (string) $product_id, 3, '0', STR_PAD_LEFT ),
-			'permalink'   => $product->get_permalink(),
-			'batch_lot'   => $batch_lot,
-			'coa_url'     => $coa_url,
-			'coa_label'   => $coa_label,
-			'purity'      => '≥ 99.2%',
-			'method'      => 'HPLC + MS',
-			'status'      => __( 'Verified', 'foxfire-child' ),
+			'id'              => $product_id,
+			'name'            => $product->get_name(),
+			'sku'             => $product->get_sku() ?: 'FF-' . str_pad( (string) $product_id, 3, '0', STR_PAD_LEFT ),
+			'permalink'       => $product->get_permalink(),
+			'batch_lot'       => $batch_lot,
+			'testing_summary' => $testing_summary,
+			'coa_url'         => $coa_url,
+			'coa_label'       => $coa_label,
+			'status'          => ! empty( $coa_url ) ? __( 'Report Available', 'foxfire-child' ) : __( 'On File', 'foxfire-child' ),
 		);
 	}
 

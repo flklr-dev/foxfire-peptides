@@ -27,12 +27,12 @@ do_action( 'woocommerce_before_cart' ); ?>
 					<span class="ff-shipping-icon" aria-hidden="true">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
 					</span>
-					<span><?php printf( esc_html__( 'Add %s more to qualify for Free Tracked Shipping', 'foxfire-child' ), '<strong>' . wp_kses_post( wc_price( $amount_left ) ) . '</strong>' ); ?></span>
+					<span><?php printf( esc_html__( 'Add %s more to qualify for Free Shipping', 'foxfire-child' ), '<strong>' . wp_kses_post( wc_price( $amount_left ) ) . '</strong>' ); ?></span>
 				<?php else : ?>
 					<span class="ff-shipping-icon ff-shipping-icon--unlocked" aria-hidden="true">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
 					</span>
-					<span class="ff-shipping-unlocked-text"><?php esc_html_e( 'You have qualified for Free Tracked Shipping!', 'foxfire-child' ); ?></span>
+					<span class="ff-shipping-unlocked-text"><?php esc_html_e( 'You have qualified for Free Shipping!', 'foxfire-child' ); ?></span>
 				<?php endif; ?>
 			</div>
 			<div class="ff-cart-shipping-bar__track">
@@ -100,9 +100,6 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 								<div class="ff-cart-card__meta">
 									<?php echo wc_get_formatted_cart_item_data( $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-									<?php if ( ! empty( $batch_lot ) ) : ?>
-										<span class="ff-cart-card__batch"><?php esc_html_e( 'Lot:', 'foxfire-child' ); ?> <?php echo esc_html( $batch_lot ); ?></span>
-									<?php endif; ?>
 								</div>
 
 								<!-- Mobile Price Line -->
@@ -202,9 +199,17 @@ do_action( 'woocommerce_before_cart' ); ?>
 		<!-- Right Column: Clean Sticky Order Summary Card (ONLY) -->
 		<div class="ff-cart-sidebar">
 			<?php woocommerce_cart_totals(); ?>
+
+			<!-- Continue Shopping Link on Mobile (Below Order Summary) -->
+			<div class="ff-cart-continue-mobile">
+				<a href="<?php echo esc_url( $shop_url ); ?>" class="ff-continue-shopping-link">
+					<span class="ff-arrow" aria-hidden="true">&larr;</span>
+					<span><?php esc_html_e( 'Continue Shopping', 'foxfire-child' ); ?></span>
+				</a>
+			</div>
 		</div>
 
 	</div>
-</div>
 
-<?php do_action( 'woocommerce_after_cart' ); ?>
+	<?php do_action( 'woocommerce_after_cart' ); ?>
+</div>

@@ -29,20 +29,6 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		<?php endforeach; ?>
 
-		<!-- Shipping -->
-		<?php if ( WC()->cart->needs_shipping() && WC()->cart->show_shipping() ) : ?>
-			<?php do_action( 'woocommerce_cart_totals_before_shipping' ); ?>
-			<div class="ff-cart-summary-row ff-cart-summary-row--shipping">
-				<?php wc_cart_totals_shipping_html(); ?>
-			</div>
-			<?php do_action( 'woocommerce_cart_totals_after_shipping' ); ?>
-		<?php elseif ( WC()->cart->needs_shipping() && 'yes' === get_option( 'woocommerce_enable_shipping_calc' ) ) : ?>
-			<div class="ff-cart-summary-row shipping">
-				<span class="ff-cart-summary-label"><?php esc_html_e( 'Shipping', 'foxfire-child' ); ?></span>
-				<span class="ff-cart-summary-value"><?php woocommerce_shipping_calculator(); ?></span>
-			</div>
-		<?php endif; ?>
-
 		<!-- Fees -->
 		<?php foreach ( WC()->cart->get_fees() as $fee ) : ?>
 			<div class="ff-cart-summary-row fee">
@@ -98,26 +84,26 @@ defined( 'ABSPATH' ) || exit;
 		<?php do_action( 'woocommerce_proceed_to_checkout' ); ?>
 	</div>
 
-	<!-- Embedded Foxfire Quality Guarantee Box -->
+	<!-- Embedded Foxfire Quality & Transparency Box -->
 	<div class="ff-cart-guarantee-box">
-		<h3 class="ff-cart-guarantee-box__title"><?php esc_html_e( 'Foxfire Quality Guarantee', 'foxfire-child' ); ?></h3>
+		<h3 class="ff-cart-guarantee-box__title"><?php esc_html_e( 'FOXFIRE QUALITY & TRANSPARENCY', 'foxfire-child' ); ?></h3>
 		<ul class="ff-cart-guarantee-box__list">
 			<li>
 				<span class="ff-guarantee-icon" aria-hidden="true">
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M4 22h16a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><path d="m3 15 2 2 4-4"/></svg>
 				</span>
 				<div>
-					<strong><?php esc_html_e( 'Batch-Matched COAs', 'foxfire-child' ); ?></strong>
-					<p><?php esc_html_e( 'HPLC & MS purity reports published for every batch.', 'foxfire-child' ); ?></p>
+					<strong><?php esc_html_e( 'Batch & COA Access', 'foxfire-child' ); ?></strong>
+					<p><?php esc_html_e( 'View available testing information and batch/lot documentation.', 'foxfire-child' ); ?></p>
 				</div>
 			</li>
 			<li>
 				<span class="ff-guarantee-icon" aria-hidden="true">
-					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
 				</span>
 				<div>
-					<strong><?php esc_html_e( 'Discreet, Secure Shipping', 'foxfire-child' ); ?></strong>
-					<p><?php esc_html_e( 'Temperature-stable packaging with fast dispatch.', 'foxfire-child' ); ?></p>
+					<strong><?php esc_html_e( 'Transparent Product Information', 'foxfire-child' ); ?></strong>
+					<p><?php esc_html_e( 'Clear product, inventory, and testing information in one place.', 'foxfire-child' ); ?></p>
 				</div>
 			</li>
 			<li>
@@ -125,8 +111,8 @@ defined( 'ABSPATH' ) || exit;
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
 				</span>
 				<div>
-					<strong><?php esc_html_e( 'Research Compliant (RUO)', 'foxfire-child' ); ?></strong>
-					<p><?php esc_html_e( 'Manufactured strictly for in-vitro laboratory use.', 'foxfire-child' ); ?></p>
+					<strong><?php esc_html_e( 'Research Use Only', 'foxfire-child' ); ?></strong>
+					<p><?php esc_html_e( 'Products are presented for research-use purposes.', 'foxfire-child' ); ?></p>
 				</div>
 			</li>
 		</ul>

@@ -1,9 +1,10 @@
 <?php
 /**
- * Product custom fields (ACF) and read helpers — Chunk 1E.
+ * Product custom fields (ACF) and read helpers — Chunk 1E & 1G.
  *
- * Batch/lot and COA fields per PRD §5.2. Primary COA reference is a URL;
- * optional file upload is supported when a PDF is hosted in the media library.
+ * Batch/lot, COA fields, and 1/3/5 quantity tier settings per PRD §5.2.
+ * Primary COA reference is a URL; optional file upload is supported
+ * when a PDF is hosted in the media library.
  *
  * @package Foxfire_Child
  */
@@ -28,7 +29,7 @@ function foxfire_register_product_field_group(): void {
 					'label'        => __( 'Batch / Lot Number', 'foxfire-child' ),
 					'name'         => 'foxfire_batch_lot',
 					'type'         => 'text',
-					'instructions' => __( 'Current batch or lot identifier for this product listing.', 'foxfire-child' ),
+					'instructions' => __( 'Current batch or lot identifier for this product listing (e.g. FF-RT2601).', 'foxfire-child' ),
 					'required'     => 0,
 				),
 				array(
@@ -36,7 +37,7 @@ function foxfire_register_product_field_group(): void {
 					'label'        => __( 'COA Link (URL)', 'foxfire-child' ),
 					'name'         => 'foxfire_coa_url',
 					'type'         => 'url',
-					'instructions' => __( 'Primary link to the Certificate of Analysis. Use a public URL or the site Testing/COA page until batch-specific COAs are available.', 'foxfire-child' ),
+					'instructions' => __( 'Direct link to Certificate of Analysis PDF/report. If empty, points to /testing-coa/ portal.', 'foxfire-child' ),
 					'required'     => 0,
 				),
 				array(
@@ -44,7 +45,7 @@ function foxfire_register_product_field_group(): void {
 					'label'        => __( 'COA File (optional)', 'foxfire-child' ),
 					'name'         => 'foxfire_coa_file',
 					'type'         => 'file',
-					'instructions' => __( 'Optional PDF upload if no external COA URL is used.', 'foxfire-child' ),
+					'instructions' => __( 'Optional PDF upload from media library if no external URL is used.', 'foxfire-child' ),
 					'return_format' => 'url',
 					'library'      => 'all',
 					'mime_types'   => 'pdf',
@@ -55,9 +56,47 @@ function foxfire_register_product_field_group(): void {
 					'label'         => __( 'COA Link Label', 'foxfire-child' ),
 					'name'          => 'foxfire_coa_label',
 					'type'          => 'text',
-					'instructions'  => __( 'Optional button/link text on the product page. Defaults to “View Certificate of Analysis”.', 'foxfire-child' ),
+					'instructions'  => __( 'Button text on product page. Defaults to “View Certificate of Analysis”.', 'foxfire-child' ),
 					'default_value' => __( 'View Certificate of Analysis', 'foxfire-child' ),
 					'required'      => 0,
+				),
+				array(
+					'key'           => 'field_foxfire_testing_summary',
+					'label'         => __( 'Testing Result / Summary', 'foxfire-child' ),
+					'name'          => 'foxfire_testing_summary',
+					'type'          => 'text',
+					'instructions'  => __( 'Simple testing summary (defaults to "Information Available").', 'foxfire-child' ),
+					'default_value' => __( 'Information Available', 'foxfire-child' ),
+					'required'      => 0,
+				),
+				array(
+					'key'           => 'field_foxfire_tier_enable',
+					'label'         => __( 'Enable 1 / 3 / 5 Vial Purchasing', 'foxfire-child' ),
+					'name'          => 'foxfire_tier_enable',
+					'type'          => 'true_false',
+					'instructions'  => __( 'Allow customers to choose 1, 3, or 5 vials on the product page.', 'foxfire-child' ),
+					'default_value' => 1,
+					'ui'            => 1,
+				),
+				array(
+					'key'           => 'field_foxfire_tier_3_discount',
+					'label'         => __( '3-Vial Discount (%)', 'foxfire-child' ),
+					'name'          => 'foxfire_tier_3_discount',
+					'type'          => 'number',
+					'instructions'  => __( 'Optional % savings when buying 3 vials (e.g. 5 for 5% off). Leave 0 for standard pricing.', 'foxfire-child' ),
+					'default_value' => 0,
+					'min'           => 0,
+					'max'           => 100,
+				),
+				array(
+					'key'           => 'field_foxfire_tier_5_discount',
+					'label'         => __( '5-Vial Discount (%)', 'foxfire-child' ),
+					'name'          => 'foxfire_tier_5_discount',
+					'type'          => 'number',
+					'instructions'  => __( 'Optional % savings when buying 5 vials (e.g. 10 for 10% off). Leave 0 for standard pricing.', 'foxfire-child' ),
+					'default_value' => 0,
+					'min'           => 0,
+					'max'           => 100,
 				),
 			),
 			'location'              => array(
@@ -118,6 +157,49 @@ function foxfire_get_product_coa_label( int $product_id = 0 ): string {
 	}
 
 	return __( 'View Certificate of Analysis', 'foxfire-child' );
+}
+
+/**
+ * Get simple testing result / summary for a product.
+ */
+function foxfire_get_product_testing_summary( int $product_id = 0 ): string {
+	$product_id = $product_id > 0 ? $product_id : get_the_ID();
+	$summary    = foxfire_get_product_field( 'foxfire_testing_summary', $product_id );
+
+	if ( is_string( $summary ) && '' !== trim( $summary ) && 'Purity & Identity Verified' !== trim( $summary ) ) {
+		return trim( $summary );
+	}
+
+	return __( 'Information Available', 'foxfire-child' );
+}
+
+/**
+ * Check if 1/3/5 quantity tiers are enabled for a product.
+ */
+function foxfire_is_tier_pricing_enabled( int $product_id = 0 ): bool {
+	$product_id = $product_id > 0 ? $product_id : get_the_ID();
+	$enabled    = foxfire_get_product_field( 'foxfire_tier_enable', $product_id );
+
+	// Default to enabled (true) if field is not explicitly set to 0/false
+	return false !== $enabled && '0' !== $enabled;
+}
+
+/**
+ * Get tier discount percentages (3-vial and 5-vial) for a product.
+ *
+ * @param int $product_id
+ * @return array{3: float, 5: float}
+ */
+function foxfire_get_product_tier_discounts( int $product_id = 0 ): array {
+	$product_id = $product_id > 0 ? $product_id : get_the_ID();
+
+	$disc_3 = floatval( foxfire_get_product_field( 'foxfire_tier_3_discount', $product_id ) );
+	$disc_5 = floatval( foxfire_get_product_field( 'foxfire_tier_5_discount', $product_id ) );
+
+	return array(
+		3 => max( 0.0, min( 100.0, $disc_3 ) ),
+		5 => max( 0.0, min( 100.0, $disc_5 ) ),
+	);
 }
 
 /**

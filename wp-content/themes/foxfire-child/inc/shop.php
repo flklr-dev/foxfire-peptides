@@ -29,35 +29,49 @@ function foxfire_render_category_pills(): void {
 		return;
 	}
 
-	$shop_url = foxfire_get_shop_url();
+	$shop_url       = foxfire_get_shop_url();
 	$current_cat_id = is_product_category() ? get_queried_object_id() : 0;
 	$is_all_active  = is_shop() && ! is_product_category() && ! is_search();
+	$product_counts = wp_count_posts( 'product' );
+	$total_count    = isset( $product_counts->publish ) ? (int) $product_counts->publish : 0;
 	?>
 	<nav class="ff-category-pills" aria-label="<?php esc_attr_e( 'Product categories', 'foxfire-child' ); ?>">
-		<div class="ff-category-pills__scroll">
-			<a
-				href="<?php echo esc_url( $shop_url ); ?>"
-				class="ff-category-pills__item <?php echo $is_all_active ? 'ff-category-pills__item--active' : ''; ?>"
-			>
-				<?php esc_html_e( 'All Compounds', 'foxfire-child' ); ?>
-			</a>
-
-			<?php foreach ( $categories as $category ) : ?>
-				<?php
-				if ( ! $category instanceof WP_Term ) {
-					continue;
-				}
-				$is_active = ( $current_cat_id === $category->term_id );
-				$clean_name = foxfire_get_category_display_name( $category->name );
-				?>
+		<div class="ff-category-pills__wrapper">
+			<div class="ff-category-pills__scroll" role="tablist">
 				<a
-					href="<?php echo esc_url( get_term_link( $category ) ); ?>"
-					class="ff-category-pills__item <?php echo $is_active ? 'ff-category-pills__item--active' : ''; ?>"
+					href="<?php echo esc_url( $shop_url ); ?>"
+					class="ff-category-pills__item <?php echo $is_all_active ? 'ff-category-pills__item--active' : ''; ?>"
+					<?php echo $is_all_active ? 'aria-current="page"' : ''; ?>
+					aria-label="<?php echo esc_attr( sprintf( __( 'Filter by All Compounds, %d products available', 'foxfire-child' ), $total_count ) ); ?>"
+					role="tab"
+					aria-selected="<?php echo $is_all_active ? 'true' : 'false'; ?>"
 				>
-					<?php echo esc_html( $clean_name ); ?>
-					<span class="ff-category-pills__count"><?php echo esc_html( (string) $category->count ); ?></span>
+					<span class="ff-category-pills__label"><?php esc_html_e( 'All Compounds', 'foxfire-child' ); ?></span>
+					<span class="ff-category-pills__count"><?php echo esc_html( (string) $total_count ); ?></span>
 				</a>
-			<?php endforeach; ?>
+
+				<?php foreach ( $categories as $category ) : ?>
+					<?php
+					if ( ! $category instanceof WP_Term ) {
+						continue;
+					}
+					$is_active  = ( $current_cat_id === $category->term_id );
+					$clean_name = foxfire_get_category_display_name( $category->name );
+					$cat_count  = (int) $category->count;
+					?>
+					<a
+						href="<?php echo esc_url( get_term_link( $category ) ); ?>"
+						class="ff-category-pills__item <?php echo $is_active ? 'ff-category-pills__item--active' : ''; ?>"
+						<?php echo $is_active ? 'aria-current="page"' : ''; ?>
+						aria-label="<?php echo esc_attr( sprintf( __( 'Filter by %s, %d products available', 'foxfire-child' ), $clean_name, $cat_count ) ); ?>"
+						role="tab"
+						aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
+					>
+						<span class="ff-category-pills__label"><?php echo esc_html( $clean_name ); ?></span>
+						<span class="ff-category-pills__count"><?php echo esc_html( (string) $cat_count ); ?></span>
+					</a>
+				<?php endforeach; ?>
+			</div>
 		</div>
 	</nav>
 	<?php
@@ -101,23 +115,15 @@ function foxfire_render_shop_header(): void {
 		return;
 	}
 
-	$title = is_product_category() ? single_term_title( '', false ) : __( 'Research Compounds & Peptides', 'foxfire-child' );
+	$title = is_product_category() ? single_term_title( '', false ) : __( 'Premium Research Peptides', 'foxfire-child' );
 	$title = foxfire_get_category_display_name( $title );
 
-	/**
-	 * Catalog copy is client-supplied (PRD §9). Placeholder text is used until
-	 * approved wording is delivered — no testing or purity claims are invented here.
-	 */
 	$subtitle = is_product_category()
 		? term_description()
-		: __( 'Lab-grade research compounds verified by independent third-party laboratories. Batch-specific Certificates of Analysis available for every sequence.', 'foxfire-child' );
+		: __( 'Industry-leading synthesis, independent third-party testing, and reliable cold dispatch. Engineered for rigorous laboratory standards.', 'foxfire-child' );
 	?>
 	<header class="ff-shop-header">
 		<div class="ff-shop-header__content">
-			<div class="ff-shop-header__eyebrow">
-				<span class="ff-shop-header__dot" aria-hidden="true"></span>
-				<?php esc_html_e( 'For research use only. Not for human consumption.', 'foxfire-child' ); ?>
-			</div>
 			<h1 class="ff-shop-header__title"><?php echo esc_html( $title ); ?></h1>
 			<?php if ( ! empty( $subtitle ) ) : ?>
 				<div class="ff-shop-header__description">
@@ -181,3 +187,112 @@ function foxfire_custom_add_to_cart_text( string $text, WC_Product $product ): s
 }
 add_filter( 'woocommerce_product_add_to_cart_text', 'foxfire_custom_add_to_cart_text', 20, 2 );
 add_filter( 'woocommerce_product_single_add_to_cart_text', 'foxfire_custom_add_to_cart_text', 20, 2 );
+
+/**
+ * Rename "Default sorting" to "Relevance" in the catalog orderby dropdown.
+ *
+ * @param array<string, string> $orderby Sorting options.
+ * @return array<string, string>
+ */
+function foxfire_rename_default_sorting_to_relevance( array $orderby ): array {
+	if ( isset( $orderby['menu_order'] ) ) {
+		$orderby['menu_order'] = __( 'Relevance', 'foxfire-child' );
+	}
+	return $orderby;
+}
+add_filter( 'woocommerce_catalog_orderby', 'foxfire_rename_default_sorting_to_relevance', 20 );
+add_filter( 'woocommerce_default_catalog_orderby_options', 'foxfire_rename_default_sorting_to_relevance', 20 );
+
+/**
+ * Enqueue shop JS and pass AJAX params on shop / product-category pages.
+ */
+function foxfire_shop_enqueue_scripts(): void {
+	if ( ! is_shop() && ! is_product_category() ) {
+		return;
+	}
+
+	$version  = defined( 'FOXFIRE_CHILD_VERSION' ) ? FOXFIRE_CHILD_VERSION : '1.2.0';
+	$js_path  = FOXFIRE_CHILD_DIR . '/assets/js/shop.js';
+
+	wp_enqueue_script(
+		'foxfire-shop-js',
+		FOXFIRE_CHILD_URI . '/assets/js/shop.js',
+		array(),
+		file_exists( $js_path ) ? (string) filemtime( $js_path ) : $version,
+		true
+	);
+
+	wp_localize_script(
+		'foxfire-shop-js',
+		'ffShopParams',
+		array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce'    => wp_create_nonce( 'foxfire_shop_search_nonce' ),
+		)
+	);
+}
+add_action( 'wp_enqueue_scripts', 'foxfire_shop_enqueue_scripts', 30 );
+
+/**
+ * AJAX handler: search products and return rendered card HTML.
+ *
+ * Accepts POST params: search (string), nonce (string).
+ * Returns JSON: { success, data: { html, count, count_text } }
+ */
+function foxfire_ajax_search_products(): void {
+	check_ajax_referer( 'foxfire_shop_search_nonce', 'nonce' );
+
+	$search = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+
+	$args = array(
+		'post_type'      => 'product',
+		'post_status'    => 'publish',
+		'posts_per_page' => 50,
+		'orderby'        => 'menu_order title',
+		'order'          => 'ASC',
+	);
+
+	if ( ! empty( $search ) ) {
+		$args['s'] = $search;
+	}
+
+	$query = new WP_Query( $args );
+	$count = $query->found_posts;
+
+	ob_start();
+
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			wc_get_template_part( 'content', 'product' );
+		}
+	}
+
+	$html = ob_get_clean();
+	wp_reset_postdata();
+
+	// Build the result count text.
+	if ( empty( $search ) ) {
+		$count_text = sprintf(
+			/* translators: %d: total number of results */
+			_n( 'Showing the single result', 'Showing all %d results', $count, 'foxfire-child' ),
+			$count
+		);
+	} else {
+		$count_text = sprintf(
+			/* translators: %d: number of results */
+			_n( '%d result found', '%d results found', $count, 'foxfire-child' ),
+			$count
+		);
+	}
+
+	wp_send_json_success(
+		array(
+			'html'       => $html,
+			'count'      => $count,
+			'count_text' => $count_text,
+		)
+	);
+}
+add_action( 'wp_ajax_foxfire_search_products', 'foxfire_ajax_search_products' );
+add_action( 'wp_ajax_nopriv_foxfire_search_products', 'foxfire_ajax_search_products' );

@@ -12,21 +12,22 @@ $shop_url = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() :
 
 <div class="ff-cart-empty">
 	<div class="ff-cart-empty__icon" aria-hidden="true">
-		<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-			<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
-			<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-			<circle cx="12" cy="12" r="2"/>
+		<!-- Modern Shopping Bag Icon -->
+		<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+			<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+			<path d="M3 6h18"/>
+			<path d="M16 10a4 4 0 0 1-8 0"/>
 		</svg>
 	</div>
 
-	<h1 class="ff-cart-empty__title"><?php esc_html_e( 'Your cart is currently empty', 'foxfire-child' ); ?></h1>
+	<h1 class="ff-cart-empty__title"><?php esc_html_e( 'Your Research Order Starts Here', 'foxfire-child' ); ?></h1>
 	<p class="ff-cart-empty__desc">
-		<?php esc_html_e( 'Explore our catalog of third-party verified laboratory peptides and research compounds.', 'foxfire-child' ); ?>
+		<?php esc_html_e( 'Explore our catalog of high-purity analytical peptides with batch-verified Certificates of Analysis and multi-vial quantity discounts.', 'foxfire-child' ); ?>
 	</p>
 
 	<div class="ff-cart-empty__actions">
 		<a href="<?php echo esc_url( $shop_url ); ?>" class="ff-btn ff-btn--primary ff-cart-empty__btn">
-			<?php esc_html_e( 'Explore Compounds', 'foxfire-child' ); ?>
+			<?php esc_html_e( 'Explore Available Compounds', 'foxfire-child' ); ?>
 			<span aria-hidden="true">&rarr;</span>
 		</a>
 	</div>

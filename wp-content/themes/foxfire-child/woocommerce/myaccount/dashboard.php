@@ -120,7 +120,7 @@ $shipping_state = get_user_meta( $user_id, 'shipping_state', true );
 			</div>
 			<div class="ff-dashboard-card__body">
 				<p class="ff-dashboard-card__desc">
-					<?php esc_html_e( 'Match batch lot numbers from your past orders with HPLC purity & Mass Spectrometry lab reports.', 'foxfire-child' ); ?>
+					<?php esc_html_e( 'Match batch lot numbers from your orders directly with independent laboratory Certificate of Analysis (COA) reports.', 'foxfire-child' ); ?>
 				</p>
 				<a href="<?php echo esc_url( home_url( '/testing-coa/' ) ); ?>" class="ff-btn ff-btn--primary ff-btn--sm">
 					<?php esc_html_e( 'Lookup Batch COAs', 'foxfire-child' ); ?> &rarr;
@@ -128,7 +128,7 @@ $shipping_state = get_user_meta( $user_id, 'shipping_state', true );
 			</div>
 			<div class="ff-dashboard-card__footer">
 				<a href="<?php echo esc_url( home_url( '/testing-coa/' ) ); ?>" class="ff-card-footer-link">
-					<?php esc_html_e( 'View Testing Standard', 'foxfire-child' ); ?> &rarr;
+					<?php esc_html_e( 'View Batch Directory', 'foxfire-child' ); ?> &rarr;
 				</a>
 			</div>
 		</div>

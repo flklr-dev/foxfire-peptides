@@ -1,6 +1,11 @@
 <?php
 /**
- * Seed product categories and development products (Chunk 1E).
+ * Seed product categories and development products (Chunk 1E & 1G).
+ *
+ * Configured per client requirements:
+ * - 1 standard strength for general products (simple products)
+ * - 2 strengths for popular GLP-1s (variable products)
+ * - 1 / 3 / 5 vial quantity tier support with single-vial inventory pools
  *
  * Run via: wp eval-file seed-products.php (see scripts/seed-products.ps1)
  *
@@ -98,103 +103,71 @@ function foxfire_seed_product_image_id_by_filename( string $filename, string $ti
 		'post_title'     => $title,
 		'post_content'   => '',
 		'post_status'    => 'inherit',
-		'post_mime_type' => $filetype['type'] ?: 'image/jpeg',
+		'post_mime_type' => $filetype['type'],
 	);
 
 	$attachment_id = wp_insert_attachment( $attachment, $dest );
-	if ( is_wp_error( $attachment_id ) ) {
+	if ( is_wp_error( $attachment_id ) || 0 === $attachment_id ) {
 		return foxfire_seed_placeholder_image_id();
 	}
 
-	wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $dest ) );
-	update_option( $option_key, $attachment_id, false );
-	foxfire_seed_log( "Product image ready: {$filename} (ID {$attachment_id})." );
+	$metadata = wp_generate_attachment_metadata( $attachment_id, $dest );
+	wp_update_attachment_metadata( $attachment_id, $metadata );
 
-	return (int) $attachment_id;
+	update_option( $option_key, $attachment_id );
+	return $attachment_id;
 }
 
 /**
- * Import shared placeholder image into the media library.
+ * Generate or get a placeholder image ID.
  */
 function foxfire_seed_placeholder_image_id(): int {
-	$stored = (int) get_option( 'foxfire_product_placeholder_image_id', 0 );
-	if ( $stored > 0 && wp_attachment_is_image( $stored ) ) {
-		return $stored;
+	$option_key = 'foxfire_placeholder_image_id';
+	$stored_id  = (int) get_option( $option_key, 0 );
+
+	if ( $stored_id > 0 && wp_attachment_is_image( $stored_id ) ) {
+		return $stored_id;
 	}
 
-	/**
-	 * WooCommerce ships its placeholder as .webp in current versions, so the
-	 * extension is read from whichever source actually exists. Copying an SVG
-	 * to a .png filename produces an unreadable image (zero intrinsic size).
-	 */
-	$candidates = array(
-		WP_PLUGIN_DIR . '/woocommerce/assets/images/placeholder.webp',
-		WP_PLUGIN_DIR . '/woocommerce/assets/images/placeholder.png',
-	);
-
-	$source = '';
-	foreach ( $candidates as $candidate ) {
-		if ( file_exists( $candidate ) ) {
-			$source = $candidate;
-			break;
-		}
-	}
-
-	if ( '' === $source ) {
-		foxfire_seed_log( 'Placeholder image file missing; products will use WooCommerce default.' );
-		return 0;
-	}
-
-	require_once ABSPATH . 'wp-admin/includes/file.php';
-	require_once ABSPATH . 'wp-admin/includes/media.php';
-	require_once ABSPATH . 'wp-admin/includes/image.php';
+	$svg = '<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <rect width="600" height="600" fill="#f7f7f7"/>
+  <rect x="20" y="20" width="560" height="560" fill="none" stroke="#e0e0e0" stroke-width="2"/>
+  <text x="300" y="280" font-family="sans-serif" font-size="22" font-weight="bold" fill="#2b2b2b" text-anchor="middle">FOXFIRE PEPTIDES</text>
+  <text x="300" y="320" font-family="sans-serif" font-size="14" fill="#4a4a4a" text-anchor="middle">Research Compound</text>
+  <circle cx="300" cy="200" r="32" fill="#e85a0c"/>
+</svg>';
 
 	$upload_dir = wp_upload_dir();
-	if ( ! empty( $upload_dir['error'] ) ) {
-		foxfire_seed_log( 'Upload directory error: ' . $upload_dir['error'] );
+	$filename   = 'foxfire-product-placeholder.svg';
+	$filepath   = trailingslashit( $upload_dir['path'] ) . $filename;
+
+	if ( false === file_put_contents( $filepath, $svg ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 		return 0;
 	}
-
-	$extension = pathinfo( $source, PATHINFO_EXTENSION );
-	$dest_name = 'foxfire-product-placeholder.' . $extension;
-	$dest      = trailingslashit( $upload_dir['path'] ) . $dest_name;
-
-	if ( ! copy( $source, $dest ) ) {
-		foxfire_seed_log( 'Could not copy placeholder image into uploads.' );
-		return 0;
-	}
-
-	$filetype = wp_check_filetype( $dest_name, null );
 
 	$attachment = array(
 		'post_title'     => 'Foxfire Product Placeholder',
 		'post_content'   => '',
 		'post_status'    => 'inherit',
-		'post_mime_type' => $filetype['type'] ?: 'image/png',
+		'post_mime_type' => 'image/svg+xml',
 	);
 
-	$attachment_id = wp_insert_attachment( $attachment, $dest );
-	if ( is_wp_error( $attachment_id ) ) {
-		foxfire_seed_log( 'Could not create placeholder attachment.' );
+	$attachment_id = wp_insert_attachment( $attachment, $filepath );
+	if ( is_wp_error( $attachment_id ) || 0 === $attachment_id ) {
 		return 0;
 	}
 
-	wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $dest ) );
-	update_option( 'foxfire_product_placeholder_image_id', $attachment_id, false );
-	foxfire_seed_log( "Placeholder image ready (ID {$attachment_id})." );
-
-	return (int) $attachment_id;
+	update_option( $option_key, $attachment_id );
+	return $attachment_id;
 }
 
 /**
  * Ensure a product category exists.
- *
- * @return int Term ID.
  */
-function foxfire_seed_ensure_category( string $name, string $slug, string $description ): int {
+function foxfire_seed_ensure_category( string $name, string $slug, string $description = '' ): int {
 	$term = get_term_by( 'slug', $slug, 'product_cat' );
-	if ( $term instanceof WP_Term ) {
-		foxfire_seed_log( "Category exists: {$name}" );
+	if ( $term && ! is_wp_error( $term ) ) {
 		return (int) $term->term_id;
 	}
 
@@ -217,8 +190,6 @@ function foxfire_seed_ensure_category( string $name, string $slug, string $descr
 
 /**
  * Assign categories to a product.
- *
- * @param int[] $term_ids Category term IDs.
  */
 function foxfire_seed_set_categories( int $product_id, array $term_ids ): void {
 	wp_set_object_terms( $product_id, array_map( 'intval', $term_ids ), 'product_cat' );
@@ -226,8 +197,6 @@ function foxfire_seed_set_categories( int $product_id, array $term_ids ): void {
 
 /**
  * Set ACF/meta fields on a product.
- *
- * @param array<string, string> $fields Field values.
  */
 function foxfire_seed_set_product_fields( int $product_id, array $fields ): void {
 	foreach ( $fields as $key => $value ) {
@@ -250,8 +219,6 @@ function foxfire_seed_set_image( int $product_id, int $image_id ): void {
 
 /**
  * Create or update a simple product.
- *
- * @param array<string, mixed> $args Product args.
  */
 function foxfire_seed_simple_product( array $args, int $image_id ): int {
 	$slug = $args['slug'];
@@ -287,9 +254,6 @@ function foxfire_seed_simple_product( array $args, int $image_id ): int {
 
 /**
  * Create or update a variable product with strength variations.
- *
- * @param array<string, mixed>  $args       Product args.
- * @param array<string, string> $variations Map of strength => price.
  */
 function foxfire_seed_variable_product( array $args, array $variations, int $image_id ): int {
 	$slug = $args['slug'];
@@ -342,16 +306,14 @@ function foxfire_seed_variable_product( array $args, array $variations, int $ima
 		wp_delete_post( $child_id, true );
 	}
 
-	$index = 0;
 	foreach ( $variations as $strength => $price ) {
-		++$index;
 		$variation = new WC_Product_Variation();
 		$variation->set_parent_id( $id );
 		$variation->set_attributes( array( 'strength' => $strength ) );
 		$variation->set_regular_price( $price );
 		$variation->set_sku( $args['sku'] . '-' . strtoupper( str_replace( array( ' ', '.' ), '', $strength ) ) );
 		$variation->set_manage_stock( true );
-		$variation->set_stock_quantity( 25 );
+		$variation->set_stock_quantity( 35 );
 		$variation->set_stock_status( 'instock' );
 		$variation->set_status( 'publish' );
 		$variation->save();
@@ -362,9 +324,6 @@ function foxfire_seed_variable_product( array $args, array $variations, int $ima
 
 /**
  * Link related products (upsells / cross-sells).
- *
- * @param int[] $upsell_ids    Upsell IDs.
- * @param int[] $crosssell_ids Cross-sell IDs.
  */
 function foxfire_seed_set_related( int $product_id, array $upsell_ids, array $crosssell_ids ): void {
 	$product = wc_get_product( $product_id );
@@ -376,13 +335,9 @@ function foxfire_seed_set_related( int $product_id, array $upsell_ids, array $cr
 	$product->save();
 }
 
-foxfire_seed_log( '=== Foxfire Peptides — Product seed (1E) ===' );
+foxfire_seed_log( '=== Foxfire Peptides — Product Seed ===' );
 
 foxfire_seed_ensure_plugin( 'advanced-custom-fields', 'advanced-custom-fields/acf.php' );
-
-if ( ! function_exists( 'acf_add_local_field_group' ) ) {
-	WP_CLI::warning( 'ACF is not loaded; custom fields will use post meta only until ACF is active.' );
-}
 
 $placeholder_id = foxfire_seed_placeholder_image_id();
 $bpc_image_id   = foxfire_seed_product_image_id_by_filename( 'bpc-157.jpg', 'BPC-157 Research Peptide' );
@@ -407,55 +362,26 @@ $tesa_image_id   = foxfire_seed_product_image_id_by_filename( 'tesamorelin.jpg',
 
 $coa_page_url   = foxfire_get_page_url( 'testing-coa', '/testing-coa/' );
 
-$cat_glp1      = foxfire_seed_ensure_category(
-	'GLP-1 Agonists (TBD)',
-	'glp-1-agonists',
-	'[PLACEHOLDER] Category taxonomy is provisional until the client confirms the final catalog structure (PRD §5.2).'
-);
-$cat_recovery  = foxfire_seed_ensure_category(
-	'Recovery & Healing (TBD)',
-	'recovery-healing',
-	'[PLACEHOLDER] Provisional category for recovery-focused research peptides.'
-);
-$cat_blends    = foxfire_seed_ensure_category(
-	'Blends (TBD)',
-	'blends',
-	'[PLACEHOLDER] Provisional category for named blend products (e.g., Wolverine, KLOW).'
-);
-$cat_support   = foxfire_seed_ensure_category(
-	'Support Compounds (TBD)',
-	'support-compounds',
-	'[PLACEHOLDER] Provisional category for ancillary/support research compounds.'
-);
+$cat_glp1      = foxfire_seed_ensure_category( 'GLP-1 Agonists', 'glp-1-agonists', 'GLP-1 receptor research compounds.' );
+$cat_recovery  = foxfire_seed_ensure_category( 'Recovery & Healing', 'recovery-healing', 'Cellular repair and recovery research peptides.' );
+$cat_blends    = foxfire_seed_ensure_category( 'Blends', 'blends', 'Specialized multi-peptide research blends.' );
+$cat_support   = foxfire_seed_ensure_category( 'Support Compounds', 'support-compounds', 'Ancillary and cellular support research compounds.' );
 
-$placeholder_desc = '[PLACEHOLDER] Research information for this product will be supplied and approved by the client. Do not treat this copy as final product content.';
-$placeholder_short = '[PLACEHOLDER] Client-approved research description pending.';
+$placeholder_desc = '[PLACEHOLDER] Research specifications for this product will be provided by the client. For laboratory research use only.';
+$placeholder_short = '[PLACEHOLDER] Laboratory research compound. Lyophilized powder in sterile vial.';
 
 $base_fields = static function ( string $batch_lot ) use ( $coa_page_url ): array {
 	return array(
-		'foxfire_batch_lot' => $batch_lot,
-		'foxfire_coa_url'   => $coa_page_url,
-		'foxfire_coa_label' => 'View Certificate of Analysis',
+		'foxfire_batch_lot'        => $batch_lot,
+		'foxfire_coa_url'          => $coa_page_url,
+		'foxfire_coa_label'        => 'View Certificate of Analysis',
+		'foxfire_tier_enable'      => 1,
+		'foxfire_tier_3_discount'  => 5,
+		'foxfire_tier_5_discount'  => 10,
 	);
 };
 
-$bpc_id = foxfire_seed_variable_product(
-	array(
-		'name'              => 'BPC-157',
-		'slug'              => 'bpc-157',
-		'sku'               => 'FF-BPC157',
-		'description'       => $placeholder_desc,
-		'short_description' => $placeholder_short,
-		'category_ids'      => array( $cat_recovery ),
-		'fields'            => $base_fields( 'LOT-BPC-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '49.99',
-		'10mg' => '89.99',
-	),
-	$bpc_image_id
-);
-
+// 1. Popular GLP-1s: 2 Strengths (15mg | 30mg)
 $reta_id = foxfire_seed_variable_product(
 	array(
 		'name'              => 'Retatrutide (RETA)',
@@ -464,28 +390,110 @@ $reta_id = foxfire_seed_variable_product(
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_glp1 ),
-		'fields'            => $base_fields( 'LOT-RETA-PLACEHOLDER-001' ),
+		'fields'            => $base_fields( 'FF-RT2601' ),
 	),
 	array(
-		'5mg'  => '129.99',
-		'10mg' => '229.99',
+		'15mg' => '129.99',
+		'30mg' => '229.99',
 	),
 	$reta_image_id
 );
 
-$tirz_id = foxfire_seed_simple_product(
+$tirz_id = foxfire_seed_variable_product(
 	array(
 		'name'              => 'Tirzepatide (TIRZ)',
 		'slug'              => 'tirzepatide-tirz',
-		'sku'               => 'FF-TIRZ-10MG',
-		'regular_price'     => '149.99',
-		'stock_quantity'    => 40,
+		'sku'               => 'FF-TIRZ',
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_glp1 ),
-		'fields'            => $base_fields( 'LOT-TIRZ-PLACEHOLDER-001' ),
+		'fields'            => $base_fields( 'FF-TZ2601' ),
+	),
+	array(
+		'15mg' => '119.99',
+		'30mg' => '209.99',
 	),
 	$tirz_image_id
+);
+
+$sema_id = foxfire_seed_variable_product(
+	array(
+		'name'              => 'Semaglutide (SEMA)',
+		'slug'              => 'semaglutide-sema',
+		'sku'               => 'FF-SEMA',
+		'description'       => $placeholder_desc,
+		'short_description' => $placeholder_short,
+		'category_ids'      => array( $cat_glp1 ),
+		'fields'            => $base_fields( 'FF-SM2601' ),
+	),
+	array(
+		'15mg' => '79.99',
+		'30mg' => '139.99',
+	),
+	$sema_image_id
+);
+
+$cagri_id = foxfire_seed_variable_product(
+	array(
+		'name'              => 'Cagrilintide (CAGRI)',
+		'slug'              => 'cagrilintide-cagri',
+		'sku'               => 'FF-CAGRI',
+		'description'       => $placeholder_desc,
+		'short_description' => $placeholder_short,
+		'category_ids'      => array( $cat_glp1 ),
+		'fields'            => $base_fields( 'FF-CG2601' ),
+	),
+	array(
+		'5mg'  => '79.99',
+		'10mg' => '139.99',
+	),
+	$cagri_image_id
+);
+
+// 2. Single-Strength Compounds (1 Standard Strength)
+$bpc_id = foxfire_seed_simple_product(
+	array(
+		'name'              => 'BPC-157',
+		'slug'              => 'bpc-157',
+		'sku'               => 'FF-BPC157-10MG',
+		'regular_price'     => '69.99',
+		'stock_quantity'    => 50,
+		'description'       => $placeholder_desc,
+		'short_description' => $placeholder_short,
+		'category_ids'      => array( $cat_recovery ),
+		'fields'            => $base_fields( 'FF-BP2601' ),
+	),
+	$bpc_image_id
+);
+
+$tb500_id = foxfire_seed_simple_product(
+	array(
+		'name'              => 'TB-500',
+		'slug'              => 'tb-500',
+		'sku'               => 'FF-TB500-10MG',
+		'regular_price'     => '69.99',
+		'stock_quantity'    => 45,
+		'description'       => $placeholder_desc,
+		'short_description' => $placeholder_short,
+		'category_ids'      => array( $cat_recovery ),
+		'fields'            => $base_fields( 'FF-TB2601' ),
+	),
+	$tb_image_id
+);
+
+$kpv_id = foxfire_seed_simple_product(
+	array(
+		'name'              => 'KPV',
+		'slug'              => 'kpv',
+		'sku'               => 'FF-KPV-10MG',
+		'regular_price'     => '59.99',
+		'stock_quantity'    => 40,
+		'description'       => $placeholder_desc,
+		'short_description' => $placeholder_short,
+		'category_ids'      => array( $cat_recovery ),
+		'fields'            => $base_fields( 'FF-KP2601' ),
+	),
+	$kpv_image_id
 );
 
 $wolverine_id = foxfire_seed_simple_product(
@@ -498,92 +506,52 @@ $wolverine_id = foxfire_seed_simple_product(
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_blends, $cat_recovery ),
-		'fields'            => $base_fields( 'LOT-WOLV-PLACEHOLDER-001' ),
+		'fields'            => $base_fields( 'FF-WV2601' ),
 	),
 	$wolv_image_id
 );
 
-$ghk_id = foxfire_seed_variable_product(
+$klow_id = foxfire_seed_simple_product(
+	array(
+		'name'              => 'KLOW Blend',
+		'slug'              => 'klow',
+		'sku'               => 'FF-KLOW-10MG',
+		'regular_price'     => '129.99',
+		'stock_quantity'    => 25,
+		'description'       => $placeholder_desc,
+		'short_description' => $placeholder_short,
+		'category_ids'      => array( $cat_blends, $cat_recovery ),
+		'fields'            => $base_fields( 'FF-KL2601' ),
+	),
+	$klow_image_id
+);
+
+$ghk_id = foxfire_seed_simple_product(
 	array(
 		'name'              => 'GHK-Cu',
 		'slug'              => 'ghk-cu',
-		'sku'               => 'FF-GHKCU',
+		'sku'               => 'FF-GHKCU-50MG',
+		'regular_price'     => '49.99',
+		'stock_quantity'    => 40,
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_support ),
-		'fields'            => $base_fields( 'LOT-GHKCU-PLACEHOLDER-001' ),
-	),
-	array(
-		'50mg'  => '39.99',
-		'100mg' => '69.99',
+		'fields'            => $base_fields( 'FF-GH2601' ),
 	),
 	$ghk_image_id
 );
 
-$sema_id = foxfire_seed_variable_product(
-	array(
-		'name'              => 'Semaglutide (SEMA)',
-		'slug'              => 'semaglutide-sema',
-		'sku'               => 'FF-SEMA',
-		'description'       => $placeholder_desc,
-		'short_description' => $placeholder_short,
-		'category_ids'      => array( $cat_glp1 ),
-		'fields'            => $base_fields( 'LOT-SEMA-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '69.99',
-		'10mg' => '119.99',
-	),
-	$sema_image_id
-);
-
-$tb500_id = foxfire_seed_variable_product(
-	array(
-		'name'              => 'TB-500',
-		'slug'              => 'tb-500',
-		'sku'               => 'FF-TB500',
-		'description'       => $placeholder_desc,
-		'short_description' => $placeholder_short,
-		'category_ids'      => array( $cat_recovery ),
-		'fields'            => $base_fields( 'LOT-TB500-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '49.99',
-		'10mg' => '89.99',
-	),
-	$tb_image_id
-);
-
-$kpv_id = foxfire_seed_variable_product(
-	array(
-		'name'              => 'KPV',
-		'slug'              => 'kpv',
-		'sku'               => 'FF-KPV',
-		'description'       => $placeholder_desc,
-		'short_description' => $placeholder_short,
-		'category_ids'      => array( $cat_recovery ),
-		'fields'            => $base_fields( 'LOT-KPV-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '54.99',
-		'10mg' => '94.99',
-	),
-	$kpv_image_id
-);
-
-$motsc_id = foxfire_seed_variable_product(
+$motsc_id = foxfire_seed_simple_product(
 	array(
 		'name'              => 'MOTS-c',
 		'slug'              => 'mots-c',
-		'sku'               => 'FF-MOTSC',
+		'sku'               => 'FF-MOTSC-10MG',
+		'regular_price'     => '59.99',
+		'stock_quantity'    => 35,
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_support ),
-		'fields'            => $base_fields( 'LOT-MOTSC-PLACEHOLDER-001' ),
-	),
-	array(
-		'10mg' => '59.99',
-		'20mg' => '104.99',
+		'fields'            => $base_fields( 'FF-MC2601' ),
 	),
 	$motsc_image_id
 );
@@ -598,56 +566,37 @@ $pt141_id = foxfire_seed_simple_product(
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_support ),
-		'fields'            => $base_fields( 'LOT-PT141-PLACEHOLDER-001' ),
+		'fields'            => $base_fields( 'FF-PT2601' ),
 	),
 	$pt141_image_id
 );
 
-$klow_id = foxfire_seed_simple_product(
-	array(
-		'name'              => 'KLOW Blend',
-		'slug'              => 'klow',
-		'sku'               => 'FF-KLOW-10MG',
-		'regular_price'     => '129.99',
-		'stock_quantity'    => 25,
-		'description'       => $placeholder_desc,
-		'short_description' => $placeholder_short,
-		'category_ids'      => array( $cat_blends, $cat_recovery ),
-		'fields'            => $base_fields( 'LOT-KLOW-PLACEHOLDER-001' ),
-	),
-	$klow_image_id
-);
-
-$selank_id = foxfire_seed_variable_product(
+$selank_id = foxfire_seed_simple_product(
 	array(
 		'name'              => 'Selank',
 		'slug'              => 'selank',
-		'sku'               => 'FF-SELANK',
+		'sku'               => 'FF-SELANK-10MG',
+		'regular_price'     => '54.99',
+		'stock_quantity'    => 30,
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_support ),
-		'fields'            => $base_fields( 'LOT-SELANK-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '44.99',
-		'10mg' => '79.99',
+		'fields'            => $base_fields( 'FF-SL2601' ),
 	),
 	$selank_image_id
 );
 
-$semax_id = foxfire_seed_variable_product(
+$semax_id = foxfire_seed_simple_product(
 	array(
 		'name'              => 'Semax',
 		'slug'              => 'semax',
-		'sku'               => 'FF-SEMAX',
+		'sku'               => 'FF-SEMAX-10MG',
+		'regular_price'     => '54.99',
+		'stock_quantity'    => 30,
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_support ),
-		'fields'            => $base_fields( 'LOT-SEMAX-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '44.99',
-		'10mg' => '79.99',
+		'fields'            => $base_fields( 'FF-SX2601' ),
 	),
 	$semax_image_id
 );
@@ -662,7 +611,7 @@ $mt1_id = foxfire_seed_simple_product(
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_support ),
-		'fields'            => $base_fields( 'LOT-MT1-PLACEHOLDER-001' ),
+		'fields'            => $base_fields( 'FF-M12601' ),
 	),
 	$mt1_image_id
 );
@@ -677,7 +626,7 @@ $mt2_id = foxfire_seed_simple_product(
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_support ),
-		'fields'            => $base_fields( 'LOT-MT2-PLACEHOLDER-001' ),
+		'fields'            => $base_fields( 'FF-M22601' ),
 	),
 	$mt2_image_id
 );
@@ -692,58 +641,37 @@ $amino_id = foxfire_seed_simple_product(
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_support ),
-		'fields'            => $base_fields( 'LOT-5AMINO-PLACEHOLDER-001' ),
+		'fields'            => $base_fields( 'FF-5A2601' ),
 	),
 	$amino_image_id
 );
 
-$cagri_id = foxfire_seed_variable_product(
-	array(
-		'name'              => 'Cagrilintide (CAGRI)',
-		'slug'              => 'cagrilintide-cagri',
-		'sku'               => 'FF-CAGRI',
-		'description'       => $placeholder_desc,
-		'short_description' => $placeholder_short,
-		'category_ids'      => array( $cat_glp1 ),
-		'fields'            => $base_fields( 'LOT-CAGRI-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '79.99',
-		'10mg' => '139.99',
-	),
-	$cagri_image_id
-);
-
-$serm_id = foxfire_seed_variable_product(
+$serm_id = foxfire_seed_simple_product(
 	array(
 		'name'              => 'Sermorelin',
 		'slug'              => 'sermorelin',
-		'sku'               => 'FF-SERM',
+		'sku'               => 'FF-SERM-10MG',
+		'regular_price'     => '59.99',
+		'stock_quantity'    => 30,
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_recovery, $cat_support ),
-		'fields'            => $base_fields( 'LOT-SERM-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '49.99',
-		'10mg' => '89.99',
+		'fields'            => $base_fields( 'FF-SR2601' ),
 	),
 	$serm_image_id
 );
 
-$tesa_id = foxfire_seed_variable_product(
+$tesa_id = foxfire_seed_simple_product(
 	array(
 		'name'              => 'Tesamorelin',
 		'slug'              => 'tesamorelin',
-		'sku'               => 'FF-TESA',
+		'sku'               => 'FF-TESA-10MG',
+		'regular_price'     => '79.99',
+		'stock_quantity'    => 30,
 		'description'       => $placeholder_desc,
 		'short_description' => $placeholder_short,
 		'category_ids'      => array( $cat_recovery, $cat_support ),
-		'fields'            => $base_fields( 'LOT-TESA-PLACEHOLDER-001' ),
-	),
-	array(
-		'5mg'  => '69.99',
-		'10mg' => '129.99',
+		'fields'            => $base_fields( 'FF-TS2601' ),
 	),
 	$tesa_image_id
 );
@@ -766,6 +694,5 @@ foxfire_seed_set_related( $amino_id, array( $motsc_id ), array( $kpv_id ) );
 wc_delete_product_transients();
 
 foxfire_seed_log( '' );
-foxfire_seed_log( 'Seed complete — 19 products, 4 placeholder categories.' );
+foxfire_seed_log( 'Seed complete — 19 products configured with 1/2 strengths and 1/3/5 quantity tiers.' );
 foxfire_seed_log( 'Shop: ' . wc_get_page_permalink( 'shop' ) );
-foxfire_seed_log( 'See docs/PRODUCT_DATA.md for field reference and admin workflow.' );

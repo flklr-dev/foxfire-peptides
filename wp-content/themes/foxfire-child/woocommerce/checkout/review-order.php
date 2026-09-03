@@ -10,6 +10,11 @@ defined( 'ABSPATH' ) || exit;
 
 <div class="ff-checkout-review-wrap">
 
+	<!-- Products Ordered Header -->
+	<div class="ff-checkout-review-header">
+		<h3 class="ff-checkout-review-title"><?php esc_html_e( 'Products Ordered', 'foxfire-child' ); ?></h3>
+	</div>
+
 	<!-- Itemized Compounds List -->
 	<div class="ff-checkout-items-list">
 		<?php
@@ -42,9 +47,6 @@ defined( 'ABSPATH' ) || exit;
 					
 					<div class="ff-checkout-item__meta">
 						<?php echo wc_get_formatted_cart_item_data( $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-						<?php if ( ! empty( $batch_lot ) ) : ?>
-							<span class="ff-checkout-item__batch"><?php esc_html_e( 'Lot:', 'foxfire-child' ); ?> <?php echo esc_html( $batch_lot ); ?></span>
-						<?php endif; ?>
 					</div>
 				</div>
 
@@ -78,11 +80,28 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		<?php endforeach; ?>
 
-		<!-- Shipping Rates -->
-		<?php if ( WC()->cart->needs_shipping() && WC()->cart->show_shipping() ) : ?>
+		<!-- Shipping / Shipment Row -->
+		<?php if ( WC()->cart->needs_shipping() ) : ?>
+			<?php
+			$raw_subtotal     = is_object( WC()->cart ) ? (float) WC()->cart->get_displayed_subtotal() : 0.0;
+			$is_free_shipping = ( $raw_subtotal >= 150.00 );
+			?>
 			<?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
-			<div class="ff-checkout-shipping-row">
-				<?php wc_cart_totals_shipping_html(); ?>
+			<div class="ff-checkout-row ff-checkout-shipping-row">
+				<span class="ff-checkout-row__label"><?php esc_html_e( 'Shipment', 'foxfire-child' ); ?></span>
+				<div class="ff-checkout-shipping-pricing ff-checkout-row__value">
+					<?php if ( $is_free_shipping ) : ?>
+						<del class="ff-shipping-was-price"><?php echo wp_kses_post( wc_price( 9.95 ) ); ?></del>
+						<ins class="ff-shipping-now-price"><?php echo wp_kses_post( wc_price( 0.00 ) ); ?></ins>
+					<?php else : ?>
+						<span class="ff-shipping-now-price"><?php echo wp_kses_post( wc_price( 9.95 ) ); ?></span>
+					<?php endif; ?>
+				</div>
+
+				<!-- Hidden WooCommerce shipping inputs for form processing -->
+				<div class="screen-reader-text" style="display:none !important;">
+					<?php wc_cart_totals_shipping_html(); ?>
+				</div>
 			</div>
 			<?php do_action( 'woocommerce_review_order_after_shipping' ); ?>
 		<?php endif; ?>

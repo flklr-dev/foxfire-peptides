@@ -50,30 +50,6 @@ if ( ! wp_doing_ajax() ) {
 		<?php wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce' ); ?>
 	</div>
 
-	<!-- Point-of-Purchase Guarantee & Trust Assurances -->
-	<div class="ff-checkout-guarantee-box">
-		<ul class="ff-checkout-guarantee-list">
-			<li>
-				<span class="ff-guarantee-icon" aria-hidden="true">
-					<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-				</span>
-				<span><strong><?php esc_html_e( 'Secure Checkout', 'foxfire-child' ); ?></strong> &mdash; <?php esc_html_e( 'Encrypted and protected order processing.', 'foxfire-child' ); ?></span>
-			</li>
-			<li>
-				<span class="ff-guarantee-icon" aria-hidden="true">
-					<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-				</span>
-				<span><strong><?php esc_html_e( 'Discreet Tracked Shipping', 'foxfire-child' ); ?></strong> &mdash; <?php esc_html_e( 'Fast dispatch with tracking on all orders.', 'foxfire-child' ); ?></span>
-			</li>
-			<li>
-				<span class="ff-guarantee-icon" aria-hidden="true">
-					<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-				</span>
-				<span><strong><?php esc_html_e( 'Quality Guaranteed', 'foxfire-child' ); ?></strong> &mdash; <?php esc_html_e( 'Independent batch testing & verified purity.', 'foxfire-child' ); ?></span>
-			</li>
-		</ul>
-	</div>
-
 </div>
 
 <?php
