@@ -419,16 +419,16 @@ function foxfire_disable_product_gallery_zoom(): void {
 add_action( 'after_setup_theme', 'foxfire_disable_product_gallery_zoom', 100 );
 
 /**
- * Filter short description to remove [PLACEHOLDER] text and provide clean copy.
+ * Replace missing or seeded placeholder copy with a neutral fallback.
+ *
+ * Product-specific short descriptions entered in WooCommerce pass through.
  */
 function foxfire_clean_pdp_short_description( string $desc ): string {
 	if ( is_product() ) {
 		if ( false !== stripos( $desc, '[PLACEHOLDER]' ) || empty( trim( strip_tags( $desc ) ) ) ) {
-			return '<p class="ff-pdp-description-text">' . esc_html__( 'High-purity lyophilized research peptide. Supplied in a sterile, sealed glass vial for in-vitro laboratory research and analytical inquiry.', 'foxfire-child' ) . '</p>';
+			return '<p class="ff-pdp-description-text">' . esc_html__( 'Product specifications are being finalized. Review the available batch and testing information before ordering. For laboratory research use only.', 'foxfire-child' ) . '</p>';
 		}
 	}
 	return $desc;
 }
 add_filter( 'woocommerce_short_description', 'foxfire_clean_pdp_short_description', 20 );
-
-

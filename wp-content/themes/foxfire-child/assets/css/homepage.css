@@ -397,7 +397,7 @@
 ul.products.ff-featured-grid {
 	display: grid !important;
 	grid-template-columns: 1fr;
-	gap: var(--space-4) !important;
+	gap: var(--space-3) !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	list-style: none !important;
@@ -410,6 +410,7 @@ ul.products.ff-featured-grid {
 	.woocommerce ul.products.ff-featured-grid,
 	ul.products.ff-featured-grid {
 		grid-template-columns: repeat(2, 1fr);
+		gap: var(--space-3) !important;
 	}
 }
 
@@ -418,7 +419,7 @@ ul.products.ff-featured-grid {
 	.woocommerce ul.products.ff-featured-grid,
 	ul.products.ff-featured-grid {
 		grid-template-columns: repeat(4, 1fr);
-		gap: var(--space-5) !important;
+		gap: var(--space-3) !important;
 	}
 }
 

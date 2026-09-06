@@ -22,7 +22,6 @@ $shipping_state = get_user_meta( $user_id, 'shipping_state', true );
 	<div class="ff-dashboard-welcome-card">
 		<div class="ff-dashboard-welcome-header">
 			<div>
-				<span class="ff-dashboard-eyebrow"><?php esc_html_e( 'Customer Portal', 'foxfire-child' ); ?></span>
 				<h1 class="ff-dashboard-title">
 					<?php
 					printf(

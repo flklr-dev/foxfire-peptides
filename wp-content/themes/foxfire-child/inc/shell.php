@@ -82,10 +82,22 @@ add_action( 'wp_enqueue_scripts', 'foxfire_shell_enqueue_assets', 30 );
  * Resolve a published page URL by slug with a safe fallback.
  */
 function foxfire_get_page_url( string $slug, string $fallback_path = '' ): string {
-	$page = get_page_by_path( $slug, OBJECT, 'page' );
+	$slugs_to_check = array( $slug );
+	if ( 'about' === $slug ) {
+		$slugs_to_check[] = 'about-us';
+	} elseif ( 'about-us' === $slug ) {
+		$slugs_to_check[] = 'about';
+	} elseif ( 'contact' === $slug ) {
+		$slugs_to_check[] = 'contact-us';
+	} elseif ( 'contact-us' === $slug ) {
+		$slugs_to_check[] = 'contact';
+	}
 
-	if ( $page instanceof WP_Post && 'publish' === $page->post_status ) {
-		return get_permalink( $page );
+	foreach ( $slugs_to_check as $s ) {
+		$page = get_page_by_path( $s, OBJECT, 'page' );
+		if ( $page instanceof WP_Post && 'publish' === $page->post_status ) {
+			return get_permalink( $page );
+		}
 	}
 
 	if ( '' !== $fallback_path ) {

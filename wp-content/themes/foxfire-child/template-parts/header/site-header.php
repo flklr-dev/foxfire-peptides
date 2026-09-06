@@ -23,8 +23,8 @@ $home_url    = home_url( '/' );
 $is_home     = is_front_page() || is_home();
 $is_shop     = ( function_exists( 'is_shop' ) && is_shop() ) || ( function_exists( 'is_product_taxonomy' ) && is_product_taxonomy() ) || ( function_exists( 'is_singular' ) && is_singular( 'product' ) );
 $is_testing  = is_page( 'testing-coa' ) || ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'testing-coa' ) );
-$is_about    = is_page( 'about' ) || ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'about' ) );
-$is_contact  = is_page( 'contact' ) || ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'contact' ) );
+$is_about    = is_page( 'about' ) || is_page( 'about-us' ) || ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'about' ) );
+$is_contact  = is_page( 'contact' ) || is_page( 'contact-us' ) || ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'contact' ) );
 $is_account  = function_exists( 'is_account_page' ) && is_account_page();
 $is_cart     = function_exists( 'is_cart' ) && is_cart();
 ?>

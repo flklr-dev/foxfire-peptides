@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $raw_subtotal        = is_object( WC()->cart ) ? WC()->cart->get_displayed_subtotal() : 0;
-$free_ship_threshold = 200;
+$free_ship_threshold = function_exists( 'foxfire_get_free_shipping_threshold' ) ? foxfire_get_free_shipping_threshold() : 150.00;
 $amount_left         = max( 0, $free_ship_threshold - $raw_subtotal );
 $progress_pct        = min( 100, round( ( $raw_subtotal / $free_ship_threshold ) * 100 ) );
 $shop_url            = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() : wc_get_page_permalink( 'shop' );

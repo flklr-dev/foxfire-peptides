@@ -241,6 +241,15 @@ $formatted_address = implode( ', ', $address_parts );
 
 	</form>
 
+	<!-- Minimalist Center Processing Toast (Matches Added to Cart HUD style) -->
+	<div id="ffCheckoutProcessingOverlay" class="ff-checkout-processing-overlay" style="display: none;" aria-hidden="true" role="status" aria-live="polite">
+		<div class="ff-checkout-processing-toast">
+			<div class="ff-checkout-processing-spinner" aria-hidden="true"></div>
+			<p class="ff-checkout-processing-title"><?php esc_html_e( 'Processing your order', 'foxfire-child' ); ?></p>
+			<span class="ff-checkout-processing-sub"><?php esc_html_e( 'Please do not close..', 'foxfire-child' ); ?></span>
+		</div>
+	</div>
+
 </div>
 
 <?php do_action( 'woocommerce_after_checkout_form', $checkout ); ?>

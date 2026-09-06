@@ -1,0 +1,128 @@
+.ff-ops-wrap {
+	max-width: 1120px;
+}
+
+.ff-ops-intro {
+	max-width: 760px;
+	font-size: 15px;
+}
+
+.ff-ops-table {
+	margin: 12px 0 28px;
+}
+
+.ff-ops-table th,
+.ff-ops-table td {
+	vertical-align: middle;
+}
+
+.ff-ops-table th:first-child {
+	width: 210px;
+}
+
+.ff-ops-table td:last-child {
+	width: 110px;
+}
+
+.ff-ops-status {
+	display: inline-block;
+	min-width: 92px;
+	font-weight: 600;
+}
+
+.ff-ops-status--pass {
+	color: #116329;
+}
+
+.ff-ops-status--fail {
+	color: #b32d2e;
+}
+
+.foxfire-ops-status,
+.foxfire-ops-tier {
+	font-weight: 600;
+}
+
+.foxfire-ops-status--direct {
+	color: #116329;
+}
+
+.foxfire-ops-status--placeholder {
+	color: #996800;
+}
+
+.foxfire-ops-status--missing {
+	color: #b32d2e;
+}
+
+.foxfire-ops-muted {
+	color: #646970;
+}
+
+.column-foxfire_batch,
+.column-foxfire_coa,
+.column-foxfire_tiers {
+	width: 10%;
+}
+
+.foxfire-pricing-preview__scroll {
+	overflow-x: auto;
+}
+
+.foxfire-pricing-preview table {
+	min-width: 620px;
+}
+
+.foxfire-pricing-preview th,
+.foxfire-pricing-preview td {
+	vertical-align: middle;
+}
+
+.foxfire-order-fields p {
+	margin: 0 0 14px;
+}
+
+.foxfire-order-fields .description {
+	margin-bottom: 0;
+}
+
+.ff-order-queue .nav-tab-wrapper {
+	margin: 18px 0 0;
+}
+
+.ff-order-queue__table {
+	margin-top: 18px;
+}
+
+.ff-order-queue__table th,
+.ff-order-queue__table td {
+	vertical-align: middle;
+}
+
+@media screen and (max-width: 782px) {
+	.ff-ops-table,
+	.ff-ops-table tbody,
+	.ff-ops-table tr,
+	.ff-ops-table th,
+	.ff-ops-table td {
+		display: block;
+		width: auto !important;
+	}
+
+	.ff-ops-table thead {
+		display: none;
+	}
+
+	.ff-ops-table tr {
+		padding: 12px;
+	}
+
+	.ff-ops-table th,
+	.ff-ops-table td {
+		padding: 4px 0;
+	}
+
+	.ff-order-queue__table thead {
+		display: none;
+	}
+}

@@ -60,10 +60,11 @@ do_action( 'woocommerce_before_edit_account_form' );
 		<!-- Password Change Section -->
 		<section class="ff-form-section">
 			<h2 class="ff-form-section-title"><?php esc_html_e( 'Password Change', 'foxfire-child' ); ?></h2>
+			<p class="ff-form-section-subtext"><?php esc_html_e( 'Only fill out these fields if you want to change your account password.', 'foxfire-child' ); ?></p>
 
 			<div class="ff-form-group">
 				<label for="password_current" class="ff-field-label">
-					<?php esc_html_e( 'Current Password (leave blank to leave unchanged)', 'foxfire-child' ); ?>
+					<?php esc_html_e( 'Current Password', 'foxfire-child' ); ?>
 				</label>
 				<div class="ff-password-input-wrap">
 					<input type="password" class="ff-form-input woocommerce-Input woocommerce-Input--password input-text" name="password_current" id="password_current" autocomplete="current-password" />
@@ -76,7 +77,7 @@ do_action( 'woocommerce_before_edit_account_form' );
 
 			<div class="ff-form-group">
 				<label for="password_1" class="ff-field-label">
-					<?php esc_html_e( 'New Password (leave blank to leave unchanged)', 'foxfire-child' ); ?>
+					<?php esc_html_e( 'New Password', 'foxfire-child' ); ?>
 				</label>
 				<div class="ff-password-input-wrap">
 					<input type="password" class="ff-form-input woocommerce-Input woocommerce-Input--password input-text" name="password_1" id="password_1" autocomplete="new-password" />

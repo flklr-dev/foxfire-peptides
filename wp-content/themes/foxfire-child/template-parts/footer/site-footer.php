@@ -13,7 +13,8 @@ $about_url   = foxfire_get_page_url( 'about', '/about/' );
 $contact_url = foxfire_get_page_url( 'contact', '/contact/' );
 $terms_url   = foxfire_get_page_url( 'terms-and-conditions', '/terms-and-conditions/' );
 $privacy_url = foxfire_get_page_url( 'privacy-policy', '/privacy-policy/' );
-$refund_url  = foxfire_get_page_url( 'refund_returns', '/refund-and-returns-policy/' );
+$refund_url  = foxfire_get_page_url( 'refund-and-returns-policy', '/refund-and-returns-policy/' );
+$shipping_url = foxfire_get_page_url( 'shipping-policy', '/shipping-policy/' );
 $year        = (string) gmdate( 'Y' );
 ?>
 
@@ -36,7 +37,7 @@ $year        = (string) gmdate( 'Y' );
 		</nav>
 
 		<div class="ff-site-footer__policies">
-			<p class="ff-site-footer__section-label"><?php esc_html_e( 'Policies', 'foxfire-child' ); ?></p>
+			<p class="ff-site-footer__section-label"><?php esc_html_e( 'Legal', 'foxfire-child' ); ?></p>
 			<ul class="ff-site-footer__links">
 				<li>
 					<a href="<?php echo esc_url( $terms_url ); ?>">
@@ -51,6 +52,11 @@ $year        = (string) gmdate( 'Y' );
 				<li>
 					<a href="<?php echo esc_url( $refund_url ); ?>">
 						<?php esc_html_e( 'Refund & Returns', 'foxfire-child' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo esc_url( $shipping_url ); ?>">
+						<?php esc_html_e( 'Shipping Policy', 'foxfire-child' ); ?>
 					</a>
 				</li>
 			</ul>

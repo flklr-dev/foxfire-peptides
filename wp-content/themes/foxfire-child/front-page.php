@@ -33,7 +33,7 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 				</h1>
 
 				<p class="ff-home-hero__lead">
-					<?php esc_html_e( 'Laboratory research compounds with batch-specific Certificates of Analysis (COAs) available for every compound. Straightforward purchasing with 1, 3, and 5 vial options.', 'foxfire-child' ); ?>
+					<?php esc_html_e( 'Laboratory research compounds with available batch and COA information. Straightforward purchasing with 1, 3, and 5 vial options.', 'foxfire-child' ); ?>
 				</p>
 
 				<div class="ff-home-hero__actions">
@@ -48,15 +48,15 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 				<ul class="ff-home-hero__bullets">
 					<li>
 						<span class="ff-home-hero__check" aria-hidden="true">✓</span>
-						<?php esc_html_e( 'Independently Tested', 'foxfire-child' ); ?>
+						<?php esc_html_e( 'Testing Information', 'foxfire-child' ); ?>
 					</li>
 					<li>
 						<span class="ff-home-hero__check" aria-hidden="true">✓</span>
-						<?php esc_html_e( 'Batch COA Reports', 'foxfire-child' ); ?>
+						<?php esc_html_e( 'Batch & COA Access', 'foxfire-child' ); ?>
 					</li>
 					<li>
 						<span class="ff-home-hero__check" aria-hidden="true">✓</span>
-						<?php esc_html_e( 'Fast, Secure Dispatch', 'foxfire-child' ); ?>
+						<?php esc_html_e( 'Simple Ordering', 'foxfire-child' ); ?>
 					</li>
 				</ul>
 			</div>
@@ -65,9 +65,9 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 				<div class="ff-home-hero__image-card">
 					<img
 						src="<?php echo esc_url( $hero_img ); ?>"
-						alt="<?php esc_attr_e( 'Foxfire Peptides sterile laboratory research vials with Certificate of Analysis testing', 'foxfire-child' ); ?>"
-						width="1200"
-						height="675"
+						alt="<?php esc_attr_e( 'Foxfire Peptides laboratory research vials with Certificate of Analysis testing', 'foxfire-child' ); ?>"
+						width="851"
+						height="733"
 						loading="eager"
 					/>
 				</div>
@@ -85,8 +85,8 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 					</svg>
 				</span>
 				<div class="ff-trust-band__content">
-					<h3 class="ff-trust-band__title"><?php esc_html_e( 'Third-Party Tested', 'foxfire-child' ); ?></h3>
-					<p class="ff-trust-band__desc"><?php esc_html_e( 'Independent laboratory analytical testing on each batch.', 'foxfire-child' ); ?></p>
+					<h3 class="ff-trust-band__title"><?php esc_html_e( 'Testing Information', 'foxfire-child' ); ?></h3>
+					<p class="ff-trust-band__desc"><?php esc_html_e( 'Access testing and documentation where available.', 'foxfire-child' ); ?></p>
 				</div>
 			</div>
 
@@ -100,8 +100,8 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 					</svg>
 				</span>
 				<div class="ff-trust-band__content">
-					<h3 class="ff-trust-band__title"><?php esc_html_e( 'Batch-Matched COAs', 'foxfire-child' ); ?></h3>
-					<p class="ff-trust-band__desc"><?php esc_html_e( 'Publicly accessible certificates matching every vial lot.', 'foxfire-child' ); ?></p>
+					<h3 class="ff-trust-band__title"><?php esc_html_e( 'Batch & COA Access', 'foxfire-child' ); ?></h3>
+					<p class="ff-trust-band__desc"><?php esc_html_e( 'Browse available laboratory reports in our directory.', 'foxfire-child' ); ?></p>
 				</div>
 			</div>
 
@@ -113,8 +113,8 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 					</svg>
 				</span>
 				<div class="ff-trust-band__content">
-					<h3 class="ff-trust-band__title"><?php esc_html_e( 'Fast, Secure Shipping', 'foxfire-child' ); ?></h3>
-					<p class="ff-trust-band__desc"><?php esc_html_e( 'Discreet, temperature-stable packaging & prompt fulfillment.', 'foxfire-child' ); ?></p>
+					<h3 class="ff-trust-band__title"><?php esc_html_e( 'Simple Ordering', 'foxfire-child' ); ?></h3>
+					<p class="ff-trust-band__desc"><?php esc_html_e( 'Direct catalog purchasing with straightforward checkout.', 'foxfire-child' ); ?></p>
 				</div>
 			</div>
 
@@ -127,8 +127,8 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 					</svg>
 				</span>
 				<div class="ff-trust-band__content">
-					<h3 class="ff-trust-band__title"><?php esc_html_e( 'Research Compliant', 'foxfire-child' ); ?></h3>
-					<p class="ff-trust-band__desc"><?php esc_html_e( 'Strictly for in-vitro and laboratory research use.', 'foxfire-child' ); ?></p>
+					<h3 class="ff-trust-band__title"><?php esc_html_e( 'Research Use Only', 'foxfire-child' ); ?></h3>
+					<p class="ff-trust-band__desc"><?php esc_html_e( 'Products intended strictly for laboratory research.', 'foxfire-child' ); ?></p>
 				</div>
 			</div>
 		</div>
@@ -217,10 +217,10 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 				<span class="ff-home-coa-banner__badge"><?php esc_html_e( 'Testing & COAs', 'foxfire-child' ); ?></span>
 			</div>
 			<h2 id="ff-coa-banner-heading" class="ff-home-coa-banner__title">
-				<?php esc_html_e( 'Every batch has a matching laboratory report.', 'foxfire-child' ); ?>
+				<?php esc_html_e( 'Access available batch testing and COA reports.', 'foxfire-child' ); ?>
 			</h2>
 			<p class="ff-home-coa-banner__desc">
-				<?php esc_html_e( 'Look up your batch number in our directory to view independent testing documentation.', 'foxfire-child' ); ?>
+				<?php esc_html_e( 'Look up your batch lot number in our directory to view available documentation.', 'foxfire-child' ); ?>
 			</p>
 		</div>
 
@@ -238,16 +238,16 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 			<div class="ff-home-standards__header ff-reveal">
 				<span class="ff-home-standards__eyebrow"><?php esc_html_e( 'Quality Approach', 'foxfire-child' ); ?></span>
 				<h2 id="ff-standards-heading" class="ff-home-standards__title">
-					<?php esc_html_e( 'Independent Testing & Simple Shopping', 'foxfire-child' ); ?>
+					<?php esc_html_e( 'Testing Information & Simple Ordering', 'foxfire-child' ); ?>
 				</h2>
 			</div>
 
 			<div class="ff-standards-grid">
 				<div class="ff-standard-card ff-reveal ff-reveal--delay-1">
 					<span class="ff-standard-card__step" aria-hidden="true">1</span>
-					<h3 class="ff-standard-card__title"><?php esc_html_e( 'Independent Verification', 'foxfire-child' ); ?></h3>
+					<h3 class="ff-standard-card__title"><?php esc_html_e( 'Testing Information', 'foxfire-child' ); ?></h3>
 					<p class="ff-standard-card__text">
-						<?php esc_html_e( 'Every compound batch is tested by third-party analytical laboratories to confirm quality.', 'foxfire-child' ); ?>
+						<?php esc_html_e( 'Review available testing data and batch documentation for your research compounds.', 'foxfire-child' ); ?>
 					</p>
 				</div>
 
@@ -255,15 +255,15 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 					<span class="ff-standard-card__step" aria-hidden="true">2</span>
 					<h3 class="ff-standard-card__title"><?php esc_html_e( 'Batch Identification', 'foxfire-child' ); ?></h3>
 					<p class="ff-standard-card__text">
-						<?php esc_html_e( 'Printed batch lot codes on every vial allow instant lookup of matching documentation.', 'foxfire-child' ); ?>
+						<?php esc_html_e( 'Printed batch numbers help you identify and cross-reference documentation easily.', 'foxfire-child' ); ?>
 					</p>
 				</div>
 
 				<div class="ff-standard-card ff-reveal ff-reveal--delay-3">
 					<span class="ff-standard-card__step" aria-hidden="true">3</span>
-					<h3 class="ff-standard-card__title"><?php esc_html_e( 'Multi-Vial Savings', 'foxfire-child' ); ?></h3>
+					<h3 class="ff-standard-card__title"><?php esc_html_e( 'Multi-Vial Options', 'foxfire-child' ); ?></h3>
 					<p class="ff-standard-card__text">
-						<?php esc_html_e( 'Choose 1, 3, or 5 vials on a single page with automatic quantity savings and accurate stock deduction.', 'foxfire-child' ); ?>
+						<?php esc_html_e( 'Choose 1, 3, or 5 vials directly on the product page to match your research requirements.', 'foxfire-child' ); ?>
 					</p>
 				</div>
 			</div>
@@ -355,7 +355,7 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 						</span>
 					</summary>
 					<div class="ff-home-faq__answer">
-						<p><?php esc_html_e( 'Foxfire plans to support payment options including Wise, Zelle, and GCash, subject to availability. Clear payment instructions will be provided during checkout.', 'foxfire-child' ); ?></p>
+						<p><?php esc_html_e( '[PROVISIONAL: Pending final client confirmation] Payment options currently in planning include electronic and manual methods (such as Wise, Zelle, and GCash). Final accepted payment methods and detailed instructions will be confirmed prior to launch and displayed at checkout.', 'foxfire-child' ); ?></p>
 					</div>
 				</details>
 
@@ -397,7 +397,7 @@ $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_
 					<?php esc_html_e( 'Ready to Order Research Peptides?', 'foxfire-child' ); ?>
 				</h2>
 				<p class="ff-home-cta-card__desc">
-					<?php esc_html_e( 'Explore our catalog of research peptides with batch-specific Certificates of Analysis available for every sequence.', 'foxfire-child' ); ?>
+					<?php esc_html_e( 'Explore our catalog and access available batch and COA documentation.', 'foxfire-child' ); ?>
 				</p>
 			</div>
 

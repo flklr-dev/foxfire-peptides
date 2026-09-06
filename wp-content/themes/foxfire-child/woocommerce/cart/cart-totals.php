@@ -29,6 +29,26 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		<?php endforeach; ?>
 
+		<!-- Shipping / Shipment Row -->
+		<?php if ( WC()->cart->needs_shipping() ) : ?>
+			<?php
+			$raw_subtotal     = is_object( WC()->cart ) ? (float) WC()->cart->get_displayed_subtotal() : 0.0;
+			$free_threshold   = function_exists( 'foxfire_get_free_shipping_threshold' ) ? foxfire_get_free_shipping_threshold() : 150.00;
+			$is_free_shipping = ( $raw_subtotal >= $free_threshold );
+			?>
+			<div class="ff-cart-summary-row ff-cart-shipping-row">
+				<span class="ff-cart-summary-label"><?php esc_html_e( 'Shipment', 'foxfire-child' ); ?></span>
+				<div class="ff-cart-summary-value ff-checkout-shipping-pricing">
+					<?php if ( $is_free_shipping ) : ?>
+						<del class="ff-shipping-was-price"><?php echo wp_kses_post( wc_price( 9.95 ) ); ?></del>
+						<ins class="ff-shipping-now-price"><?php echo wp_kses_post( wc_price( 0.00 ) ); ?></ins>
+					<?php else : ?>
+						<span class="ff-shipping-now-price"><?php echo wp_kses_post( wc_price( 9.95 ) ); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
+		<?php endif; ?>
+
 		<!-- Fees -->
 		<?php foreach ( WC()->cart->get_fees() as $fee ) : ?>
 			<div class="ff-cart-summary-row fee">

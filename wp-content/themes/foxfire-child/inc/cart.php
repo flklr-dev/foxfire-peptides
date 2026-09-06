@@ -8,6 +8,13 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Return free shipping minimum threshold ($150.00) across cart, checkout, and shipping rates.
+ */
+function foxfire_get_free_shipping_threshold(): float {
+	return 150.00;
+}
+
+/**
  * Suppress Storefront default breadcrumbs and page title on cart page.
  * Unhook cross-sells from inside the sidebar collaterals.
  */
@@ -181,53 +188,6 @@ function foxfire_cart_enqueue_scripts(): void {
 add_action( 'wp_enqueue_scripts', 'foxfire_cart_enqueue_scripts', 30 );
 
 /**
- * Apply quantity tier discounts dynamically in the cart.
- *
- * Single-vial stock deduction is handled natively by WooCommerce because
- * the line item quantity is 1, 3, or 5 individual units.
- *
- * @param WC_Cart $cart
- */
-function foxfire_apply_tier_discounts( WC_Cart $cart ): void {
-	if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-		return;
-	}
-
-	if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 ) {
-		return;
-	}
-
-	foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
-		/** @var WC_Product $product */
-		$product    = $cart_item['data'];
-		$product_id = $cart_item['product_id'];
-		$quantity   = (int) $cart_item['quantity'];
-
-		if ( ! function_exists( 'foxfire_is_tier_pricing_enabled' ) || ! foxfire_is_tier_pricing_enabled( $product_id ) ) {
-			continue;
-		}
-
-		$discounts = function_exists( 'foxfire_get_product_tier_discounts' ) ? foxfire_get_product_tier_discounts( $product_id ) : array( 3 => 0, 5 => 0 );
-		$discount_pct = 0.0;
-
-		if ( $quantity >= 5 && ! empty( $discounts[5] ) ) {
-			$discount_pct = (float) $discounts[5];
-		} elseif ( $quantity >= 3 && ! empty( $discounts[3] ) ) {
-			$discount_pct = (float) $discounts[3];
-		}
-
-		if ( $discount_pct > 0.0 ) {
-			$regular_price = (float) $product->get_regular_price();
-			if ( $regular_price > 0 ) {
-				$discounted_unit_price = $regular_price * ( 1 - ( $discount_pct / 100 ) );
-				$product->set_price( $discounted_unit_price );
-			}
-		}
-	}
-}
-add_action( 'woocommerce_before_calculate_totals', 'foxfire_apply_tier_discounts', 20, 1 );
-
-/**
  * AJAX handler for Single Product Page (PDP) Add-to-Cart.
  * Supports Simple & Variable products, custom quantity tiers, and returns product card info for the center modal.
  */
@@ -312,4 +272,3 @@ function foxfire_ajax_add_to_cart_pdp(): void {
 }
 add_action( 'wp_ajax_foxfire_ajax_add_to_cart_pdp', 'foxfire_ajax_add_to_cart_pdp' );
 add_action( 'wp_ajax_nopriv_foxfire_ajax_add_to_cart_pdp', 'foxfire_ajax_add_to_cart_pdp' );
-

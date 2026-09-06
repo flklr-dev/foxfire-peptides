@@ -84,7 +84,8 @@ defined( 'ABSPATH' ) || exit;
 		<?php if ( WC()->cart->needs_shipping() ) : ?>
 			<?php
 			$raw_subtotal     = is_object( WC()->cart ) ? (float) WC()->cart->get_displayed_subtotal() : 0.0;
-			$is_free_shipping = ( $raw_subtotal >= 150.00 );
+			$free_threshold   = function_exists( 'foxfire_get_free_shipping_threshold' ) ? foxfire_get_free_shipping_threshold() : 150.00;
+			$is_free_shipping = ( $raw_subtotal >= $free_threshold );
 			?>
 			<?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
 			<div class="ff-checkout-row ff-checkout-shipping-row">

@@ -14,7 +14,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 
 	<div class="ff-section-title-wrap">
 		<h1 class="ff-section-title"><?php esc_html_e( 'Order History', 'foxfire-child' ); ?></h1>
-		<p class="ff-section-subtext"><?php esc_html_e( 'Review past analytical orders, verify tracking details, and lookup batch COAs.', 'foxfire-child' ); ?></p>
+		<p class="ff-section-subtext"><?php esc_html_e( 'Review your past compound orders and track shipment statuses.', 'foxfire-child' ); ?></p>
 	</div>
 
 	<?php if ( $has_orders ) : ?>
@@ -45,11 +45,15 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 					<!-- Order Items Preview -->
 					<div class="ff-order-card__items">
 						<?php
-						$items = $order->get_items();
-						foreach ( $items as $item_id => $item ) :
+						$items        = array_values( $order->get_items() );
+						$total_items  = count( $items );
+						$has_more     = $total_items > 2;
+						$initial_rows = array_slice( $items, 0, 2 );
+						$hidden_rows  = $has_more ? array_slice( $items, 2 ) : array();
+
+						foreach ( $initial_rows as $item ) :
 							$product   = $item->get_product();
 							$thumbnail = $product ? $product->get_image( 'woocommerce_thumbnail' ) : '';
-							$batch_lot = $product ? get_field( 'foxfire_batch_lot', $product->get_id() ) : '';
 							?>
 							<div class="ff-order-item-row">
 								<div class="ff-order-item-thumb">
@@ -59,9 +63,6 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 									<strong class="ff-order-item-name"><?php echo esc_html( $item->get_name() ); ?></strong>
 									<span class="ff-order-item-meta">
 										<?php esc_html_e( 'Qty:', 'foxfire-child' ); ?> <?php echo esc_html( (string) $item->get_quantity() ); ?>
-										<?php if ( ! empty( $batch_lot ) ) : ?>
-											&bull; <span class="ff-order-batch-tag"><?php esc_html_e( 'Lot:', 'foxfire-child' ); ?> <?php echo esc_html( $batch_lot ); ?></span>
-										<?php endif; ?>
 									</span>
 								</div>
 								<div class="ff-order-item-price">
@@ -69,23 +70,56 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 								</div>
 							</div>
 						<?php endforeach; ?>
+
+						<?php if ( $has_more ) : ?>
+							<div class="ff-order-items-more" hidden id="ff-order-more-<?php echo esc_attr( (string) $order->get_id() ); ?>">
+								<?php
+								foreach ( $hidden_rows as $item ) :
+									$product   = $item->get_product();
+									$thumbnail = $product ? $product->get_image( 'woocommerce_thumbnail' ) : '';
+									?>
+									<div class="ff-order-item-row">
+										<div class="ff-order-item-thumb">
+											<?php echo $thumbnail; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+										</div>
+										<div class="ff-order-item-info">
+											<strong class="ff-order-item-name"><?php echo esc_html( $item->get_name() ); ?></strong>
+											<span class="ff-order-item-meta">
+												<?php esc_html_e( 'Qty:', 'foxfire-child' ); ?> <?php echo esc_html( (string) $item->get_quantity() ); ?>
+											</span>
+										</div>
+										<div class="ff-order-item-price">
+											<?php echo wp_kses_post( $order->get_formatted_line_subtotal( $item ) ); ?>
+										</div>
+									</div>
+								<?php endforeach; ?>
+							</div>
+
+							<div class="ff-order-more-wrap">
+								<button type="button"
+									class="ff-order-more-toggle"
+									aria-expanded="false"
+									aria-controls="ff-order-more-<?php echo esc_attr( (string) $order->get_id() ); ?>"
+									data-more-text="<?php printf( esc_attr__( 'View More (+%d)', 'foxfire-child' ), count( $hidden_rows ) ); ?>"
+									data-less-text="<?php esc_attr_e( 'View Less', 'foxfire-child' ); ?>">
+									<span class="ff-order-more-label"><?php printf( esc_html__( 'View More (+%d)', 'foxfire-child' ), count( $hidden_rows ) ); ?></span>
+									<svg class="ff-order-more-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+								</button>
+							</div>
+						<?php endif; ?>
 					</div>
 
 					<!-- Order Card Bottom Bar -->
 					<div class="ff-order-card__footer">
+						<div class="ff-order-card__actions">
+							<a href="<?php echo esc_url( $order_url ); ?>" class="ff-order-view-btn">
+								<span><?php esc_html_e( 'View Details', 'foxfire-child' ); ?></span>
+								<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+							</a>
+						</div>
 						<div class="ff-order-card__total">
 							<span class="ff-total-label"><?php esc_html_e( 'Total Amount:', 'foxfire-child' ); ?></span>
 							<strong class="ff-total-val"><?php echo wp_kses_post( $order->get_formatted_order_total() ); ?></strong>
-						</div>
-						<div class="ff-order-card__actions">
-							<a href="<?php echo esc_url( home_url( '/testing-coa/' ) ); ?>" class="ff-btn ff-btn--outline ff-btn--sm">
-								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M4 22h16a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><path d="m3 15 2 2 4-4"/></svg>
-								<?php esc_html_e( 'COA Lookup', 'foxfire-child' ); ?>
-							</a>
-
-							<a href="<?php echo esc_url( $order_url ); ?>" class="ff-btn ff-btn--primary ff-btn--sm">
-								<?php esc_html_e( 'View Details', 'foxfire-child' ); ?> &rarr;
-							</a>
 						</div>
 					</div>
 

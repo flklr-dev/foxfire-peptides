@@ -89,15 +89,44 @@
 
 				var $btn = $('#place_order');
 				if ($btn.length && !$btn.hasClass('is-loading')) {
-					$btn.addClass('is-loading').prop('disabled', true);
+					$btn.data('original-html', $btn.html());
+					var processingText = (window.foxfire_checkout_params && window.foxfire_checkout_params.i18n_processing)
+						? window.foxfire_checkout_params.i18n_processing
+						: 'Processing Order...';
+					$btn.addClass('is-loading');
+					$btn.html('<span class="ff-btn-spinner" aria-hidden="true"></span> ' + processingText);
 				}
+
+				// Show the standard UX order processing overlay
+				$('#ffCheckoutProcessingOverlay').attr('aria-hidden', 'false').fadeIn(200);
 			});
 
 			$(document.body).on('checkout_error', function () {
+				// Dismiss the processing overlay on error so customer can fix any field issue
+				$('#ffCheckoutProcessingOverlay').attr('aria-hidden', 'true').fadeOut(200);
+
 				var $btn = $('#place_order');
 				if ($btn.length) {
 					$btn.removeClass('is-loading');
+					if ($btn.data('original-html')) {
+						$btn.html($btn.data('original-html'));
+					}
 					self.updatePlaceOrderStatus();
+				}
+			});
+
+			// Dismiss processing overlay if an AJAX network error occurs during checkout
+			$(document).ajaxError(function (event, jqXHR, ajaxSettings) {
+				if (ajaxSettings && ajaxSettings.url && ajaxSettings.url.indexOf('wc-ajax=checkout') !== -1) {
+					$('#ffCheckoutProcessingOverlay').attr('aria-hidden', 'true').fadeOut(200);
+					var $btn = $('#place_order');
+					if ($btn.length) {
+						$btn.removeClass('is-loading');
+						if ($btn.data('original-html')) {
+							$btn.html($btn.data('original-html'));
+						}
+						self.updatePlaceOrderStatus();
+					}
 				}
 			});
 
@@ -202,6 +231,8 @@
 				$country.trigger('change');
 			}
 
+			this.pairAddressFields();
+
 			// Focus first visible input
 			setTimeout(function () {
 				var $firstInput = $modal.find('input:visible').first();
@@ -209,6 +240,38 @@
 					$firstInput.focus();
 				}
 			}, 100);
+		},
+
+		pairAddressFields: function () {
+			var $modal = $('#ffAddressModal');
+			if (!$modal.length) return;
+
+			// 1. Pair Email and Phone on Row 2
+			var $email = $modal.find('#billing_email_field');
+			var $phone = $modal.find('#billing_phone_field');
+			if ($email.length && $phone.length && $email.next()[0] !== $phone[0]) {
+				$email.after($phone);
+			}
+
+			// 2. Pair Town / City and Postcode on Row 6
+			var $city = $modal.find('#billing_city_field');
+			var $postcode = $modal.find('#billing_postcode_field');
+			if ($city.length && $postcode.length && $city.next()[0] !== $postcode[0]) {
+				$city.after($postcode);
+			}
+
+			// 3. Ensure Country and State / Region labels
+			var $countryLabel = $modal.find('#billing_country_field label');
+			$countryLabel.each(function () {
+				var req = $(this).find('.required').prop('outerHTML') || '';
+				$(this).html('Country' + (req ? '&nbsp;' + req : ''));
+			});
+
+			var $stateLabel = $modal.find('#billing_state_field label');
+			$stateLabel.each(function () {
+				var req = $(this).find('.required').prop('outerHTML') || '';
+				$(this).html('State / Region' + (req ? '&nbsp;' + req : ''));
+			});
 		},
 
 		closeAddressModal: function () {

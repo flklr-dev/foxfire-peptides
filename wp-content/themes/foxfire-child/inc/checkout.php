@@ -146,7 +146,7 @@ function foxfire_filter_checkout_shipping_rates( array $rates, array $package ):
 		$subtotal = (float) WC()->cart->get_displayed_subtotal();
 	}
 
-	$free_threshold = 150.00;
+	$free_threshold = function_exists( 'foxfire_get_free_shipping_threshold' ) ? foxfire_get_free_shipping_threshold() : 150.00;
 
 	if ( $subtotal >= $free_threshold ) {
 		$free_rates = array();
@@ -238,8 +238,9 @@ function foxfire_checkout_enqueue_scripts(): void {
 			'foxfire-checkout-js',
 			'foxfire_checkout_params',
 			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'foxfire_checkout_nonce' ),
+				'ajax_url'        => admin_url( 'admin-ajax.php' ),
+				'nonce'           => wp_create_nonce( 'foxfire_checkout_nonce' ),
+				'i18n_processing' => __( 'Processing Order...', 'foxfire-child' ),
 			)
 		);
 	}
@@ -363,50 +364,50 @@ function foxfire_customize_checkout_fields( array $fields ): array {
 		$fields['billing']['billing_country']['required'] = true;
 	}
 
-	// 6. State / Region (Row 4 - Full Width)
-	if ( isset( $fields['billing']['billing_state'] ) ) {
-		$fields['billing']['billing_state']['priority']    = 60;
-		$fields['billing']['billing_state']['label']       = __( 'State / Region', 'foxfire-child' );
-		$fields['billing']['billing_state']['placeholder'] = __( 'Select State / Region', 'foxfire-child' );
-		$fields['billing']['billing_state']['class']       = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
-		$fields['billing']['billing_state']['required']    = true;
-	}
-
-	// 7. City (Row 5 - Left)
-	if ( isset( $fields['billing']['billing_city'] ) ) {
-		$fields['billing']['billing_city']['priority']    = 70;
-		$fields['billing']['billing_city']['label']       = __( 'City', 'foxfire-child' );
-		$fields['billing']['billing_city']['placeholder'] = __( 'City', 'foxfire-child' );
-		$fields['billing']['billing_city']['class']       = array( 'form-row-first', 'ff-field-wrap', 'address-field' );
-		$fields['billing']['billing_city']['required']    = true;
-	}
-
-	// 8. ZIP / Postal code (Row 5 - Right)
-	if ( isset( $fields['billing']['billing_postcode'] ) ) {
-		$fields['billing']['billing_postcode']['priority']    = 80;
-		$fields['billing']['billing_postcode']['label']       = __( 'ZIP / Postal code', 'foxfire-child' );
-		$fields['billing']['billing_postcode']['placeholder'] = __( 'ZIP / Postal code', 'foxfire-child' );
-		$fields['billing']['billing_postcode']['class']       = array( 'form-row-last', 'ff-field-wrap', 'address-field' );
-		$fields['billing']['billing_postcode']['required']    = true;
-	}
-
-	// 9. Street Address Line 1 (Row 6 - Full Width)
+	// 6. Street Address Line 1 (Row 4 - Full Width)
 	if ( isset( $fields['billing']['billing_address_1'] ) ) {
-		$fields['billing']['billing_address_1']['priority']    = 90;
+		$fields['billing']['billing_address_1']['priority']    = 60;
 		$fields['billing']['billing_address_1']['label']       = __( 'Street address', 'foxfire-child' );
 		$fields['billing']['billing_address_1']['placeholder'] = __( 'House number and street name', 'foxfire-child' );
 		$fields['billing']['billing_address_1']['class']       = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
 		$fields['billing']['billing_address_1']['required']    = true;
 	}
 
-	// 10. Street Address Line 2 (Row 6 - Full Width, Optional)
+	// 7. Street Address Line 2 (Row 5 - Full Width, Optional)
 	if ( isset( $fields['billing']['billing_address_2'] ) ) {
-		$fields['billing']['billing_address_2']['priority']    = 100;
+		$fields['billing']['billing_address_2']['priority']    = 70;
 		$fields['billing']['billing_address_2']['label']       = __( 'Apartment, suite, unit (optional)', 'foxfire-child' );
 		$fields['billing']['billing_address_2']['label_class'] = array( 'screen-reader-text' );
 		$fields['billing']['billing_address_2']['placeholder'] = __( 'Apartment, suite, unit, building (optional)', 'foxfire-child' );
 		$fields['billing']['billing_address_2']['class']       = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
 		$fields['billing']['billing_address_2']['required']    = false;
+	}
+
+	// 8. Town / City (Row 6 - Left Column)
+	if ( isset( $fields['billing']['billing_city'] ) ) {
+		$fields['billing']['billing_city']['priority']    = 80;
+		$fields['billing']['billing_city']['label']       = __( 'Town / City', 'foxfire-child' );
+		$fields['billing']['billing_city']['placeholder'] = __( 'Town / City', 'foxfire-child' );
+		$fields['billing']['billing_city']['class']       = array( 'form-row-first', 'ff-field-wrap', 'address-field' );
+		$fields['billing']['billing_city']['required']    = true;
+	}
+
+	// 9. ZIP / Postal code (Row 6 - Right Column, strictly paired with Town / City)
+	if ( isset( $fields['billing']['billing_postcode'] ) ) {
+		$fields['billing']['billing_postcode']['priority']    = 85;
+		$fields['billing']['billing_postcode']['label']       = __( 'ZIP / Postal code', 'foxfire-child' );
+		$fields['billing']['billing_postcode']['placeholder'] = __( 'ZIP / Postal code', 'foxfire-child' );
+		$fields['billing']['billing_postcode']['class']       = array( 'form-row-last', 'ff-field-wrap', 'address-field' );
+		$fields['billing']['billing_postcode']['required']    = true;
+	}
+
+	// 10. State / Region (Row 7 - Full Width)
+	if ( isset( $fields['billing']['billing_state'] ) ) {
+		$fields['billing']['billing_state']['priority']    = 90;
+		$fields['billing']['billing_state']['label']       = __( 'State / Region', 'foxfire-child' );
+		$fields['billing']['billing_state']['placeholder'] = __( 'Select State / Region', 'foxfire-child' );
+		$fields['billing']['billing_state']['class']       = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
+		$fields['billing']['billing_state']['required']    = true;
 	}
 
 	// Disable order notes completely
@@ -454,31 +455,31 @@ function foxfire_customize_billing_fields( array $fields ): array {
 		$fields['billing_country']['class']    = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
 		$fields['billing_country']['required'] = true;
 	}
-	if ( isset( $fields['billing_state'] ) ) {
-		$fields['billing_state']['priority'] = 60;
-		$fields['billing_state']['label']    = __( 'State / Region', 'foxfire-child' );
-		$fields['billing_state']['class']    = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
-		$fields['billing_state']['required'] = true;
-	}
-	if ( isset( $fields['billing_city'] ) ) {
-		$fields['billing_city']['priority'] = 70;
-		$fields['billing_city']['class']    = array( 'form-row-first', 'ff-field-wrap', 'address-field' );
-		$fields['billing_city']['required'] = true;
-	}
-	if ( isset( $fields['billing_postcode'] ) ) {
-		$fields['billing_postcode']['priority'] = 80;
-		$fields['billing_postcode']['class']    = array( 'form-row-last', 'ff-field-wrap', 'address-field' );
-		$fields['billing_postcode']['required'] = true;
-	}
 	if ( isset( $fields['billing_address_1'] ) ) {
-		$fields['billing_address_1']['priority'] = 90;
+		$fields['billing_address_1']['priority'] = 60;
 		$fields['billing_address_1']['class']    = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
 		$fields['billing_address_1']['required'] = true;
 	}
 	if ( isset( $fields['billing_address_2'] ) ) {
-		$fields['billing_address_2']['priority'] = 100;
+		$fields['billing_address_2']['priority'] = 70;
 		$fields['billing_address_2']['class']    = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
 		$fields['billing_address_2']['required'] = false;
+	}
+	if ( isset( $fields['billing_city'] ) ) {
+		$fields['billing_city']['priority'] = 80;
+		$fields['billing_city']['class']    = array( 'form-row-first', 'ff-field-wrap', 'address-field' );
+		$fields['billing_city']['required'] = true;
+	}
+	if ( isset( $fields['billing_postcode'] ) ) {
+		$fields['billing_postcode']['priority'] = 85;
+		$fields['billing_postcode']['class']    = array( 'form-row-last', 'ff-field-wrap', 'address-field' );
+		$fields['billing_postcode']['required'] = true;
+	}
+	if ( isset( $fields['billing_state'] ) ) {
+		$fields['billing_state']['priority'] = 90;
+		$fields['billing_state']['label']    = __( 'State / Region', 'foxfire-child' );
+		$fields['billing_state']['class']    = array( 'form-row-wide', 'ff-field-wrap', 'address-field' );
+		$fields['billing_state']['required'] = true;
 	}
 
 	uasort( $fields, function ( $a, $b ) {
@@ -491,6 +492,123 @@ function foxfire_customize_billing_fields( array $fields ): array {
 }
 add_filter( 'woocommerce_billing_fields', 'foxfire_customize_billing_fields', 999 );
 
+/**
+ * Lock in address locale priorities and clean labels so WooCommerce address-i18n.js
+ * never moves Phone to the bottom, never separates Town / City and ZIP, and uses
+ * "Country" and "State / Region" consistently.
+ */
+function foxfire_override_address_locale_priorities( array $locale ): array {
+	if ( isset( $locale['default'] ) ) {
+		$locale['default']['phone']['priority']     = 40;
+		$locale['default']['phone']['label']        = __( 'Phone number', 'foxfire-child' );
+		$locale['default']['country']['priority']   = 50;
+		$locale['default']['country']['label']      = __( 'Country', 'foxfire-child' );
+		$locale['default']['address_1']['priority'] = 60;
+		$locale['default']['address_2']['priority'] = 70;
+		$locale['default']['city']['priority']      = 80;
+		$locale['default']['postcode']['priority']  = 85;
+		$locale['default']['state']['priority']     = 90;
+		$locale['default']['state']['label']        = __( 'State / Region', 'foxfire-child' );
+	}
+	foreach ( $locale as $code => &$country_fields ) {
+		$country_fields['country']['priority'] = 50;
+		$country_fields['country']['label']    = __( 'Country', 'foxfire-child' );
+
+		if ( isset( $country_fields['phone'] ) ) {
+			$country_fields['phone']['priority'] = 40;
+			$country_fields['phone']['label']    = __( 'Phone number', 'foxfire-child' );
+		}
+		if ( isset( $country_fields['address_1'] ) ) {
+			$country_fields['address_1']['priority'] = 60;
+		}
+		if ( isset( $country_fields['address_2'] ) ) {
+			$country_fields['address_2']['priority'] = 70;
+		}
+		if ( isset( $country_fields['city'] ) ) {
+			$country_fields['city']['priority'] = 80;
+		}
+		if ( isset( $country_fields['postcode'] ) ) {
+			$country_fields['postcode']['priority'] = 85;
+		}
+		if ( isset( $country_fields['state'] ) ) {
+			$country_fields['state']['priority'] = 90;
+			$country_fields['state']['label']    = __( 'State / Region', 'foxfire-child' );
+		}
+	}
+	unset( $country_fields );
+	return $locale;
+}
+add_filter( 'woocommerce_get_country_locale', 'foxfire_override_address_locale_priorities', 999 );
+
+add_filter( 'woocommerce_get_country_locale_default', function ( array $fields ): array {
+	if ( isset( $fields['phone'] ) ) {
+		$fields['phone']['priority'] = 40;
+		$fields['phone']['label']    = __( 'Phone number', 'foxfire-child' );
+	}
+	if ( isset( $fields['country'] ) ) {
+		$fields['country']['priority'] = 50;
+		$fields['country']['label']    = __( 'Country', 'foxfire-child' );
+	}
+	if ( isset( $fields['address_1'] ) ) {
+		$fields['address_1']['priority'] = 60;
+	}
+	if ( isset( $fields['address_2'] ) ) {
+		$fields['address_2']['priority'] = 70;
+	}
+	if ( isset( $fields['city'] ) ) {
+		$fields['city']['priority'] = 80;
+	}
+	if ( isset( $fields['postcode'] ) ) {
+		$fields['postcode']['priority'] = 85;
+	}
+	if ( isset( $fields['state'] ) ) {
+		$fields['state']['priority'] = 90;
+		$fields['state']['label']    = __( 'State / Region', 'foxfire-child' );
+	}
+	return $fields;
+}, 999 );
+
+add_filter( 'woocommerce_default_address_fields', function ( array $fields ): array {
+	if ( isset( $fields['phone'] ) ) {
+		$fields['phone']['priority'] = 40;
+		$fields['phone']['label']    = __( 'Phone number', 'foxfire-child' );
+	}
+	if ( isset( $fields['country'] ) ) {
+		$fields['country']['priority'] = 50;
+		$fields['country']['label']    = __( 'Country', 'foxfire-child' );
+	}
+	if ( isset( $fields['address_1'] ) ) {
+		$fields['address_1']['priority'] = 60;
+	}
+	if ( isset( $fields['address_2'] ) ) {
+		$fields['address_2']['priority'] = 70;
+	}
+	if ( isset( $fields['city'] ) ) {
+		$fields['city']['priority'] = 80;
+	}
+	if ( isset( $fields['postcode'] ) ) {
+		$fields['postcode']['priority'] = 85;
+	}
+	if ( isset( $fields['state'] ) ) {
+		$fields['state']['priority'] = 90;
+		$fields['state']['label']    = __( 'State / Region', 'foxfire-child' );
+	}
+	return $fields;
+}, 999 );
+
+// Clean up core WooCommerce gettext translations for Country and State labels
+add_filter( 'gettext', function ( string $translation, string $text, string $domain ): string {
+	if ( 'woocommerce' === $domain ) {
+		if ( 'Country / Region' === $text || 'Country / Region' === $translation ) {
+			return 'Country';
+		}
+		if ( 'State / County' === $text || 'State / County' === $translation ) {
+			return 'State / Region';
+		}
+	}
+	return $translation;
+}, 999, 3 );
+
 // Disable order notes field globally in WooCommerce
 add_filter( 'woocommerce_enable_order_notes_field', '__return_false', 999 );
 
@@ -499,7 +617,7 @@ add_filter( 'woocommerce_enable_order_notes_field', '__return_false', 999 );
  * Native select elements provide 100% reliable dropdown experience on both mobile & desktop.
  */
 function foxfire_disable_checkout_select2(): void {
-	if ( is_checkout() ) {
+	if ( is_checkout() || is_account_page() ) {
 		wp_dequeue_script( 'selectWoo' );
 		wp_dequeue_style( 'select2' );
 	}

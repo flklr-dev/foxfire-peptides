@@ -45,4 +45,5 @@ package-lock.json
 
 # Docker volumes (data lives in named volumes, not bind mounts)
 # wp-content/themes/ and custom code ARE committed
-scripts/.store-config-inner.unix.sh
+scripts/.*.unix.sh
+scripts/.ensure-policy-pages.unix.sh
