@@ -228,7 +228,10 @@ function foxfire_operations_render_order_metabox( $object ) {
 		<p>
 			<label><input type="checkbox" name="foxfire_needs_follow_up" value="yes" <?php checked( $needs_followup ); ?>> <?php esc_html_e( 'Needs staff follow-up', 'foxfire-operations' ); ?></label>
 		</p>
-		<p class="description"><?php esc_html_e( 'Save these fields, choose Shipped in the order status control, and update the order. The customer shipment email is sent only when the status changes to Shipped.', 'foxfire-operations' ); ?></p>
+		<p>
+			<button type="submit" class="button button-primary" name="save" value="Update"><?php esc_html_e( 'Save shipment details', 'foxfire-operations' ); ?></button>
+		</p>
+		<p class="description"><?php esc_html_e( 'This securely updates the complete order, including these shipment fields and any billing, shipping, status, or order changes. The customer shipment email is sent only when the status changes to Shipped.', 'foxfire-operations' ); ?></p>
 	</div>
 	<?php
 }
@@ -390,6 +393,41 @@ function foxfire_operations_register_shipped_email( $emails ) {
 	return $emails;
 }
 add_filter( 'woocommerce_email_classes', 'foxfire_operations_register_shipped_email' );
+
+/**
+ * Add a shipment-email resend option to WooCommerce's native Order actions.
+ *
+ * @param array<string, string> $actions Existing order actions.
+ * @param WC_Order|null         $order   Current order.
+ * @return array<string, string>
+ */
+function foxfire_operations_add_resend_shipped_action( $actions, $order ) {
+	if ( $order instanceof WC_Order && ( $order->has_status( 'shipped' ) || foxfire_operations_get_tracking_details( $order )['has_data'] ) ) {
+		$actions['foxfire_resend_shipment_email'] = __( 'Resend shipment email', 'foxfire-operations' );
+	}
+
+	return $actions;
+}
+add_filter( 'woocommerce_order_actions', 'foxfire_operations_add_resend_shipped_action', 20, 2 );
+
+/**
+ * Resend the shipment email through WooCommerce's protected order-action form.
+ *
+ * @param WC_Order $order Current order.
+ * @return void
+ */
+function foxfire_operations_resend_shipped_email( $order ) {
+	if ( ! $order instanceof WC_Order || ! current_user_can( 'edit_shop_orders' ) ) {
+		return;
+	}
+
+	$emails = WC()->mailer()->get_emails();
+	if ( isset( $emails['Foxfire_Email_Customer_Shipped_Order'] ) ) {
+		$emails['Foxfire_Email_Customer_Shipped_Order']->trigger( $order->get_id(), $order );
+		$order->add_order_note( __( 'Shipment email resent by staff.', 'foxfire-operations' ), false, true );
+	}
+}
+add_action( 'woocommerce_order_action_foxfire_resend_shipment_email', 'foxfire_operations_resend_shipped_email' );
 
 /**
  * Return public shipment details for an order.
@@ -566,7 +604,12 @@ function foxfire_operations_render_order_queue_page() {
 		$query_args['meta_value'] = 'yes';
 	}
 
-	$results = wc_get_orders( $query_args );
+	$results         = wc_get_orders( $query_args );
+	$pagination_base = str_replace(
+		'999999999',
+		'%#%',
+		esc_url_raw( add_query_arg( array( 'page' => 'foxfire-order-queue', 'queue' => $selected, 'paged' => 999999999 ), admin_url( 'admin.php' ) ) )
+	);
 	?>
 	<div class="wrap ff-ops-wrap ff-order-queue">
 		<h1><?php esc_html_e( 'Order Queue', 'foxfire-operations' ); ?></h1>
@@ -605,7 +648,7 @@ function foxfire_operations_render_order_queue_page() {
 
 		<?php if ( $results->max_num_pages > 1 ) : ?>
 			<div class="tablenav"><div class="tablenav-pages">
-				<?php echo wp_kses_post( paginate_links( array( 'base' => add_query_arg( array( 'page' => 'foxfire-order-queue', 'queue' => $selected, 'paged' => '%#%' ), admin_url( 'admin.php' ) ), 'current' => $current_page, 'total' => $results->max_num_pages ) ) ); ?>
+				<?php echo wp_kses_post( paginate_links( array( 'base' => $pagination_base, 'current' => $current_page, 'total' => $results->max_num_pages ) ) ); ?>
 			</div></div>
 		<?php endif; ?>
 	</div>

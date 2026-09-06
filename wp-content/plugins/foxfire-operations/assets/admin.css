@@ -86,6 +86,35 @@
 	margin-bottom: 0;
 }
 
+.foxfire-promotion-review {
+	margin: 0 0 12px;
+}
+
+.foxfire-promotion-review__item {
+	border-bottom: 1px solid #dcdcde;
+	padding: 8px 0;
+}
+
+.foxfire-promotion-review__item:last-child {
+	border-bottom: 0;
+}
+
+.foxfire-promotion-review dt {
+	font-weight: 600;
+}
+
+.foxfire-promotion-review dd {
+	margin: 3px 0 0;
+}
+
+.foxfire-promotion-review__item--pass dd {
+	color: #116329;
+}
+
+.foxfire-promotion-review__item--review dd {
+	color: #996800;
+}
+
 .ff-order-queue .nav-tab-wrapper {
 	margin: 18px 0 0;
 }

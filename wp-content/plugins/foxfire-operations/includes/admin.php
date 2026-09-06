@@ -33,9 +33,10 @@ function foxfire_operations_enqueue_admin_assets( string $hook_suffix ): void {
 	$is_operations_hub = 'toplevel_page_foxfire-operations' === $hook_suffix;
 	$is_order_queue    = str_ends_with( $hook_suffix, '_page_foxfire-order-queue' );
 	$is_product_screen = $screen && 'product' === $screen->post_type && in_array( $screen->base, array( 'post', 'edit' ), true );
+	$is_coupon_screen  = $screen && 'shop_coupon' === $screen->post_type && in_array( $screen->base, array( 'post', 'edit' ), true );
 	$is_order_screen   = $screen && ( 'shop_order' === $screen->post_type || ( function_exists( 'wc_get_page_screen_id' ) && wc_get_page_screen_id( 'shop-order' ) === $screen->id ) );
 
-	if ( ! $is_operations_hub && ! $is_order_queue && ! $is_product_screen && ! $is_order_screen ) {
+	if ( ! $is_operations_hub && ! $is_order_queue && ! $is_product_screen && ! $is_coupon_screen && ! $is_order_screen ) {
 		return;
 	}
 
