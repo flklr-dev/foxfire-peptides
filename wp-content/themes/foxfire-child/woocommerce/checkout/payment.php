@@ -14,7 +14,7 @@ if ( ! wp_doing_ajax() ) {
 
 <div id="payment" class="woocommerce-checkout-payment ff-checkout-payment">
 	
-	<h3 class="ff-checkout-payment__title"><?php esc_html_e( 'Payment Method', 'foxfire-child' ); ?></h3>
+	<h2 class="ff-checkout-payment__title"><?php esc_html_e( 'Payment Method', 'foxfire-child' ); ?></h2>
 
 	<?php if ( WC()->cart->needs_payment() ) : ?>
 		<ul class="wc_payment_methods payment_methods methods ff-payment-methods">

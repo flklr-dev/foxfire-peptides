@@ -18,6 +18,12 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
+if ( foxfire_should_render_editor_page() ) {
+	foxfire_render_editor_policy_page();
+	get_footer();
+	return;
+}
+
 $effective_date = 'September 2026';
 $last_updated   = 'September 4, 2026';
 $contact_url    = foxfire_get_page_url( 'contact', '/contact/' );

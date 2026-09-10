@@ -136,8 +136,10 @@ $shop_url  = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() 
 									<span class="ff-coa-table__summary"><?php echo esc_html( $item['testing_summary'] ); ?></span>
 								</td>
 								<td data-label="<?php esc_attr_e( 'Status', 'foxfire-child' ); ?>" class="ff-coa-col--status">
-									<span class="ff-badge ff-badge--tested">
-										<span class="ff-badge__icon" aria-hidden="true">✓</span>
+									<span class="ff-badge <?php echo ! empty( $item['has_coa'] ) ? 'ff-badge--tested' : 'ff-badge--pending'; ?>">
+										<?php if ( ! empty( $item['has_coa'] ) ) : ?>
+											<span class="ff-badge__icon" aria-hidden="true">✓</span>
+										<?php endif; ?>
 										<?php echo esc_html( $item['status'] ); ?>
 									</span>
 								</td>
@@ -158,8 +160,8 @@ $shop_url  = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() 
 											<?php esc_html_e( 'View COA', 'foxfire-child' ); ?>
 										</a>
 									<?php else : ?>
-										<span class="ff-coa-table__pending">
-											<?php esc_html_e( 'On File', 'foxfire-child' ); ?>
+									<span class="ff-coa-table__pending">
+										<?php esc_html_e( 'Not available', 'foxfire-child' ); ?>
 										</span>
 									<?php endif; ?>
 								</td>

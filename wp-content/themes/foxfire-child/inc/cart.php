@@ -8,10 +8,74 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Return free shipping minimum threshold ($150.00) across cart, checkout, and shipping rates.
+ * Read free-shipping progress from the matching saved WooCommerce zone.
+ *
+ * @return array{minimum:float,current:float,remaining:float,percent:float,qualified:bool}|null
  */
-function foxfire_get_free_shipping_threshold(): float {
-	return 150.00;
+function foxfire_get_free_shipping_progress(): ?array {
+	return function_exists( 'foxfire_operations_get_free_shipping_progress' )
+		? foxfire_operations_get_free_shipping_progress()
+		: null;
+}
+
+/** Render the automatically selected WooCommerce shipping amount. */
+function foxfire_render_shipping_methods(): void {
+	if ( ! function_exists( 'WC' ) || ! WC()->cart || ! WC()->shipping() || ! WC()->session ) {
+		echo '<span class="ff-shipping-pending">' . esc_html__( 'Shipping is calculated during checkout.', 'foxfire-child' ) . '</span>';
+		return;
+	}
+
+	$packages = WC()->shipping()->get_packages();
+	if ( empty( $packages ) ) {
+		echo '<span class="ff-shipping-pending">' . esc_html__( 'Enter your address to view shipping options.', 'foxfire-child' ) . '</span>';
+		return;
+	}
+
+	$shipping_total   = 0.0;
+	$comparison_total = 0.0;
+	$all_free         = true;
+	$has_rate         = false;
+
+	foreach ( $packages as $index => $package ) {
+		$rates = isset( $package['rates'] ) && is_array( $package['rates'] ) ? $package['rates'] : array();
+		if ( empty( $rates ) ) {
+			echo '<span class="ff-shipping-pending">' . esc_html__( 'No shipping option is available for the current address.', 'foxfire-child' ) . '</span>';
+			return;
+		}
+
+		$method   = reset( $rates );
+		$has_rate = true;
+		printf(
+			'<input type="hidden" name="shipping_method[%1$d]" data-index="%1$d" value="%2$s" class="shipping_method">',
+			absint( $index ),
+			esc_attr( $method->get_id() )
+		);
+
+		$display_cost    = function_exists( 'foxfire_operations_shipping_rate_display_cost' ) ? foxfire_operations_shipping_rate_display_cost( $method ) : (float) $method->get_cost();
+		$shipping_total += $display_cost;
+		$is_free         = 'free_shipping' === $method->get_method_id();
+		$all_free        = $all_free && $is_free;
+
+		if ( $is_free ) {
+			$metadata = $method->get_meta_data();
+			$comparison_total += isset( $metadata['_foxfire_comparison_shipping_cost'] ) ? (float) $metadata['_foxfire_comparison_shipping_cost'] : 0.0;
+		}
+	}
+
+	if ( ! $has_rate ) {
+		return;
+	}
+
+	echo '<span class="ff-shipping-price">';
+	if ( $all_free && $comparison_total > 0 ) {
+		echo '<del class="ff-shipping-was-price">' . wp_kses_post( wc_price( $comparison_total ) ) . '</del> ';
+		echo '<ins class="ff-shipping-now-price">' . wp_kses_post( wc_price( 0 ) ) . '</ins>';
+	} elseif ( $all_free ) {
+		echo '<ins class="ff-shipping-now-price">' . wp_kses_post( wc_price( 0 ) ) . '</ins>';
+	} else {
+		echo '<span class="ff-shipping-current-price">' . wp_kses_post( wc_price( $shipping_total ) ) . '</span>';
+	}
+	echo '</span>';
 }
 
 /**
@@ -138,6 +202,10 @@ add_action( 'woocommerce_after_cart', 'foxfire_render_cart_cross_sells', 15 );
  * Render the added-to-cart confirmation modal in the footer.
  */
 function foxfire_render_atc_modal_footer(): void {
+	if ( function_exists( 'foxfire_has_commerce_interactions' ) && ! foxfire_has_commerce_interactions() ) {
+		return;
+	}
+
 	get_template_part( 'template-parts/cart/added-to-cart-modal' );
 }
 add_action( 'wp_footer', 'foxfire_render_atc_modal_footer', 20 );
@@ -148,30 +216,31 @@ add_action( 'wp_footer', 'foxfire_render_atc_modal_footer', 20 );
 function foxfire_cart_enqueue_scripts(): void {
 	$version = defined( 'FOXFIRE_CHILD_VERSION' ) ? FOXFIRE_CHILD_VERSION : '1.2.0';
 
-	// Added-to-Cart Modal script (all pages)
-	$modal_js_path = FOXFIRE_CHILD_DIR . '/assets/js/atc-modal.js';
-	wp_enqueue_script(
-		'foxfire-atc-modal',
-		FOXFIRE_CHILD_URI . '/assets/js/atc-modal.js',
-		array( 'jquery' ),
-		file_exists( $modal_js_path ) ? (string) filemtime( $modal_js_path ) : $version,
-		true
-	);
+	if ( ! function_exists( 'foxfire_has_commerce_interactions' ) || foxfire_has_commerce_interactions() ) {
+		$modal_js_path = FOXFIRE_CHILD_DIR . '/assets/js/atc-modal.js';
+		wp_enqueue_script(
+			'foxfire-atc-modal',
+			FOXFIRE_CHILD_URI . '/assets/js/atc-modal.js',
+			array( 'jquery' ),
+			file_exists( $modal_js_path ) ? (string) filemtime( $modal_js_path ) : $version,
+			true
+		);
 
-	wp_localize_script(
-		'foxfire-atc-modal',
-		'foxfire_atc_params',
-		array(
-			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'nonce'    => wp_create_nonce( 'foxfire_atc_nonce' ),
-			'cart_url' => wc_get_cart_url(),
-			'i18n'     => array(
-				'adding' => __( 'Adding...', 'foxfire-child' ),
-				'added'  => __( 'Added to Cart', 'foxfire-child' ),
-				'error'  => __( 'Could not add to cart. Please select an option.', 'foxfire-child' ),
-			),
-		)
-	);
+		wp_localize_script(
+			'foxfire-atc-modal',
+			'foxfire_atc_params',
+			array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'foxfire_atc_nonce' ),
+				'cart_url' => wc_get_cart_url(),
+				'i18n'     => array(
+					'adding' => __( 'Adding...', 'foxfire-child' ),
+					'added'  => __( 'Added to Cart', 'foxfire-child' ),
+					'error'  => __( 'Could not add to cart. Please select an option.', 'foxfire-child' ),
+				),
+			)
+		);
+	}
 
 	// Full Cart Page script (only on /cart/)
 	if ( is_cart() ) {

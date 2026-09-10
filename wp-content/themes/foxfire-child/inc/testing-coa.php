@@ -110,9 +110,10 @@ function foxfire_get_coa_catalog_items(): array {
 			$coa_url = '';
 		}
 
-		$testing_summary = function_exists( 'foxfire_get_product_testing_summary' ) ? foxfire_get_product_testing_summary( $product_id ) : __( 'Information Available', 'foxfire-child' );
+		$has_coa         = function_exists( 'foxfire_product_has_coa_document' ) && foxfire_product_has_coa_document( $product_id );
+		$testing_summary = function_exists( 'foxfire_get_product_testing_summary' ) ? foxfire_get_product_testing_summary( $product_id ) : __( 'Not provided', 'foxfire-child' );
 		if ( empty( $testing_summary ) || 'Purity & Identity Verified' === $testing_summary ) {
-			$testing_summary = __( 'Information Available', 'foxfire-child' );
+			$testing_summary = __( 'Not provided', 'foxfire-child' );
 		}
 
 		$items[] = array(
@@ -122,9 +123,10 @@ function foxfire_get_coa_catalog_items(): array {
 			'permalink'       => $product->get_permalink(),
 			'batch_lot'       => $batch_lot,
 			'testing_summary' => $testing_summary,
-			'coa_url'         => $coa_url,
+			'coa_url'         => $has_coa ? $coa_url : '',
 			'coa_label'       => $coa_label,
-			'status'          => ! empty( $coa_url ) ? __( 'Report Available', 'foxfire-child' ) : __( 'On File', 'foxfire-child' ),
+			'has_coa'         => $has_coa,
+			'status'          => $has_coa ? __( 'Report Available', 'foxfire-child' ) : __( 'Awaiting Document', 'foxfire-child' ),
 		);
 	}
 

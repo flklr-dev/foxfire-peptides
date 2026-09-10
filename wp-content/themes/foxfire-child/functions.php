@@ -22,6 +22,7 @@ require_once FOXFIRE_CHILD_DIR . '/inc/cart.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/checkout.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/order-numbers.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/account.php';
+require_once FOXFIRE_CHILD_DIR . '/inc/performance.php';
 
 /**
  * Enqueue parent theme, fonts, and Foxfire design system styles.
@@ -37,11 +38,12 @@ function foxfire_child_enqueue_assets(): void {
 		$parent_theme->get( 'Version' )
 	);
 
+	$fonts_path = FOXFIRE_CHILD_DIR . '/assets/css/fonts.css';
 	wp_enqueue_style(
 		'foxfire-fonts',
-		'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap',
+		FOXFIRE_CHILD_URI . '/assets/css/fonts.css',
 		array(),
-		null
+		file_exists( $fonts_path ) ? (string) filemtime( $fonts_path ) : FOXFIRE_CHILD_VERSION
 	);
 
 	$styles = array(

@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * Enqueue homepage-specific assets on the front page.
  */
 function foxfire_homepage_enqueue_assets(): void {
-	if ( ! is_front_page() && ! is_home() ) {
+	if ( ! is_front_page() && ! is_home() && ! is_page_template( 'page-faq.php' ) ) {
 		return;
 	}
 
@@ -36,19 +36,93 @@ function foxfire_homepage_enqueue_assets(): void {
 add_action( 'wp_enqueue_scripts', 'foxfire_homepage_enqueue_assets', 30 );
 
 /**
- * Query featured or latest products for the homepage showcase.
+ * Filter candidate homepage IDs to public products customers can currently buy.
+ *
+ * @param int[] $candidate_ids Candidate product IDs in display order.
+ * @param int   $limit         Maximum IDs to return.
+ * @return int[]
+ */
+function foxfire_homepage_filter_available_product_ids( array $candidate_ids, int $limit ): array {
+	$available_ids = array();
+	foreach ( array_map( 'absint', $candidate_ids ) as $product_id ) {
+		if ( $product_id <= 0 || in_array( $product_id, $available_ids, true ) || 'product' !== get_post_type( $product_id ) || 'publish' !== get_post_status( $product_id ) ) {
+			continue;
+		}
+
+		$product = wc_get_product( $product_id );
+		if (
+			$product instanceof WC_Product
+			&& 'hidden' !== $product->get_catalog_visibility()
+			&& $product->is_in_stock()
+			&& $product->is_purchasable()
+		) {
+			$available_ids[] = $product_id;
+		}
+
+		if ( count( $available_ids ) >= $limit ) {
+			break;
+		}
+	}
+
+	return $available_ids;
+}
+
+/**
+ * Query administrator-prioritized, featured, or latest products for the
+ * homepage showcase, in that order.
  *
  * @param int $limit Number of products to return.
  * @return WP_Query
  */
 function foxfire_get_homepage_products( int $limit = 8 ): WP_Query {
+	$limit = max( 1, min( 8, $limit ) );
+	$ids   = function_exists( 'foxfire_operations_get_homepage_product_ids' )
+		? foxfire_operations_get_homepage_product_ids( true )
+		: array();
+
+	if ( empty( $ids ) && function_exists( 'wc_get_featured_product_ids' ) ) {
+		$ids = foxfire_homepage_filter_available_product_ids( wc_get_featured_product_ids(), $limit );
+	}
+
+	if ( ! empty( $ids ) ) {
+		return new WP_Query(
+			array(
+				'post_type'           => 'product',
+				'post_status'         => 'publish',
+				'post__in'            => array_slice( $ids, 0, $limit ),
+				'posts_per_page'      => $limit,
+				'orderby'             => 'post__in',
+				'ignore_sticky_posts' => true,
+				'no_found_rows'       => true,
+			)
+		);
+	}
+
+	$recent_query = new WP_Query(
+		array(
+			'post_type'              => 'product',
+			'post_status'            => 'publish',
+			'posts_per_page'         => max( 32, $limit * 4 ),
+			'orderby'                => 'date',
+			'order'                  => 'DESC',
+			'fields'                 => 'ids',
+			'ignore_sticky_posts'    => true,
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		)
+	);
+	$ids = foxfire_homepage_filter_available_product_ids( $recent_query->posts, $limit );
+
 	return new WP_Query(
 		array(
-			'post_type'      => 'product',
-			'post_status'    => 'publish',
-			'posts_per_page' => $limit,
-			'orderby'        => 'date',
-			'order'          => 'DESC',
+			'post_type'           => 'product',
+			'post_status'         => 'publish',
+			'post__in'            => ! empty( $ids ) ? $ids : array( 0 ),
+			'posts_per_page'      => $limit,
+			'orderby'             => 'post__in',
+			'ignore_sticky_posts' => true,
+			'no_found_rows'       => true,
 		)
 	);
 }
@@ -110,24 +184,6 @@ function foxfire_get_homepage_categories(): array {
 }
 
 /**
- * Ensure the custom front-page template is ALWAYS loaded on the site homepage,
- * regardless of WordPress show_on_front or page_on_front settings.
- *
- * @param string $template Template path.
- * @return string
- */
-function foxfire_homepage_template_include( string $template ): string {
-	if ( is_front_page() || ( is_home() && ! is_paged() ) ) {
-		$front_page = FOXFIRE_CHILD_DIR . '/front-page.php';
-		if ( file_exists( $front_page ) ) {
-			return $front_page;
-		}
-	}
-	return $template;
-}
-add_filter( 'template_include', 'foxfire_homepage_template_include', 99 );
-
-/**
  * Suppress breadcrumbs on the homepage.
  */
 function foxfire_homepage_remove_breadcrumbs(): void {
@@ -136,4 +192,3 @@ function foxfire_homepage_remove_breadcrumbs(): void {
 	}
 }
 add_action( 'wp', 'foxfire_homepage_remove_breadcrumbs', 10 );
-

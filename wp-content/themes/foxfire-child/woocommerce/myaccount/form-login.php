@@ -20,7 +20,7 @@ $enable_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_regis
 				<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
 			</div>
 			<h1 class="ff-auth-title"><?php esc_html_e( 'Customer Portal', 'foxfire-child' ); ?></h1>
-			<p class="ff-auth-desc"><?php esc_html_e( 'Sign in to review orders, track shipments, and lookup batch purity COAs.', 'foxfire-child' ); ?></p>
+			<p class="ff-auth-desc"><?php esc_html_e( 'Sign in to review orders, track shipments, and access available batch COA documents.', 'foxfire-child' ); ?></p>
 		</div>
 
 		<?php if ( $enable_registration ) : ?>

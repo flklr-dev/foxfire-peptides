@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<!-- Products Ordered Header -->
 	<div class="ff-checkout-review-header">
-		<h3 class="ff-checkout-review-title"><?php esc_html_e( 'Products Ordered', 'foxfire-child' ); ?></h3>
+		<h2 class="ff-checkout-review-title"><?php esc_html_e( 'Products Ordered', 'foxfire-child' ); ?></h2>
 	</div>
 
 	<!-- Itemized Compounds List -->
@@ -80,28 +80,13 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		<?php endforeach; ?>
 
-		<!-- Shipping / Shipment Row -->
+		<!-- Automatically selected shipping amount -->
 		<?php if ( WC()->cart->needs_shipping() ) : ?>
-			<?php
-			$raw_subtotal     = is_object( WC()->cart ) ? (float) WC()->cart->get_displayed_subtotal() : 0.0;
-			$free_threshold   = function_exists( 'foxfire_get_free_shipping_threshold' ) ? foxfire_get_free_shipping_threshold() : 150.00;
-			$is_free_shipping = ( $raw_subtotal >= $free_threshold );
-			?>
 			<?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
 			<div class="ff-checkout-row ff-checkout-shipping-row">
-				<span class="ff-checkout-row__label"><?php esc_html_e( 'Shipment', 'foxfire-child' ); ?></span>
+				<span class="ff-checkout-row__label"><?php esc_html_e( 'Shipping', 'foxfire-child' ); ?></span>
 				<div class="ff-checkout-shipping-pricing ff-checkout-row__value">
-					<?php if ( $is_free_shipping ) : ?>
-						<del class="ff-shipping-was-price"><?php echo wp_kses_post( wc_price( 9.95 ) ); ?></del>
-						<ins class="ff-shipping-now-price"><?php echo wp_kses_post( wc_price( 0.00 ) ); ?></ins>
-					<?php else : ?>
-						<span class="ff-shipping-now-price"><?php echo wp_kses_post( wc_price( 9.95 ) ); ?></span>
-					<?php endif; ?>
-				</div>
-
-				<!-- Hidden WooCommerce shipping inputs for form processing -->
-				<div class="screen-reader-text" style="display:none !important;">
-					<?php wc_cart_totals_shipping_html(); ?>
+					<?php foxfire_render_shipping_methods(); ?>
 				</div>
 			</div>
 			<?php do_action( 'woocommerce_review_order_after_shipping' ); ?>

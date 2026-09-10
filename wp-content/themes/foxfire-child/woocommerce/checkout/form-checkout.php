@@ -246,7 +246,7 @@ $formatted_address = implode( ', ', $address_parts );
 		<div class="ff-checkout-processing-toast">
 			<div class="ff-checkout-processing-spinner" aria-hidden="true"></div>
 			<p class="ff-checkout-processing-title"><?php esc_html_e( 'Processing your order', 'foxfire-child' ); ?></p>
-			<span class="ff-checkout-processing-sub"><?php esc_html_e( 'Please do not close..', 'foxfire-child' ); ?></span>
+			<span class="ff-checkout-processing-sub"><?php esc_html_e( 'Please do not close or reload this page.', 'foxfire-child' ); ?></span>
 		</div>
 	</div>
 

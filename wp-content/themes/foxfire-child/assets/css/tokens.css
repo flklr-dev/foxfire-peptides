@@ -17,13 +17,13 @@
 	--color-text-muted: #4a4a4a;
 	--color-text-inverse: #ffffff;
 
-	/* PLACEHOLDER: Bright Fox Orange — primary CTA / energy */
-	--color-accent-primary: #e85a0c;
-	--color-accent-primary-hover: #c94d0a;
-	--color-accent-primary-active: #a33f08;
+	/* PLACEHOLDER: Fox Orange — darkened enough for WCAG AA white-on-orange text. */
+	--color-accent-primary: #c2410c;
+	--color-accent-primary-hover: #a83b08;
+	--color-accent-primary-active: #7f2d06;
 
 	/* PLACEHOLDER: Neon Green — trust badges / success (text-safe shade) */
-	--color-accent-secondary: #1b8a4b;
+	--color-accent-secondary: #157a42;
 	--color-accent-secondary-bg: #e8f6ee;
 
 	/* Charcoal — structure, footer, strong sections */
@@ -87,7 +87,7 @@
 	--shadow-none: none;
 	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
 
-	--focus-ring: 0 0 0 3px rgba(232, 90, 12, 0.35);
+	--focus-ring: 0 0 0 3px rgba(194, 65, 12, 0.35);
 
 	--transition-fast: 150ms ease;
 }

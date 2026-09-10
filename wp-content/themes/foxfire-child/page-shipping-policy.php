@@ -15,6 +15,12 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
+if ( foxfire_should_render_editor_page() ) {
+	foxfire_render_editor_policy_page();
+	get_footer();
+	return;
+}
+
 $effective_date = 'September 2026';
 $last_updated   = 'September 4, 2026';
 $contact_url    = foxfire_get_page_url( 'contact', '/contact/' );
@@ -237,7 +243,7 @@ $terms_url      = foxfire_get_page_url( 'terms-and-conditions', '/terms-and-cond
 				</li>
 				<li>
 					<strong><?php esc_html_e( 'Receiving Storage:', 'foxfire-child' ); ?></strong>
-					<?php esc_html_e( 'Upon receipt, research materials should be inspected and immediately stored in accordance with product specifications (typically stored in a dark, dry environment between 2°C to 8°C for short term, or -20°C for extended research storage).', 'foxfire-child' ); ?>
+					<?php esc_html_e( 'Upon receipt, inspect the shipment and follow the handling and storage information supplied on the product label, packaging, or applicable batch documentation. Contact support before use if that information is missing or unclear.', 'foxfire-child' ); ?>
 				</li>
 			</ul>
 		</section>

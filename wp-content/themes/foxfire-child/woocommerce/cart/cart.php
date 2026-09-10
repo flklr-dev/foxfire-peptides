@@ -7,11 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$raw_subtotal        = is_object( WC()->cart ) ? WC()->cart->get_displayed_subtotal() : 0;
-$free_ship_threshold = function_exists( 'foxfire_get_free_shipping_threshold' ) ? foxfire_get_free_shipping_threshold() : 150.00;
-$amount_left         = max( 0, $free_ship_threshold - $raw_subtotal );
-$progress_pct        = min( 100, round( ( $raw_subtotal / $free_ship_threshold ) * 100 ) );
-$shop_url            = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() : wc_get_page_permalink( 'shop' );
+$free_shipping_progress = function_exists( 'foxfire_get_free_shipping_progress' ) ? foxfire_get_free_shipping_progress() : null;
+$shop_url               = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() : wc_get_page_permalink( 'shop' );
 
 do_action( 'woocommerce_before_cart' ); ?>
 
@@ -20,25 +17,27 @@ do_action( 'woocommerce_before_cart' ); ?>
 	<header class="ff-cart-header">
 		<h1 class="ff-cart-header__title"><?php esc_html_e( 'Review Order', 'foxfire-child' ); ?></h1>
 
-		<!-- Sleek Inline Free Shipping Progress Bar (Directly below title, above the 2-column grid) -->
-		<div class="ff-cart-shipping-bar">
-			<div class="ff-cart-shipping-bar__message">
-				<?php if ( $amount_left > 0 ) : ?>
+		<?php if ( is_array( $free_shipping_progress ) ) : ?>
+			<!-- Free-shipping progress reflects the matching saved WooCommerce method. -->
+			<div class="ff-cart-shipping-bar">
+				<div class="ff-cart-shipping-bar__message">
+				<?php if ( ! $free_shipping_progress['qualified'] ) : ?>
 					<span class="ff-shipping-icon" aria-hidden="true">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
 					</span>
-					<span><?php printf( esc_html__( 'Add %s more to qualify for Free Shipping', 'foxfire-child' ), '<strong>' . wp_kses_post( wc_price( $amount_left ) ) . '</strong>' ); ?></span>
+					<span><?php printf( esc_html__( 'Add %s more to qualify for Free Shipping', 'foxfire-child' ), '<strong>' . wp_kses_post( wc_price( $free_shipping_progress['remaining'] ) ) . '</strong>' ); ?></span>
 				<?php else : ?>
 					<span class="ff-shipping-icon ff-shipping-icon--unlocked" aria-hidden="true">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
 					</span>
 					<span class="ff-shipping-unlocked-text"><?php esc_html_e( 'You have qualified for Free Shipping!', 'foxfire-child' ); ?></span>
 				<?php endif; ?>
+				</div>
+				<div class="ff-cart-shipping-bar__track">
+					<div class="ff-cart-shipping-bar__fill" style="width: <?php echo esc_attr( (string) round( $free_shipping_progress['percent'] ) ); ?>%;"></div>
+				</div>
 			</div>
-			<div class="ff-cart-shipping-bar__track">
-				<div class="ff-cart-shipping-bar__fill" style="width: <?php echo esc_attr( $progress_pct ); ?>%;"></div>
-			</div>
-		</div>
+		<?php endif; ?>
 	</header>
 
 	<!-- 2-Column Cart Grid Layout (Both Columns Top-Aligned) -->

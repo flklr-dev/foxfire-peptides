@@ -744,6 +744,25 @@ ul.products.ff-featured-grid li.product,
 	margin-bottom: var(--space-8);
 }
 
+.ff-faq-page .ff-home-faq {
+	margin: 0;
+	padding: clamp(3rem, 7vw, 6rem) var(--container-padding);
+}
+
+.ff-faq-page__intro,
+.ff-faq-page__empty {
+	color: #475569;
+	font-size: 1rem;
+	line-height: 1.7;
+	margin: -1rem auto 2rem;
+	max-width: 720px;
+	text-align: center;
+}
+
+.ff-faq-page__intro > :last-child {
+	margin-bottom: 0;
+}
+
 .ff-home-faq__inner {
 	max-width: 860px;
 	margin: 0 auto;

@@ -25,6 +25,8 @@ $shop_url = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() :
 		<?php esc_html_e( 'Browse our products and find what you need.', 'foxfire-child' ); ?>
 	</p>
 
+	<?php foxfire_render_checkout_recovery(); ?>
+
 	<div class="ff-cart-empty__actions">
 		<a href="<?php echo esc_url( $shop_url ); ?>" class="ff-btn ff-btn--primary ff-cart-empty__btn">
 			<?php esc_html_e( 'Shop Now', 'foxfire-child' ); ?>

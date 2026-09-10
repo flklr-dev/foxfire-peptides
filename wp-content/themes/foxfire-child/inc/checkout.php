@@ -18,205 +18,15 @@ function foxfire_checkout_cleanup_layout(): void {
 
 		// Remove the blue "Have a coupon? Click here to enter your code" banner
 		remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
+
+		// The order-received template renders a Foxfire-designed order summary
+		// while still firing the normal WooCommerce extension hooks.
+		if ( is_order_received_page() ) {
+			remove_action( 'woocommerce_thankyou', 'woocommerce_order_details_table', 10 );
+		}
 	}
 }
 add_action( 'wp', 'foxfire_checkout_cleanup_layout', 10 );
-
-/**
- * Ensure test payment gateways are enabled for local development:
- * 1. Credit / Debit Card (Test)
- * 2. Cash on Delivery (Test)
- */
-function foxfire_setup_test_payment_gateways(): void {
-	// Enable Card Test Gateway (via BACS settings)
-	update_option(
-		'woocommerce_bacs_settings',
-		array(
-			'enabled'      => 'yes',
-			'title'        => __( 'Credit / Debit Card (Test)', 'foxfire-child' ),
-			'description'  => __( 'Simulate credit or debit card checkout for testing. No live payment will be processed.', 'foxfire-child' ),
-			'instructions' => __( 'Your test analytical research order has been placed successfully.', 'foxfire-child' ),
-		)
-	);
-
-	// Enable COD (Cash on Delivery Test)
-	update_option(
-		'woocommerce_cod_settings',
-		array(
-			'enabled'      => 'yes',
-			'title'        => __( 'Cash on Delivery (Test)', 'foxfire-child' ),
-			'description'  => __( 'Pay with cash upon delivery test order. Exact change is appreciated.', 'foxfire-child' ),
-			'instructions' => __( 'Payment will be collected in cash upon delivery.', 'foxfire-child' ),
-		)
-	);
-
-	// Disable Cheque gateway if active
-	$cheque_settings = get_option( 'woocommerce_cheque_settings', array() );
-	if ( is_array( $cheque_settings ) && isset( $cheque_settings['enabled'] ) && 'yes' === $cheque_settings['enabled'] ) {
-		$cheque_settings['enabled'] = 'no';
-		update_option( 'woocommerce_cheque_settings', $cheque_settings );
-	}
-}
-add_action( 'init', 'foxfire_setup_test_payment_gateways', 5 );
-
-/**
- * Filter available payment gateways on checkout to ensure only the requested test gateways appear in order.
- */
-function foxfire_filter_available_payment_gateways( array $gateways ): array {
-	$result = array();
-
-	// 1. Credit / Debit Card (Test)
-	if ( isset( $gateways['bacs'] ) ) {
-		$gateways['bacs']->title       = __( 'Credit / Debit Card (Test)', 'foxfire-child' );
-		$gateways['bacs']->description = __( 'Simulate credit or debit card checkout for testing. No live payment will be processed.', 'foxfire-child' );
-		$result['bacs']                = $gateways['bacs'];
-	}
-
-	// 2. Cash on Delivery (Test)
-	if ( isset( $gateways['cod'] ) ) {
-		$gateways['cod']->title       = __( 'Cash on Delivery (Test)', 'foxfire-child' );
-		$gateways['cod']->description = __( 'Pay with cash upon delivery test order. Exact change is appreciated.', 'foxfire-child' );
-		$result['cod']                = $gateways['cod'];
-	}
-
-	// Select first method by default if none chosen
-	if ( ! empty( $result ) && WC()->session ) {
-		$chosen = WC()->session->get( 'chosen_payment_method' );
-		if ( empty( $chosen ) || ! isset( $result[ $chosen ] ) ) {
-			$keys = array_keys( $result );
-			WC()->session->set( 'chosen_payment_method', $keys[0] );
-			$result[ $keys[0] ]->chosen = true;
-		}
-	}
-
-	return ! empty( $result ) ? $result : $gateways;
-}
-add_filter( 'woocommerce_available_payment_gateways', 'foxfire_filter_available_payment_gateways', 999 );
-
-/**
- * Automatically configure Foxfire United States shipping zone and methods if not present:
- * - Standard Shipping ($9.95)
- * - Free Standard Shipping on orders $150+
- */
-function foxfire_setup_shipping_methods(): void {
-	if ( ! class_exists( 'WC_Shipping_Zones' ) ) {
-		return;
-	}
-
-	$zones = WC_Shipping_Zones::get_zones();
-	if ( empty( $zones ) ) {
-		$zone = new WC_Shipping_Zone();
-		$zone->set_zone_name( 'United States' );
-		$zone->set_zone_order( 1 );
-		$zone->add_location( 'US', 'country' );
-		$zone->save();
-
-		// Add Flat Rate ($9.95)
-		$flat_id = $zone->add_shipping_method( 'flat_rate' );
-		if ( $flat_id ) {
-			$flat = WC_Shipping_Zones::get_shipping_method( $flat_id );
-			if ( $flat ) {
-				$flat->update_option( 'title', __( 'Standard Shipping', 'foxfire-child' ) );
-				$flat->update_option( 'cost', '9.95' );
-			}
-		}
-
-		// Add Free Shipping ($150+)
-		$free_id = $zone->add_shipping_method( 'free_shipping' );
-		if ( $free_id ) {
-			$free = WC_Shipping_Zones::get_shipping_method( $free_id );
-			if ( $free ) {
-				$free->update_option( 'title', __( 'Free Standard Shipping on orders $150+', 'foxfire-child' ) );
-				$free->update_option( 'requires', 'min_amount' );
-				$free->update_option( 'min_amount', '150' );
-			}
-		}
-	}
-}
-add_action( 'init', 'foxfire_setup_shipping_methods', 6 );
-
-/**
- * Filter shipping rates on checkout:
- * - When subtotal >= $150: Free Standard Shipping on orders $150+ ($0.00)
- * - When subtotal < $150: Standard Shipping ($9.95)
- */
-function foxfire_filter_checkout_shipping_rates( array $rates, array $package ): array {
-	$subtotal = isset( $package['contents_cost'] ) ? (float) $package['contents_cost'] : 0.0;
-	if ( 0.0 === $subtotal && function_exists( 'WC' ) && is_object( WC()->cart ) ) {
-		$subtotal = (float) WC()->cart->get_displayed_subtotal();
-	}
-
-	$free_threshold = function_exists( 'foxfire_get_free_shipping_threshold' ) ? foxfire_get_free_shipping_threshold() : 150.00;
-
-	if ( $subtotal >= $free_threshold ) {
-		$free_rates = array();
-		foreach ( $rates as $rate_id => $rate ) {
-			if ( 'free_shipping' === $rate->method_id || false !== stripos( $rate->label, 'free' ) ) {
-				$rate->set_label( __( 'Free Standard Shipping on orders $150+', 'foxfire-child' ) );
-				$rate->set_cost( 0.00 );
-				$free_rates[ $rate_id ] = $rate;
-			}
-		}
-
-		if ( ! empty( $free_rates ) ) {
-			return $free_rates;
-		}
-
-		// Fallback rate if none was found in zone
-		$rate_id = 'foxfire_free_shipping';
-		$rate    = new WC_Shipping_Rate(
-			$rate_id,
-			__( 'Free Standard Shipping on orders $150+', 'foxfire-child' ),
-			0.00,
-			array(),
-			'free_shipping'
-		);
-		return array( $rate_id => $rate );
-	}
-
-	// Under $150: return only Standard Shipping ($9.95)
-	$standard_rates = array();
-	foreach ( $rates as $rate_id => $rate ) {
-		if ( 'free_shipping' !== $rate->method_id && false === stripos( $rate->label, 'free' ) ) {
-			$rate->set_label( __( 'Standard Shipping', 'foxfire-child' ) );
-			$rate->set_cost( 9.95 );
-			$standard_rates[ $rate_id ] = $rate;
-		}
-	}
-
-	if ( ! empty( $standard_rates ) ) {
-		return $standard_rates;
-	}
-
-	// Fallback rate
-	$rate_id = 'foxfire_standard_shipping';
-	$rate    = new WC_Shipping_Rate(
-		$rate_id,
-		__( 'Standard Shipping', 'foxfire-child' ),
-		9.95,
-		array(),
-		'flat_rate'
-	);
-	return array( $rate_id => $rate );
-}
-add_filter( 'woocommerce_package_rates', 'foxfire_filter_checkout_shipping_rates', 100, 2 );
-
-/**
- * Ensure shipping calculation is always ready on checkout,
- * and pre-populate US as default country if customer hasn't set one yet.
- */
-add_filter( 'woocommerce_shipping_cost_requires_address', '__return_false', 99 );
-
-function foxfire_prepare_checkout_shipping(): void {
-	if ( function_exists( 'WC' ) && is_object( WC()->customer ) ) {
-		if ( empty( WC()->customer->get_shipping_country() ) ) {
-			WC()->customer->set_shipping_country( 'US' );
-			WC()->customer->set_billing_country( 'US' );
-		}
-	}
-}
-add_action( 'template_redirect', 'foxfire_prepare_checkout_shipping', 5 );
-add_action( 'woocommerce_before_checkout_form', 'foxfire_prepare_checkout_shipping', 5 );
 
 /**
  * Enqueue checkout scripts and styles.
@@ -238,9 +48,11 @@ function foxfire_checkout_enqueue_scripts(): void {
 			'foxfire-checkout-js',
 			'foxfire_checkout_params',
 			array(
-				'ajax_url'        => admin_url( 'admin-ajax.php' ),
-				'nonce'           => wp_create_nonce( 'foxfire_checkout_nonce' ),
-				'i18n_processing' => __( 'Processing Order...', 'foxfire-child' ),
+				'ajax_url'           => admin_url( 'admin-ajax.php' ),
+				'nonce'              => wp_create_nonce( 'foxfire_checkout_nonce' ),
+				'i18n_processing'    => __( 'Processing Order...', 'foxfire-child' ),
+				'i18n_offline'       => __( 'You appear to be offline. Reconnect before placing the order; no order was submitted.', 'foxfire-child' ),
+				'i18n_network_error' => __( 'The connection was interrupted while placing your order. It may already have been received. Check your Orders page or confirmation email before trying again.', 'foxfire-child' ),
 			)
 		);
 	}
@@ -312,6 +124,116 @@ function foxfire_ajax_save_checkout_address(): void {
 }
 add_action( 'wp_ajax_foxfire_save_checkout_address', 'foxfire_ajax_save_checkout_address' );
 add_action( 'wp_ajax_nopriv_foxfire_save_checkout_address', 'foxfire_ajax_save_checkout_address' );
+
+/**
+ * Determine whether the current browser may recover a recently attempted order.
+ *
+ * The WooCommerce session value is not enough on its own: logged-in customers
+ * must own the order, while a guest session may recover only a guest order.
+ * Recovery is deliberately time-limited so an old completed purchase does not
+ * remain on every future empty-cart screen.
+ */
+function foxfire_customer_can_recover_checkout_order( WC_Order $order ): bool {
+	$allowed_statuses = array( 'pending', 'failed', 'on-hold', 'processing', 'shipped', 'completed' );
+	if ( ! in_array( $order->get_status(), $allowed_statuses, true ) ) {
+		return false;
+	}
+
+	$current_user_id = get_current_user_id();
+	$order_user_id   = (int) $order->get_customer_id();
+	if ( $current_user_id > 0 ? $order_user_id !== $current_user_id : 0 !== $order_user_id ) {
+		return false;
+	}
+
+	$created = $order->get_date_created();
+	if ( ! $created ) {
+		return false;
+	}
+
+	/** Filter the short-lived empty-cart recovery window, in seconds. */
+	$window = max( HOUR_IN_SECONDS, absint( apply_filters( 'foxfire_checkout_recovery_window', DAY_IN_SECONDS, $order ) ) );
+	return $created->getTimestamp() >= time() - $window;
+}
+
+/**
+ * Remember the server-created order until its confirmation page is reached.
+ *
+ * WooCommerce already stores an awaiting-payment order, but clears that value
+ * on its confirmation route. This separate marker covers a response that is
+ * interrupted between successful order processing and that final page.
+ */
+function foxfire_remember_recent_checkout_order( int $order_id, array $posted_data, WC_Order $order ): void {
+	unset( $posted_data );
+
+	if ( $order_id <= 0 || $order->get_id() !== $order_id || ! function_exists( 'WC' ) || ! WC()->session ) {
+		return;
+	}
+
+	WC()->session->set( 'foxfire_recent_checkout_order', $order_id );
+}
+add_action( 'woocommerce_checkout_order_processed', 'foxfire_remember_recent_checkout_order', 10, 3 );
+
+/** Clear the recovery marker after the verified confirmation page renders. */
+function foxfire_clear_recent_checkout_order( int $order_id ): void {
+	if ( $order_id <= 0 || ! function_exists( 'WC' ) || ! WC()->session ) {
+		return;
+	}
+
+	if ( $order_id === absint( WC()->session->get( 'foxfire_recent_checkout_order' ) ) ) {
+		WC()->session->__unset( 'foxfire_recent_checkout_order' );
+	}
+}
+add_action( 'woocommerce_thankyou', 'foxfire_clear_recent_checkout_order', 1 );
+
+/**
+ * Return the order stored by WooCommerce before its payment handoff.
+ *
+ * @param int $order_id Optional explicit ID used by isolated acceptance tests.
+ */
+function foxfire_get_recoverable_checkout_order( int $order_id = 0 ): ?WC_Order {
+	if ( $order_id <= 0 ) {
+		if ( ! function_exists( 'WC' ) || ! WC()->session ) {
+			return null;
+		}
+		$order_id = absint( WC()->session->get( 'order_awaiting_payment' ) );
+		if ( $order_id <= 0 ) {
+			$order_id = absint( WC()->session->get( 'foxfire_recent_checkout_order' ) );
+		}
+	}
+
+	$order = $order_id > 0 ? wc_get_order( $order_id ) : false;
+	return $order instanceof WC_Order && foxfire_customer_can_recover_checkout_order( $order ) ? $order : null;
+}
+
+/** Render a safe resume/status action on the empty-cart screen. */
+function foxfire_render_checkout_recovery(): void {
+	$order = foxfire_get_recoverable_checkout_order();
+	if ( ! $order ) {
+		return;
+	}
+
+	$needs_payment = $order->needs_payment();
+	$url           = $needs_payment ? $order->get_checkout_payment_url() : $order->get_checkout_order_received_url();
+	?>
+	<section class="ff-checkout-recovery" aria-labelledby="ff-checkout-recovery-title">
+		<h2 id="ff-checkout-recovery-title" class="ff-checkout-recovery__title">
+			<?php echo esc_html( $needs_payment ? __( 'Continue your pending order', 'foxfire-child' ) : __( 'Your order may already be complete', 'foxfire-child' ) ); ?>
+		</h2>
+		<p class="ff-checkout-recovery__copy">
+			<?php
+			echo esc_html(
+				$needs_payment
+					? __( 'We found a recent order waiting for payment. Continue that order instead of creating a duplicate.', 'foxfire-child' )
+					: __( 'We found the order created by your recent checkout. Review its confirmation and status before placing another order.', 'foxfire-child' )
+			);
+			?>
+		</p>
+		<a class="ff-btn ff-btn--secondary ff-checkout-recovery__button" href="<?php echo esc_url( $url ); ?>">
+			<?php echo esc_html( $needs_payment ? __( 'Continue payment', 'foxfire-child' ) : __( 'View order confirmation', 'foxfire-child' ) ); ?>
+		</a>
+	</section>
+	<?php
+}
 
 /**
  * Customize WooCommerce checkout form fields for a modern DTC structure.
@@ -626,5 +548,3 @@ add_action( 'wp_enqueue_scripts', 'foxfire_disable_checkout_select2', 100 );
 
 // Terms and conditions must be unchecked by default
 add_filter( 'woocommerce_terms_is_checked_default', '__return_false', 999 );
-
-

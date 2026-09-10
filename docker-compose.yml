@@ -43,7 +43,13 @@ services:
         define('SCRIPT_DEBUG', true);
     volumes:
       - wordpress_data:/var/www/html
-      - ./wp-content:/var/www/html/wp-content
+      # Keep large third-party plugins/themes in Docker's Linux volume. Binding
+      # all of wp-content from Windows makes every PHP include substantially
+      # slower. Only project code and user uploads need live host access.
+      - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins
+      - ./wp-content/plugins/foxfire-operations:/var/www/html/wp-content/plugins/foxfire-operations
+      - ./wp-content/themes/foxfire-child:/var/www/html/wp-content/themes/foxfire-child
+      - ./wp-content/uploads:/var/www/html/wp-content/uploads
 
   mailpit:
     image: axllent/mailpit:v1.31.1
@@ -76,7 +82,10 @@ services:
       FOXFIRE_LOCAL_SMTP_PORT: ${FOXFIRE_LOCAL_SMTP_PORT:-1025}
     volumes:
       - wordpress_data:/var/www/html
-      - ./wp-content:/var/www/html/wp-content
+      - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins
+      - ./wp-content/plugins/foxfire-operations:/var/www/html/wp-content/plugins/foxfire-operations
+      - ./wp-content/themes/foxfire-child:/var/www/html/wp-content/themes/foxfire-child
+      - ./wp-content/uploads:/var/www/html/wp-content/uploads
     user: "33:33"
     entrypoint: wp
     command: "--info"

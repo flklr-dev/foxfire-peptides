@@ -20,8 +20,16 @@
 	width: 210px;
 }
 
-.ff-ops-table td:last-child {
+.ff-ops-links-table td:last-child {
 	width: 110px;
+}
+
+.ff-ops-security-table td:nth-child(2) {
+	width: 120px;
+}
+
+.ff-ops-security-table td:last-child {
+	width: auto;
 }
 
 .ff-ops-status {
@@ -36,6 +44,10 @@
 
 .ff-ops-status--fail {
 	color: #b32d2e;
+}
+
+.ff-ops-status--neutral {
+	color: #646970;
 }
 
 .foxfire-ops-status,
@@ -115,6 +127,108 @@
 	color: #996800;
 }
 
+.ff-content-form {
+	max-width: 900px;
+}
+
+.ff-homepage-products__form {
+	max-width: 980px;
+}
+
+.ff-homepage-products__table {
+	margin-top: 16px;
+}
+
+.ff-homepage-products__table th:first-child {
+	width: 72px;
+}
+
+.ff-homepage-products__table td:last-child {
+	width: 190px;
+}
+
+.ff-homepage-products__position {
+	display: inline-block;
+	font-size: 16px;
+	font-weight: 700;
+	min-width: 28px;
+}
+
+.ff-homepage-products__actions {
+	display: flex;
+	gap: 6px;
+}
+
+.ff-homepage-products__drag {
+	cursor: grab;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.ff-homepage-products__drag:active {
+	cursor: grabbing;
+}
+
+.ff-homepage-products__placeholder {
+	background: #f0f6fc !important;
+	border: 2px dashed #72aee6;
+	height: 56px;
+}
+
+#foxfire-homepage-products-help {
+	margin-top: 10px;
+}
+
+.ff-content-section {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	margin: 20px 0;
+	padding: 8px 20px 4px;
+}
+
+.ff-content-section h2 {
+	border-bottom: 1px solid #dcdcde;
+	margin: 0 -20px;
+	padding: 14px 20px;
+}
+
+.ff-content-section textarea {
+	resize: vertical;
+}
+
+.ff-content-policy-links ul {
+	display: grid;
+	gap: 10px;
+	margin: 18px 0;
+}
+
+.ff-content-policy-links li {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 0;
+}
+
+.ff-content-policy-status {
+	border-radius: 999px;
+	display: inline-block;
+	font-size: 12px;
+	font-weight: 600;
+	padding: 3px 9px;
+}
+
+.ff-content-policy-status.is-active {
+	background: #e7f7ed;
+	color: #116329;
+}
+
+.ff-content-policy-status.is-fallback {
+	background: #f1f3f5;
+	color: #50575e;
+}
+
 .ff-order-queue .nav-tab-wrapper {
 	margin: 18px 0 0;
 }
@@ -153,5 +267,9 @@
 
 	.ff-order-queue__table thead {
 		display: none;
+	}
+
+	.ff-homepage-products__actions {
+		margin-top: 8px;
 	}
 }

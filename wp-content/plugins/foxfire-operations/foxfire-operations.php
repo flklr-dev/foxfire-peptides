@@ -3,7 +3,7 @@
  * Plugin Name: Foxfire Operations
  * Plugin URI:  https://foxfirepeptides.com
  * Description: Secure, theme-independent store operations and client administration for Foxfire Peptides.
- * Version:     0.4.0
+ * Version:     0.11.0
  * Author:      Foxfire Peptides
  * Text Domain: foxfire-operations
  * Requires at least: 6.9
@@ -16,8 +16,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'FOXFIRE_OPERATIONS_VERSION', '0.4.0' );
-define( 'FOXFIRE_OPERATIONS_ROLE_VERSION', '1' );
+define( 'FOXFIRE_OPERATIONS_VERSION', '0.11.0' );
+define( 'FOXFIRE_OPERATIONS_ROLE_VERSION', '2' );
+define( 'FOXFIRE_OPERATIONS_CONTENT_VERSION', '2' );
 define( 'FOXFIRE_OPERATIONS_FILE', __FILE__ );
 define( 'FOXFIRE_OPERATIONS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FOXFIRE_OPERATIONS_URL', plugin_dir_url( __FILE__ ) );
@@ -40,11 +41,16 @@ if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
 
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/roles.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/security.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/customer-auth.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/local-mail.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/pricing.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/product-admin.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/promotions.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/orders.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/homepage-merchandising.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/content-admin.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/seo.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/store-settings.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/admin.php';
 
 register_activation_hook( __FILE__, 'foxfire_operations_activate' );

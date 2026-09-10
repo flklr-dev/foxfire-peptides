@@ -165,23 +165,13 @@ $bill_email = $order->get_billing_email();
 			<div class="ff-view-order-totals">
 				<?php
 				foreach ( $order->get_order_item_totals() as $key => $total ) :
-					$is_total    = 'order_total' === $key;
-					$is_shipping = 'shipping' === $key;
+					$is_total = 'order_total' === $key;
 					?>
 					<div class="ff-view-order-total-row <?php echo $is_total ? 'ff-view-order-total-row--final' : ''; ?>">
 						<span class="ff-total-label"><?php echo esc_html( $total['label'] ); ?></span>
 						<span class="ff-total-val <?php echo $is_total ? 'ff-total-val--orange' : ''; ?>">
 							<?php
-							if ( $is_shipping ) {
-								$ship_total = (float) $order->get_shipping_total();
-								if ( 0.0 === $ship_total || 0 === (int) $ship_total ) {
-									echo '<span class="ff-view-order-shipping-pricing"><del class="ff-shipping-was-price">' . wp_kses_post( wc_price( 9.90 ) ) . '</del> <ins class="ff-shipping-now-price">' . wp_kses_post( wc_price( 0.00 ) ) . '</ins></span>';
-								} else {
-									echo wp_kses_post( $total['value'] );
-								}
-							} else {
-								echo wp_kses_post( $total['value'] );
-							}
+							echo wp_kses_post( $total['value'] );
 							?>
 						</span>
 					</div>

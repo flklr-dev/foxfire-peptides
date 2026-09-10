@@ -95,7 +95,7 @@ function foxfire_render_product_card_badges(): void {
 	if ( $product->is_in_stock() ) {
 		$coa_url = function_exists( 'foxfire_get_product_coa_url' ) ? foxfire_get_product_coa_url( $product->get_id() ) : '';
 
-		if ( ! empty( $coa_url ) ) {
+		if ( ! empty( $coa_url ) && function_exists( 'foxfire_product_has_coa_document' ) && foxfire_product_has_coa_document( $product->get_id() ) ) {
 			echo '<span class="ff-badge ff-badge--tested">' . esc_html__( 'COA Available', 'foxfire-child' ) . '</span>';
 		} else {
 			echo '<span class="ff-badge ff-badge--stock">' . esc_html__( 'In Stock', 'foxfire-child' ) . '</span>';
@@ -120,7 +120,7 @@ function foxfire_render_shop_header(): void {
 
 	$subtitle = is_product_category()
 		? term_description()
-		: __( 'Industry-leading synthesis, independent third-party testing, and reliable cold dispatch. Engineered for rigorous laboratory standards.', 'foxfire-child' );
+		: __( 'Browse research compounds with available batch, stock, and COA information. Review each product and its available documentation before ordering.', 'foxfire-child' );
 	?>
 	<header class="ff-shop-header">
 		<div class="ff-shop-header__content">
@@ -187,6 +187,28 @@ function foxfire_custom_add_to_cart_text( string $text, WC_Product $product ): s
 }
 add_filter( 'woocommerce_product_add_to_cart_text', 'foxfire_custom_add_to_cart_text', 20, 2 );
 add_filter( 'woocommerce_product_single_add_to_cart_text', 'foxfire_custom_add_to_cart_text', 20, 2 );
+
+/**
+ * Keep the loop button's accessible name aligned with its visible label.
+ *
+ * WooCommerce provides the product-specific action through aria-describedby;
+ * repeating a different action in aria-label causes a WCAG label-in-name
+ * failure after we standardize the visible catalog label.
+ *
+ * @param array<string, mixed> $args Template arguments.
+ * @param WC_Product           $product Product object.
+ * @return array<string, mixed>
+ */
+function foxfire_align_loop_add_to_cart_accessible_name( array $args, WC_Product $product ): array {
+	if ( ! isset( $args['attributes'] ) || ! is_array( $args['attributes'] ) ) {
+		$args['attributes'] = array();
+	}
+
+	$args['attributes']['aria-label'] = $product->add_to_cart_text();
+
+	return $args;
+}
+add_filter( 'woocommerce_loop_add_to_cart_args', 'foxfire_align_loop_add_to_cart_accessible_name', 30, 2 );
 
 /**
  * Rename "Default sorting" to "Relevance" in the catalog orderby dropdown.

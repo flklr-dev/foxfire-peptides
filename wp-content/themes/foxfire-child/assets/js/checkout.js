@@ -69,6 +69,17 @@
 
 			// Validation & Button loading state on submit
 			$('form.checkout').on('checkout_place_order', function () {
+				if (window.navigator && window.navigator.onLine === false) {
+					self.resetProcessingState();
+					self.showCheckoutNotice(
+						(window.foxfire_checkout_params && window.foxfire_checkout_params.i18n_offline)
+							? window.foxfire_checkout_params.i18n_offline
+							: 'You appear to be offline. Reconnect before placing the order; no order was submitted.',
+						'offline'
+					);
+					return false;
+				}
+
 				var $terms = $('#terms');
 				if ($terms.length && !$terms.is(':checked')) {
 					$terms.focus();
@@ -102,32 +113,26 @@
 			});
 
 			$(document.body).on('checkout_error', function () {
-				// Dismiss the processing overlay on error so customer can fix any field issue
-				$('#ffCheckoutProcessingOverlay').attr('aria-hidden', 'true').fadeOut(200);
-
-				var $btn = $('#place_order');
-				if ($btn.length) {
-					$btn.removeClass('is-loading');
-					if ($btn.data('original-html')) {
-						$btn.html($btn.data('original-html'));
-					}
-					self.updatePlaceOrderStatus();
-				}
+				self.resetProcessingState();
 			});
 
 			// Dismiss processing overlay if an AJAX network error occurs during checkout
 			$(document).ajaxError(function (event, jqXHR, ajaxSettings) {
 				if (ajaxSettings && ajaxSettings.url && ajaxSettings.url.indexOf('wc-ajax=checkout') !== -1) {
-					$('#ffCheckoutProcessingOverlay').attr('aria-hidden', 'true').fadeOut(200);
-					var $btn = $('#place_order');
-					if ($btn.length) {
-						$btn.removeClass('is-loading');
-						if ($btn.data('original-html')) {
-							$btn.html($btn.data('original-html'));
-						}
-						self.updatePlaceOrderStatus();
-					}
+					self.resetProcessingState();
+					setTimeout(function () {
+						self.showCheckoutNotice(
+							(window.foxfire_checkout_params && window.foxfire_checkout_params.i18n_network_error)
+								? window.foxfire_checkout_params.i18n_network_error
+								: 'The connection was interrupted while placing your order. It may already have been received. Check your Orders page or confirmation email before trying again.',
+							'unknown'
+						);
+					}, 50);
 				}
+			});
+
+			$(window).on('online', function () {
+				$('.ff-checkout-network-notice[data-foxfire-network="offline"]').remove();
 			});
 
 			// Open Address Modal when clicking Change or + Set Address button
@@ -191,6 +196,39 @@
 			$(document).on('input change', 'input[name^="billing_"], select[name^="billing_"]', function () {
 				self.updateAddressPreview();
 			});
+		},
+
+		resetProcessingState: function () {
+			$('#ffCheckoutProcessingOverlay').attr('aria-hidden', 'true').stop(true, true).fadeOut(200);
+
+			var $btn = $('#place_order');
+			if ($btn.length) {
+				$btn.removeClass('is-loading');
+				if ($btn.data('original-html')) {
+					$btn.html($btn.data('original-html'));
+				}
+				this.updatePlaceOrderStatus();
+			}
+		},
+
+		showCheckoutNotice: function (message, networkState) {
+			var $form = $('form.checkout');
+			if (!$form.length) {
+				return;
+			}
+
+			var $group = $form.find('.woocommerce-NoticeGroup-checkout').first();
+			if (!$group.length) {
+				$group = $('<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout"></div>');
+				$form.prepend($group);
+			}
+
+			$group.find('.ff-checkout-network-notice').remove();
+			var $notice = $('<ul class="woocommerce-error ff-checkout-network-notice" role="alert" tabindex="-1"><li></li></ul>');
+			$notice.attr('data-foxfire-network', networkState || 'unknown');
+			$notice.find('li').text(message);
+			$group.prepend($notice);
+			$notice.trigger('focus');
 		},
 
 		updatePlaceOrderStatus: function () {

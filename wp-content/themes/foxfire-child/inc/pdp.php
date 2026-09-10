@@ -68,12 +68,13 @@ function foxfire_pdp_eyebrow(): void {
 	}
 
 	$coa_url = function_exists( 'foxfire_get_product_coa_url' ) ? foxfire_get_product_coa_url( $product->get_id() ) : '';
+	$has_coa = function_exists( 'foxfire_product_has_coa_document' ) && foxfire_product_has_coa_document( $product->get_id() );
 	?>
 	<div class="ff-pdp-eyebrow">
 		<?php if ( ! empty( $cat_name ) ) : ?>
 			<span class="ff-pdp-eyebrow__category"><?php echo esc_html( $cat_name ); ?></span>
 		<?php endif; ?>
-		<?php if ( ! empty( $coa_url ) ) : ?>
+		<?php if ( ! empty( $coa_url ) && $has_coa ) : ?>
 			<span class="ff-badge ff-badge--tested">
 				<span class="ff-badge__icon" aria-hidden="true">✓</span>
 				<?php esc_html_e( 'COA Available', 'foxfire-child' ); ?>
@@ -207,9 +208,11 @@ function foxfire_render_pdp_info_sections(): void {
 	$product_id = $product->get_id();
 	$coa_url    = function_exists( 'foxfire_get_product_coa_url' ) ? foxfire_get_product_coa_url( $product_id ) : '';
 	$coa_label  = function_exists( 'foxfire_get_product_coa_label' ) ? foxfire_get_product_coa_label( $product_id ) : __( 'View Certificate of Analysis', 'foxfire-child' );
+	$has_coa    = function_exists( 'foxfire_product_has_coa_document' ) && foxfire_product_has_coa_document( $product_id );
 	$batch_lot  = function_exists( 'foxfire_get_product_batch_lot' ) ? foxfire_get_product_batch_lot( $product_id ) : '';
 	$testing_pg = foxfire_get_page_url( 'testing-coa', '/testing-coa/' );
-	$final_url  = ! empty( $coa_url ) ? $coa_url : $testing_pg;
+	$final_url  = $has_coa ? $coa_url : $testing_pg;
+	$final_label = $has_coa ? $coa_label : __( 'Browse Testing & COA Directory', 'foxfire-child' );
 	?>
 	<div class="ff-pdp-info-grid">
 		<!-- Left Column: Batch Verification & Testing -->
@@ -223,9 +226,9 @@ function foxfire_render_pdp_info_sections(): void {
 								<polyline points="9 12 11 14 15 10"></polyline>
 							</svg>
 						</span>
-						<h3 id="ff-coa-heading" class="ff-pdp-coa-box__title">
+						<h2 id="ff-coa-heading" class="ff-pdp-coa-box__title">
 							<?php esc_html_e( 'Batch Verification & Testing', 'foxfire-child' ); ?>
-						</h3>
+						</h2>
 					</div>
 
 					<?php if ( ! empty( $batch_lot ) ) : ?>
@@ -236,7 +239,11 @@ function foxfire_render_pdp_info_sections(): void {
 				</div>
 
 				<p class="ff-pdp-coa-box__text">
-					<?php esc_html_e( 'Every research batch is independently tested to ensure compound integrity and quality. View the laboratory Certificate of Analysis (COA) for full documentation.', 'foxfire-child' ); ?>
+					<?php if ( $has_coa ) : ?>
+						<?php esc_html_e( 'Review the documentation available for this batch. The linked Certificate of Analysis (COA) is the source of truth for its reported test results.', 'foxfire-child' ); ?>
+					<?php else : ?>
+						<?php esc_html_e( 'A batch-specific Certificate of Analysis is not attached yet. Browse the testing directory for currently available documentation.', 'foxfire-child' ); ?>
+					<?php endif; ?>
 				</p>
 
 				<div class="ff-pdp-coa-box__footer">
@@ -246,7 +253,7 @@ function foxfire_render_pdp_info_sections(): void {
 						rel="noopener noreferrer"
 						class="ff-pdp-coa-box__cta"
 					>
-						<span><?php echo esc_html( $coa_label ); ?></span>
+						<span><?php echo esc_html( $final_label ); ?></span>
 						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 							<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
 							<polyline points="15 3 21 3 21 9"></polyline>
@@ -257,9 +264,9 @@ function foxfire_render_pdp_info_sections(): void {
 			</section>
 		</div>
 
-		<!-- Right Column: Storage & Handling Specifications -->
+		<!-- Right Column: Product and handling information -->
 		<div class="ff-pdp-info-grid__col ff-pdp-info-grid__col--right">
-			<section class="ff-pdp-specs-card" aria-label="<?php esc_attr_e( 'Storage & Handling Specifications', 'foxfire-child' ); ?>">
+			<section class="ff-pdp-specs-card" aria-label="<?php esc_attr_e( 'Product and Handling Information', 'foxfire-child' ); ?>">
 				<div class="ff-pdp-specs-card__header">
 					<span class="ff-pdp-specs-card__icon" aria-hidden="true">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -268,16 +275,16 @@ function foxfire_render_pdp_info_sections(): void {
 							<line x1="12" y1="22.08" x2="12" y2="12"></line>
 						</svg>
 					</span>
-					<h4 class="ff-pdp-specs-card__title"><?php esc_html_e( 'Storage & Handling Specifications', 'foxfire-child' ); ?></h4>
+					<h2 class="ff-pdp-specs-card__title"><?php esc_html_e( 'Product & Handling Information', 'foxfire-child' ); ?></h2>
 				</div>
 				<ul class="ff-pdp-specs-card__list">
 					<li>
 						<span class="ff-specs-label"><?php esc_html_e( 'Form:', 'foxfire-child' ); ?></span>
-						<span class="ff-specs-value"><?php esc_html_e( 'Lyophilized powder in sterile sealed glass vial', 'foxfire-child' ); ?></span>
+						<span class="ff-specs-value"><?php esc_html_e( 'See the product label and available batch documentation.', 'foxfire-child' ); ?></span>
 					</li>
 					<li>
 						<span class="ff-specs-label"><?php esc_html_e( 'Storage:', 'foxfire-child' ); ?></span>
-						<span class="ff-specs-value"><?php esc_html_e( 'Store at -20°C for long-term stability; protect from light.', 'foxfire-child' ); ?></span>
+						<span class="ff-specs-value"><?php esc_html_e( 'Follow the storage conditions shown on the product label or supplied batch documentation.', 'foxfire-child' ); ?></span>
 					</li>
 					<li>
 						<span class="ff-specs-label"><?php esc_html_e( 'Notice:', 'foxfire-child' ); ?></span>

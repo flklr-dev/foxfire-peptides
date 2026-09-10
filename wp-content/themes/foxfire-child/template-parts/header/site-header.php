@@ -49,17 +49,34 @@ $is_cart     = function_exists( 'is_cart' ) && is_cart();
 			<?php endif; ?>
 		</div>
 
-		<!-- Mobile Menu Toggle -->
-		<button
-			type="button"
-			class="ff-nav-toggle"
-			aria-expanded="false"
-			aria-controls="<?php echo esc_attr( $nav_panel_id ); ?>"
-			data-ff-nav-toggle
-		>
-			<span class="ff-nav-toggle__icon" aria-hidden="true"></span>
-			<span class="ff-nav-toggle__label"><?php esc_html_e( 'Menu', 'foxfire-child' ); ?></span>
-		</button>
+		<!-- Mobile Controls (Orange Cart + Borderless Burger) -->
+		<div class="ff-site-header__mobile-controls">
+			<a
+				href="<?php echo esc_url( $cart_url ); ?>"
+				class="ff-mobile-cart-btn <?php echo $is_cart ? 'is-active' : ''; ?>"
+			>
+				<span class="ff-mobile-cart-btn__icon" aria-hidden="true">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="9" cy="21" r="1"></circle>
+						<circle cx="20" cy="21" r="1"></circle>
+						<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+					</svg>
+				</span>
+				<?php foxfire_render_cart_count_badge(); ?>
+			</a>
+
+			<button
+				type="button"
+				class="ff-nav-toggle"
+				aria-expanded="false"
+				aria-controls="<?php echo esc_attr( $nav_panel_id ); ?>"
+				aria-label="<?php esc_attr_e( 'Open navigation menu', 'foxfire-child' ); ?>"
+				data-ff-nav-toggle
+			>
+				<span class="screen-reader-text"><?php esc_html_e( 'Menu', 'foxfire-child' ); ?></span>
+				<span class="ff-nav-toggle__icon" aria-hidden="true"></span>
+			</button>
+		</div>
 
 		<!-- Main Nav Wrap (Mobile Slide-out Drawer & Desktop Horizontal Nav) -->
 		<div class="ff-site-header__nav-wrap" data-ff-nav-panel>
@@ -117,17 +134,10 @@ $is_cart     = function_exists( 'is_cart' ) && is_cart();
 						</a>
 					</li>
 
-					<!-- Mobile Drawer Only Links -->
+					<!-- Mobile Drawer Account Link -->
 					<li class="ff-primary-nav__item ff-primary-nav__item--mobile-only">
 						<a class="ff-primary-nav__link <?php echo $is_account ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $account_url ); ?>">
 							<?php esc_html_e( 'Account', 'foxfire-child' ); ?>
-						</a>
-					</li>
-
-					<li class="ff-primary-nav__item ff-primary-nav__item--mobile-only">
-						<a class="ff-primary-nav__link <?php echo $is_cart ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $cart_url ); ?>">
-							<span><?php esc_html_e( 'Cart', 'foxfire-child' ); ?></span>
-							<?php foxfire_render_cart_count_badge(); ?>
 						</a>
 					</li>
 				</ul>

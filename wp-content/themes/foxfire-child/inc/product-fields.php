@@ -38,6 +38,24 @@ function foxfire_get_product_coa_url( int $product_id = 0 ): string {
 }
 
 /**
+ * Whether the product has a batch-specific COA document rather than a link
+ * back to the general directory.
+ */
+function foxfire_product_has_coa_document( int $product_id = 0 ): bool {
+	$coa_url = trim( foxfire_get_product_coa_url( $product_id ) );
+
+	if ( '' === $coa_url || '#' === $coa_url ) {
+		return false;
+	}
+
+	$directory_url  = foxfire_get_page_url( 'testing-coa', '/testing-coa/' );
+	$coa_path       = untrailingslashit( (string) wp_parse_url( $coa_url, PHP_URL_PATH ) );
+	$directory_path = untrailingslashit( (string) wp_parse_url( $directory_url, PHP_URL_PATH ) );
+
+	return '' === $directory_path || $coa_path !== $directory_path;
+}
+
+/**
  * COA link label for display.
  */
 function foxfire_get_product_coa_label( int $product_id = 0 ): string {
@@ -62,7 +80,7 @@ function foxfire_get_product_testing_summary( int $product_id = 0 ): string {
 		return trim( $summary );
 	}
 
-	return __( 'Information Available', 'foxfire-child' );
+	return __( 'Not provided', 'foxfire-child' );
 }
 
 /**

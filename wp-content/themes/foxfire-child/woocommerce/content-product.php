@@ -30,13 +30,34 @@ $classes    = wc_get_product_class( array( 'ff-product-card' ), $product );
 			<a href="<?php the_permalink(); ?>" class="ff-product-card__image-link" tabindex="-1" aria-hidden="true">
 				<?php
 				if ( has_post_thumbnail( $product_id ) ) {
+					global $foxfire_product_card_image_position;
+					$foxfire_product_card_image_position = isset( $foxfire_product_card_image_position ) ? (int) $foxfire_product_card_image_position : 0;
+					$foxfire_product_card_image_position++;
+
+					$image_attributes = array(
+						'class'    => 'ff-product-card__img',
+						'alt'      => the_title_attribute( array( 'echo' => false ) ),
+						'decoding' => 'async',
+					);
+
+					// Homepage cards sit below the hero; keep its LCP image first in line.
+					if ( is_front_page() || is_home() ) {
+						$image_attributes['loading']       = 'lazy';
+						$image_attributes['fetchpriority'] = 'low';
+					} elseif (
+						1 === $foxfire_product_card_image_position
+						&& ( ( function_exists( 'is_shop' ) && is_shop() ) || ( function_exists( 'is_product_category' ) && is_product_category() ) )
+					) {
+						$image_attributes['loading']       = 'eager';
+						$image_attributes['fetchpriority'] = 'high';
+					} else {
+						$image_attributes['loading'] = 'lazy';
+					}
+
 					echo get_the_post_thumbnail(
 						$product_id,
 						'woocommerce_thumbnail',
-						array(
-							'class' => 'ff-product-card__img',
-							'alt'   => the_title_attribute( array( 'echo' => false ) ),
-						)
+						$image_attributes
 					);
 				} else {
 					echo wc_placeholder_img( 'woocommerce_thumbnail' );

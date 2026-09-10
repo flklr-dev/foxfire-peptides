@@ -17,6 +17,20 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$contact_eyebrow           = foxfire_get_managed_content( 'contact_eyebrow', __( 'Customer Care & Inquiries', 'foxfire-child' ) );
+$contact_title             = foxfire_get_managed_content( 'contact_title', __( 'Contact Us', 'foxfire-child' ) );
+$contact_intro             = foxfire_get_managed_content( 'contact_intro', __( 'Have questions about products, batch documentation, or your order? We are here to help.', 'foxfire-child' ) );
+$contact_direct_title      = foxfire_get_managed_content( 'contact_direct_title', __( 'How to Reach Us', 'foxfire-child' ) );
+$contact_direct_desc       = foxfire_get_managed_content( 'contact_direct_description', __( 'Our team is available Monday through Friday to assist with inquiries, documentation, and orders.', 'foxfire-child' ) );
+$support_email             = foxfire_get_managed_content( 'support_email', 'support@foxfirepeptides.com' );
+$support_phone             = foxfire_get_managed_content( 'support_phone', '' );
+$support_phone_uri         = preg_replace( '/[^0-9+]/', '', $support_phone );
+$contact_response_time     = foxfire_get_managed_content( 'contact_response_time', __( '12–24 business hours', 'foxfire-child' ) );
+$contact_hours             = foxfire_get_managed_content( 'contact_hours', __( 'Mon – Fri, 9 AM – 5 PM EST', 'foxfire-child' ) );
+$contact_trust_note        = foxfire_get_managed_content( 'contact_trust_note', __( 'Every inquiry is received and handled directly by the Foxfire team.', 'foxfire-child' ) );
+$contact_form_title        = foxfire_get_managed_content( 'contact_form_title', __( 'Send Us a Message', 'foxfire-child' ) );
+$contact_form_description  = foxfire_get_managed_content( 'contact_form_description', __( 'Fill in the details below and we will get back to you as soon as possible.', 'foxfire-child' ) );
+
 // ── Form State ───────────────────────────────────────────────────────────────
 $form_status  = '';
 $form_message = '';
@@ -99,6 +113,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['foxfire_contact_sub
 
 				// 6. Build notification email.
 				$admin_email  = get_option( 'admin_email' );
+				$recipient_email = is_email( $support_email ) ? $support_email : $admin_email;
 				$site_name    = get_bloginfo( 'name' );
 				$subject_text = $allowed_subjects[ $subject_key ];
 
@@ -125,13 +140,17 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['foxfire_contact_sub
 					'Content-Type: text/plain; charset=UTF-8',
 				);
 
-				wp_mail( $admin_email, $email_subject, $email_body, $headers );
+				wp_mail( $recipient_email, $email_subject, $email_body, $headers );
 
 				// 7. Increment rate-limit counter (1-hour TTL).
 				set_transient( $ip_key, $submit_count + 1, HOUR_IN_SECONDS );
 
 				$form_status  = 'success';
-				$form_message = __( 'Thank you! Your message has been sent. Our team will respond within 12–24 business hours.', 'foxfire-child' );
+				$form_message = sprintf(
+					/* translators: %s: public support response-time estimate. */
+					__( 'Thank you! Your message has been sent. Our team will respond within %s.', 'foxfire-child' ),
+					$contact_response_time
+				);
 
 				// Clear form on success.
 				$form_data = array(
@@ -154,10 +173,10 @@ get_header();
 
 		<!-- Page Header -->
 		<header class="ff-contact-header">
-			<span class="ff-contact-header__label"><?php esc_html_e( 'Customer Care & Inquiries', 'foxfire-child' ); ?></span>
-			<h1 class="ff-contact-header__title"><?php esc_html_e( 'Contact Us', 'foxfire-child' ); ?></h1>
+			<span class="ff-contact-header__label"><?php echo esc_html( $contact_eyebrow ); ?></span>
+			<h1 class="ff-contact-header__title"><?php echo esc_html( $contact_title ); ?></h1>
 			<p class="ff-contact-header__lead">
-				<?php esc_html_e( 'Have questions about products, batch documentation, or your order? We are here to help.', 'foxfire-child' ); ?>
+				<?php echo esc_html( $contact_intro ); ?>
 			</p>
 		</header>
 
@@ -170,9 +189,9 @@ get_header();
 
 					<div class="ff-contact-info-card__header">
 						<span class="ff-contact-info-card__eyebrow"><?php esc_html_e( 'Direct Contact', 'foxfire-child' ); ?></span>
-						<h2 class="ff-contact-info-card__title"><?php esc_html_e( 'How to Reach Us', 'foxfire-child' ); ?></h2>
+						<h2 class="ff-contact-info-card__title"><?php echo esc_html( $contact_direct_title ); ?></h2>
 						<p class="ff-contact-info-card__desc">
-							<?php esc_html_e( 'Our team is available Monday through Friday to assist with inquiries, documentation, and orders.', 'foxfire-child' ); ?>
+							<?php echo esc_html( $contact_direct_desc ); ?>
 						</p>
 					</div>
 
@@ -188,9 +207,18 @@ get_header();
 							</div>
 							<div class="ff-contact-info-item__content">
 								<span class="ff-contact-info-item__label"><?php esc_html_e( 'Email', 'foxfire-child' ); ?></span>
-								<a href="mailto:support@foxfirepeptides.com" class="ff-contact-info-item__value ff-contact-info-item__link">support@foxfirepeptides.com</a>
+								<a href="mailto:<?php echo esc_attr( $support_email ); ?>" class="ff-contact-info-item__value ff-contact-info-item__link"><?php echo esc_html( $support_email ); ?></a>
 							</div>
 						</div>
+
+						<?php if ( '' !== $support_phone && '' !== $support_phone_uri ) : ?>
+							<div class="ff-contact-info-item">
+								<div class="ff-contact-info-item__content">
+									<span class="ff-contact-info-item__label"><?php esc_html_e( 'Phone', 'foxfire-child' ); ?></span>
+									<a href="tel:<?php echo esc_attr( $support_phone_uri ); ?>" class="ff-contact-info-item__value ff-contact-info-item__link"><?php echo esc_html( $support_phone ); ?></a>
+								</div>
+							</div>
+						<?php endif; ?>
 
 						<!-- Response Time -->
 						<div class="ff-contact-info-item">
@@ -202,7 +230,7 @@ get_header();
 							</div>
 							<div class="ff-contact-info-item__content">
 								<span class="ff-contact-info-item__label"><?php esc_html_e( 'Response Time', 'foxfire-child' ); ?></span>
-								<span class="ff-contact-info-item__value"><?php esc_html_e( '12–24 business hours', 'foxfire-child' ); ?></span>
+								<span class="ff-contact-info-item__value"><?php echo esc_html( $contact_response_time ); ?></span>
 							</div>
 						</div>
 
@@ -218,7 +246,7 @@ get_header();
 							</div>
 							<div class="ff-contact-info-item__content">
 								<span class="ff-contact-info-item__label"><?php esc_html_e( 'Hours', 'foxfire-child' ); ?></span>
-								<span class="ff-contact-info-item__value"><?php esc_html_e( 'Mon – Fri, 9 AM – 5 PM EST', 'foxfire-child' ); ?></span>
+								<span class="ff-contact-info-item__value"><?php echo esc_html( $contact_hours ); ?></span>
 							</div>
 						</div>
 
@@ -231,7 +259,7 @@ get_header();
 							</svg>
 						</div>
 						<p class="ff-contact-trust-note__text">
-							<?php esc_html_e( 'Every inquiry is received and handled directly by the Foxfire team.', 'foxfire-child' ); ?>
+							<?php echo esc_html( $contact_trust_note ); ?>
 						</p>
 					</div>
 
@@ -244,8 +272,8 @@ get_header();
 
 				<div class="ff-contact-form-card">
 					<header class="ff-contact-form-card__header">
-						<h2 id="contact-form-title" class="ff-contact-form-card__title"><?php esc_html_e( 'Send Us a Message', 'foxfire-child' ); ?></h2>
-						<p class="ff-contact-form-card__desc"><?php esc_html_e( 'Fill in the details below and we will get back to you as soon as possible.', 'foxfire-child' ); ?></p>
+						<h2 id="contact-form-title" class="ff-contact-form-card__title"><?php echo esc_html( $contact_form_title ); ?></h2>
+						<p class="ff-contact-form-card__desc"><?php echo esc_html( $contact_form_description ); ?></p>
 					</header>
 
 					<?php if ( ! empty( $form_message ) ) : ?>
