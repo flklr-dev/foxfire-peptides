@@ -24,7 +24,7 @@ Get-Content ".env" | ForEach-Object {
 $WP_URL = if ($env:WP_URL) { $env:WP_URL } else { "http://localhost:8080" }
 
 # 2. Ensure wp-content directories exist
-$dirs = @("wp-content/themes", "wp-content/plugins", "wp-content/mu-plugins")
+$dirs = @("wp-content/themes", "wp-content/plugins", "wp-content/mu-plugins", "wp-content/uploads")
 foreach ($dir in $dirs) {
     if (-not (Test-Path $dir)) {
         New-Item -ItemType Directory -Path $dir -Force | Out-Null
@@ -97,7 +97,22 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "WooCommerce already active - skipping." -ForegroundColor Yellow
 }
 
-# 7. Install Storefront parent theme + activate Foxfire child theme
+# 7. Install Advanced Custom Fields if not present
+Write-Host ""
+Write-Host "Checking Advanced Custom Fields..." -ForegroundColor Cyan
+docker compose run --rm wpcli plugin is-active advanced-custom-fields --url="$WP_URL" | Out-Null
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Installing Advanced Custom Fields..." -ForegroundColor Cyan
+    docker compose run --rm wpcli plugin install advanced-custom-fields --activate --url="$WP_URL"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Advanced Custom Fields install failed." -ForegroundColor Red
+        exit 1
+    }
+} else {
+    Write-Host "Advanced Custom Fields already active - skipping." -ForegroundColor Yellow
+}
+
+# 8. Install Storefront parent theme + activate Foxfire child theme
 Write-Host ""
 Write-Host "Checking themes..." -ForegroundColor Cyan
 docker compose run --rm wpcli theme is-installed storefront --url="$WP_URL" | Out-Null
@@ -112,12 +127,22 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Foxfire child theme active." -ForegroundColor Green
 
-# 8. Configure WooCommerce store (Chunk 1C)
+# 9. Activate the theme-independent Foxfire Operations plugin (Chunk 1P)
+Write-Host ""
+Write-Host "Activating Foxfire Operations..." -ForegroundColor Cyan
+docker compose run --rm wpcli plugin activate foxfire-operations --url="$WP_URL"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Failed to activate Foxfire Operations." -ForegroundColor Red
+    exit 1
+}
+Write-Host "Foxfire Operations active." -ForegroundColor Green
+
+# 10. Configure WooCommerce store (Chunk 1C)
 Write-Host ""
 Write-Host "Configuring WooCommerce store..." -ForegroundColor Cyan
 & "$Root\scripts\configure-store.ps1"
 
-# 9. Summary
+# 11. Summary
 Write-Host ""
 Write-Host "=== Setup Complete ===" -ForegroundColor Green
 Write-Host "Site:     $WP_URL"

@@ -363,7 +363,7 @@ $tesa_image_id   = foxfire_seed_product_image_id_by_filename( 'tesamorelin.jpg',
 $coa_page_url   = foxfire_get_page_url( 'testing-coa', '/testing-coa/' );
 
 $cat_glp1      = foxfire_seed_ensure_category( 'GLP-1 Agonists', 'glp-1-agonists', 'GLP-1 receptor research compounds.' );
-$cat_recovery  = foxfire_seed_ensure_category( 'Recovery & Healing', 'recovery-healing', 'Cellular repair and recovery research peptides.' );
+$cat_recovery  = foxfire_seed_ensure_category( 'Peptide Research', 'recovery-healing', 'Compounds for laboratory peptide research.' );
 $cat_blends    = foxfire_seed_ensure_category( 'Blends', 'blends', 'Specialized multi-peptide research blends.' );
 $cat_support   = foxfire_seed_ensure_category( 'Support Compounds', 'support-compounds', 'Ancillary and cellular support research compounds.' );
 

@@ -269,7 +269,7 @@ function foxfire_operations_render_homepage_products_page(): void {
 	?>
 	<div class="wrap ff-ops-wrap ff-homepage-products">
 		<h1><?php esc_html_e( 'Homepage Products', 'foxfire-operations' ); ?></h1>
-		<p class="ff-ops-intro"><?php esc_html_e( 'Choose up to eight published products and arrange their homepage priority. Position 1 appears first. This changes merchandising only; it does not alter prices, stock, product details, or the homepage layout.', 'foxfire-operations' ); ?></p>
+		<p class="ff-ops-intro"><?php esc_html_e( 'Arrange up to eight published products in priority order. The homepage shows the first four available products; additional selections are backup priorities. This changes merchandising only, not prices, stock or product details.', 'foxfire-operations' ); ?></p>
 
 		<?php if ( 'updated' === $status ) : ?>
 			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Homepage product priorities saved.', 'foxfire-operations' ); ?></p></div>

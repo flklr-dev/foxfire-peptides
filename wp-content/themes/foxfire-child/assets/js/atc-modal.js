@@ -52,28 +52,44 @@
 		bindEvents: function () {
 			var self = this;
 
+			// Namespace and replace our delegated handlers so a duplicated/cached
+			// script tag cannot register the add-to-cart flow more than once.
+			$(document).off('.foxfireAtc');
+			$(document.body).off('.foxfireAtc');
+
 			// Optional tap to dismiss toast immediately
-			$(document).on('click', '#ff-atc-toast', function () {
+			$(document).on('click.foxfireAtc', '#ff-atc-toast', function () {
 				self.hide();
 			});
 
-			var isSubmitting = false;
+			function clearInlineError($form) {
+				$form.children('.ff-atc-notice').remove();
+			}
+
+			function showInlineError($form, message) {
+				clearInlineError($form);
+
+				var $notice = $('<div class="ff-atc-notice ff-atc-notice--error" role="alert" tabindex="-1"><span class="ff-atc-notice__icon" aria-hidden="true">!</span><p class="ff-atc-notice__message"></p></div>');
+				$notice.find('.ff-atc-notice__message').text(message);
+				$form.prepend($notice);
+				$notice.trigger('focus');
+			}
 
 			// Prevent native form submission unconditionally on PDP
-			$(document).on('submit', 'form.cart', function (e) {
+			$(document).on('submit.foxfireAtc', 'form.cart', function (e) {
 				e.preventDefault();
-				e.stopPropagation();
+				e.stopImmediatePropagation();
 			});
 
 			// 1. Single Product Page (PDP) AJAX Add-to-Cart Click Interception
-			$(document).on('click', '.single-product .single_add_to_cart_button, form.cart .single_add_to_cart_button', function (e) {
+			$(document).on('click.foxfireAtc', '.single-product .single_add_to_cart_button, form.cart .single_add_to_cart_button', function (e) {
 				e.preventDefault();
-				e.stopPropagation();
+				e.stopImmediatePropagation();
 
 				var $btn = $(this);
 				var $form = $btn.closest('form.cart');
 
-				if (!$form.length || isSubmitting) {
+				if (!$form.length || $form.data('foxfireAtcSubmitting')) {
 					return;
 				}
 
@@ -91,7 +107,8 @@
 					}
 				}
 
-				isSubmitting = true;
+				clearInlineError($form);
+				$form.data('foxfireAtcSubmitting', true);
 				$btn.addClass('is-loading');
 
 				var formData = $form.serializeArray();
@@ -101,6 +118,12 @@
 				};
 
 				$.each(formData, function (i, field) {
+					// WooCommerce treats this hidden field as a native add-to-cart
+					// request during wp_loaded. Forwarding it to our custom AJAX
+					// endpoint adds the same quantity once there and once here.
+					if (field.name === 'add-to-cart') {
+						return;
+					}
 					postData[field.name] = field.value;
 				});
 
@@ -125,6 +148,7 @@
 					dataType: 'json',
 					success: function (response) {
 						if (response && response.success && response.data) {
+							clearInlineError($form);
 							// Update header counter and fragments
 							if (response.data.fragments) {
 								$.each(response.data.fragments, function (key, value) {
@@ -134,27 +158,29 @@
 							}
 							self.show();
 						} else {
-							var msg = (response && response.data && response.data.message) ? response.data.message : 'Error adding to cart.';
-							alert(msg);
+							var msg = (response && response.data && response.data.message) ? response.data.message : ((window.foxfire_atc_params && window.foxfire_atc_params.i18n) ? window.foxfire_atc_params.i18n.error : 'Could not add item to cart.');
+							showInlineError($form, msg);
 						}
 					},
-					error: function () {
-						alert('Could not add item to cart. Please refresh and try again.');
+					error: function (xhr) {
+						var responseMessage = xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message ? xhr.responseJSON.data.message : '';
+						var msg = responseMessage || ((window.foxfire_atc_params && window.foxfire_atc_params.i18n) ? window.foxfire_atc_params.i18n.network_error : 'Could not add item to cart. Please refresh and try again.');
+						showInlineError($form, msg);
 					},
 					complete: function () {
-						isSubmitting = false;
+						$form.removeData('foxfireAtcSubmitting');
 						$btn.removeClass('is-loading');
 					}
 				});
 			});
 
 			// 2. Shop & Archive Loop Cards Add-to-Cart Interception
-			$(document).on('click', '.ajax_add_to_cart', function () {
+			$(document).on('click.foxfireAtc', '.ajax_add_to_cart', function () {
 				var $btn = $(this);
 				$btn.addClass('is-loading');
 			});
 
-			$(document.body).on('added_to_cart', function (event, fragments, cart_hash, $button) {
+			$(document.body).on('added_to_cart.foxfireAtc', function (event, fragments, cart_hash, $button) {
 				if ($button && $button.length) {
 					$button.removeClass('is-loading');
 					$button.siblings('a.added_to_cart').remove();

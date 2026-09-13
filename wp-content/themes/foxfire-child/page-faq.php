@@ -20,8 +20,8 @@ $default_faqs = array(
 			'answer'   => __( 'Browse the shop, choose an available product and quantity option, add it to your cart, and complete checkout using one of the currently enabled payment methods.', 'foxfire-child' ),
 		),
 		array(
-			'question' => __( 'What quantity options are available?', 'foxfire-child' ),
-			'answer'   => __( 'Each product page shows the quantity options currently available for that item. Pricing and availability may vary by product.', 'foxfire-child' ),
+			'question' => __( 'Can I order more than one vial?', 'foxfire-child' ),
+			'answer'   => __( 'Yes. Multiple-vial quantities are available on select products. Available quantity options and pricing are shown directly on each product page.', 'foxfire-child' ),
 		),
 		array(
 			'question' => __( 'Where can I find testing and COA documents?', 'foxfire-child' ),
@@ -41,7 +41,7 @@ $default_faqs = array(
 		),
 		array(
 			'question' => __( 'How is shipping calculated?', 'foxfire-child' ),
-			'answer'   => __( 'Cart and checkout calculate the eligible shipping amount from the destination and current order total. Free shipping is applied automatically when the saved WooCommerce rule is met.', 'foxfire-child' ),
+			'answer'   => __( 'Shipping is calculated at checkout based on your delivery address and order total. If your order qualifies for free shipping, it will be applied automatically.', 'foxfire-child' ),
 		),
 		array(
 			'question' => __( 'Is an account required to order?', 'foxfire-child' ),

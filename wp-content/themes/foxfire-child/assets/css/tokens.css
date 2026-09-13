@@ -10,6 +10,11 @@
  */
 
 :root {
+	/* Client-approved September 13 palette. Page-by-page rollout. */
+	--color-brand-orange: #ff5800;
+	--color-brand-green: #aff769;
+	--color-brand-black: #15171a;
+	--color-on-brand: #15171a;
 	/* --- Color: backgrounds & text --- */
 	--color-bg: #ffffff;
 	--color-bg-subtle: #f7f7f7;

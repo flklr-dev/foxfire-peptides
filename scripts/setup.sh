@@ -23,7 +23,7 @@ set +a
 WP_URL="${WP_URL:-http://localhost:8080}"
 
 # 2. Ensure wp-content directories exist
-mkdir -p wp-content/themes wp-content/plugins wp-content/mu-plugins
+mkdir -p wp-content/themes wp-content/plugins wp-content/mu-plugins wp-content/uploads
 
 # 3. Start containers
 echo ""
@@ -71,7 +71,15 @@ else
   echo "WooCommerce already active — skipping."
 fi
 
-# 7. Install Storefront parent theme + activate Foxfire child theme
+# 7. Install Advanced Custom Fields if needed
+echo ""
+echo "Checking Advanced Custom Fields..."
+if ! docker compose run --rm wpcli plugin is-active advanced-custom-fields --url="${WP_URL}" 2>/dev/null; then
+  echo "Installing Advanced Custom Fields..."
+  docker compose run --rm wpcli plugin install advanced-custom-fields --activate --url="${WP_URL}"
+fi
+
+# 8. Install Storefront parent theme + activate Foxfire child theme
 echo ""
 echo "Checking themes..."
 if ! docker compose run --rm wpcli theme is-installed storefront --url="${WP_URL}" 2>/dev/null; then
@@ -80,12 +88,17 @@ if ! docker compose run --rm wpcli theme is-installed storefront --url="${WP_URL
 fi
 docker compose run --rm wpcli theme activate foxfire-child --url="${WP_URL}"
 
-# 8. Configure WooCommerce store (Chunk 1C)
+# 9. Activate the theme-independent Foxfire Operations plugin (Chunk 1P)
+echo ""
+echo "Activating Foxfire Operations..."
+docker compose run --rm wpcli plugin activate foxfire-operations --url="${WP_URL}"
+
+# 10. Configure WooCommerce store (Chunk 1C)
 echo ""
 echo "Configuring WooCommerce store..."
 ./scripts/configure-store.sh
 
-# 9. Summary
+# 11. Summary
 echo "Site:     ${WP_URL}"
 echo "Admin:    ${WP_URL}/wp-admin"
 echo "User:     ${WP_ADMIN_USER}"

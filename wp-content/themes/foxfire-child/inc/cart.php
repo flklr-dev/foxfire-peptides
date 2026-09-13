@@ -234,9 +234,10 @@ function foxfire_cart_enqueue_scripts(): void {
 				'nonce'    => wp_create_nonce( 'foxfire_atc_nonce' ),
 				'cart_url' => wc_get_cart_url(),
 				'i18n'     => array(
-					'adding' => __( 'Adding...', 'foxfire-child' ),
-					'added'  => __( 'Added to Cart', 'foxfire-child' ),
-					'error'  => __( 'Could not add to cart. Please select an option.', 'foxfire-child' ),
+					'adding'       => __( 'Adding...', 'foxfire-child' ),
+					'added'        => __( 'Added to Cart', 'foxfire-child' ),
+					'error'        => __( 'Could not add item to cart. Please review your selection and try again.', 'foxfire-child' ),
+					'network_error' => __( 'We could not update your cart. Check your connection, then try again.', 'foxfire-child' ),
 				),
 			)
 		);
@@ -257,11 +258,41 @@ function foxfire_cart_enqueue_scripts(): void {
 add_action( 'wp_enqueue_scripts', 'foxfire_cart_enqueue_scripts', 30 );
 
 /**
+ * Return the latest WooCommerce cart error as safe plain text.
+ *
+ * Validation callbacks may add an HTML "View cart" action to the session.
+ * The PDP displays its own compact inline notice, so the action and any queued
+ * copies must not leak into the next page response.
+ */
+function foxfire_get_ajax_cart_error( string $fallback ): string {
+	$errors  = function_exists( 'wc_get_notices' ) ? wc_get_notices( 'error' ) : array();
+	$latest  = ! empty( $errors ) ? end( $errors ) : null;
+	$message = is_array( $latest ) && isset( $latest['notice'] ) ? (string) $latest['notice'] : '';
+
+	if ( '' !== $message ) {
+		$message = (string) preg_replace( '#<a\b[^>]*>.*?</a>#is', '', $message );
+		$message = trim( wp_strip_all_tags( html_entity_decode( $message, ENT_QUOTES, get_bloginfo( 'charset' ) ) ) );
+	}
+
+	if ( function_exists( 'wc_clear_notices' ) ) {
+		wc_clear_notices();
+	}
+
+	return '' !== $message ? $message : $fallback;
+}
+
+/**
  * AJAX handler for Single Product Page (PDP) Add-to-Cart.
  * Supports Simple & Variable products, custom quantity tiers, and returns product card info for the center modal.
  */
 function foxfire_ajax_add_to_cart_pdp(): void {
 	check_ajax_referer( 'foxfire_atc_nonce', 'nonce' );
+
+	// This endpoint owns its response. Discard stale notices from an earlier
+	// request so failed stock checks cannot accumulate across page loads.
+	if ( function_exists( 'wc_clear_notices' ) ) {
+		wc_clear_notices();
+	}
 
 	$product_id   = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
 	$quantity     = isset( $_POST['quantity'] ) ? max( 1, absint( $_POST['quantity'] ) ) : 1;
@@ -282,13 +313,29 @@ function foxfire_ajax_add_to_cart_pdp(): void {
 	$passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations );
 
 	if ( ! $passed_validation ) {
-		wp_send_json_error( array( 'message' => __( 'Product could not be added to cart.', 'foxfire-child' ) ) );
+		wp_send_json_error(
+			array(
+				'message' => foxfire_get_ajax_cart_error( __( 'This quantity is not currently available. Review your cart or choose a smaller quantity.', 'foxfire-child' ) ),
+			),
+			409
+		);
 	}
 
 	$cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variations );
 
 	if ( ! $cart_item_key ) {
-		wp_send_json_error( array( 'message' => __( 'Could not add item to cart. Please check stock.', 'foxfire-child' ) ) );
+		wp_send_json_error(
+			array(
+				'message' => foxfire_get_ajax_cart_error( __( 'Could not add item to cart. Please check the available stock.', 'foxfire-child' ) ),
+			),
+			409
+		);
+	}
+
+	// Direct WC_Cart calls should not produce a notice, but integrations may
+	// attach one. The custom success toast is the only confirmation we retain.
+	if ( function_exists( 'wc_clear_notices' ) ) {
+		wc_clear_notices();
 	}
 
 	WC()->cart->calculate_totals();

@@ -103,7 +103,7 @@ function foxfire_get_coa_catalog_items(): array {
 		$coa_label  = function_exists( 'foxfire_get_product_coa_label' ) ? foxfire_get_product_coa_label( $product_id ) : __( 'View COA Report', 'foxfire-child' );
 
 		if ( empty( $batch_lot ) ) {
-			$batch_lot = 'FF-' . strtoupper( substr( md5( (string) $product_id ), 0, 6 ) );
+			$batch_lot = __( 'Not provided', 'foxfire-child' );
 		}
 
 		if ( empty( $coa_url ) ) {
@@ -119,7 +119,7 @@ function foxfire_get_coa_catalog_items(): array {
 		$items[] = array(
 			'id'              => $product_id,
 			'name'            => $product->get_name(),
-			'sku'             => $product->get_sku() ?: 'FF-' . str_pad( (string) $product_id, 3, '0', STR_PAD_LEFT ),
+			'sku'             => $product->get_sku() ?: __( 'Not provided', 'foxfire-child' ),
 			'permalink'       => $product->get_permalink(),
 			'batch_lot'       => $batch_lot,
 			'testing_summary' => $testing_summary,

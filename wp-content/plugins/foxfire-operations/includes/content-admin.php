@@ -10,8 +10,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Return the supported public-content field definitions.
  *
- * All values are plain text by design. This prevents stored script/HTML
- * injection and keeps layout markup owned by the theme.
+ * Copy values are plain text by design. Image fields store validated WordPress
+ * attachment IDs so operators can use the Media Library without exposing raw
+ * HTML or arbitrary remote image URLs.
  *
  * @return array<string, array{section:string,label:string,type:string,max:int,default:string,description:string}>
  */
@@ -74,88 +75,213 @@ function foxfire_operations_public_content_schema(): array {
 		),
 		'home_hero_title' => array(
 			'section' => 'homepage', 'label' => __( 'Hero heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 140,
-			'default' => __( 'Quality Research Peptides With Transparent Testing', 'foxfire-operations' ),
+			'default' => __( 'Research Compounds. Transparent Testing. Real Accountability.', 'foxfire-operations' ),
 			'description' => __( 'Primary homepage heading.', 'foxfire-operations' ),
 		),
 		'home_hero_lead' => array(
 			'section' => 'homepage', 'label' => __( 'Hero description', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 320,
-			'default' => __( 'Laboratory research compounds with available batch and COA information. Straightforward purchasing with 1, 3, and 5 vial options.', 'foxfire-operations' ),
+			'default' => __( 'Third-party testing, clear batch documentation, and straightforward access to the information behind every Foxfire product.', 'foxfire-operations' ),
 			'description' => __( 'Supporting text below the homepage heading.', 'foxfire-operations' ),
 		),
 		'home_primary_cta' => array(
 			'section' => 'homepage', 'label' => __( 'Primary button label', 'foxfire-operations' ), 'type' => 'text', 'max' => 40,
-			'default' => __( 'Shop Now', 'foxfire-operations' ),
+			'default' => __( 'SHOP RESEARCH COMPOUNDS', 'foxfire-operations' ),
 			'description' => __( 'The destination remains the WooCommerce shop.', 'foxfire-operations' ),
 		),
 		'home_secondary_cta' => array(
 			'section' => 'homepage', 'label' => __( 'Secondary button label', 'foxfire-operations' ), 'type' => 'text', 'max' => 60,
-			'default' => __( 'View Testing & COAs', 'foxfire-operations' ),
+			'default' => __( 'VIEW TESTING & COAs', 'foxfire-operations' ),
 			'description' => __( 'The destination remains the Testing/COA page.', 'foxfire-operations' ),
 		),
 		'home_coa_title' => array(
 			'section' => 'homepage', 'label' => __( 'COA callout heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 140,
-			'default' => __( 'Access available batch testing and COA reports.', 'foxfire-operations' ),
+			'default' => __( "Know What's Behind Every Vial.", 'foxfire-operations' ),
 			'description' => __( 'Heading in the homepage testing callout.', 'foxfire-operations' ),
 		),
 		'home_coa_description' => array(
 			'section' => 'homepage', 'label' => __( 'COA callout description', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 280,
-			'default' => __( 'Look up your batch lot number in our directory to view available documentation.', 'foxfire-operations' ),
+			'default' => __( 'Access available third-party testing and batch-specific documentation for Foxfire research compounds. Search by product, batch, or lot number to find the available COA.', 'foxfire-operations' ),
 			'description' => __( 'Supporting text in the homepage testing callout.', 'foxfire-operations' ),
 		),
 		'home_closing_title' => array(
 			'section' => 'homepage', 'label' => __( 'Closing call-to-action heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 140,
-			'default' => __( 'Ready to Order Research Peptides?', 'foxfire-operations' ),
+			'default' => __( 'Ready to Explore Foxfire?', 'foxfire-operations' ),
 			'description' => __( 'Heading above the final homepage buttons.', 'foxfire-operations' ),
 		),
 		'home_closing_description' => array(
 			'section' => 'homepage', 'label' => __( 'Closing call-to-action description', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 280,
-			'default' => __( 'Explore our catalog and access available batch and COA documentation.', 'foxfire-operations' ),
+			'default' => __( 'Browse our research compounds, review available testing documentation, and find the products that fit your research needs.', 'foxfire-operations' ),
 			'description' => __( 'Supporting text above the final homepage buttons.', 'foxfire-operations' ),
+		),
+		'about_hero_eyebrow' => array(
+			'section' => 'about', 'label' => __( 'About page label', 'foxfire-operations' ), 'type' => 'text', 'max' => 50,
+			'default' => __( 'About Foxfire', 'foxfire-operations' ),
+			'description' => __( 'Short label above the main About page heading.', 'foxfire-operations' ),
 		),
 		'about_hero_title' => array(
 			'section' => 'about', 'label' => __( 'About page heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 140,
-			'default' => __( 'Built on Quality, Trust & Community', 'foxfire-operations' ),
-			'description' => __( 'Primary heading at the top of the About page.', 'foxfire-operations' ),
+			'default' => __( 'The Road Is Better Together.', 'foxfire-operations' ),
+			'description' => __( 'Purpose-led primary heading at the top of the About page. Keep it concise for mobile.', 'foxfire-operations' ),
 		),
 		'about_hero_intro' => array(
 			'section' => 'about', 'label' => __( 'About page introduction', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 420,
-			'default' => __( 'Foxfire Peptides is focused on creating a straightforward, transparent experience for research customers. We believe quality products, accessible information, and dependable service are the foundation of lasting relationships.', 'foxfire-operations' ),
+			'default' => __( 'Foxfire Peptides is being built as a focused, human-led peptide company—with clear product information, a recognizable founder, and genuine relationships at its heart.', 'foxfire-operations' ),
 			'description' => __( 'Introductory paragraph below the About page heading.', 'foxfire-operations' ),
 		),
 		'about_story_title' => array(
 			'section' => 'about', 'label' => __( 'Story heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 100,
-			'default' => __( 'A More Personal Approach', 'foxfire-operations' ),
+			'default' => __( 'A Focused, More Personal Approach', 'foxfire-operations' ),
 			'description' => __( 'Heading above the main About story.', 'foxfire-operations' ),
 		),
 		'about_story_one' => array(
 			'section' => 'about', 'label' => __( 'Story paragraph one', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 650,
-			'default' => __( 'We want Foxfire to feel different from an anonymous online storefront. Our goal is to make purchasing simple, information easy to find, and communication clear throughout the customer experience.', 'foxfire-operations' ),
+			'default' => __( 'Foxfire is designed around a focused catalog rather than an overwhelming warehouse of options. The goal is to make it simple to find a product, understand the available strengths, and move through checkout without unnecessary friction.', 'foxfire-operations' ),
 			'description' => __( 'First paragraph in the About story.', 'foxfire-operations' ),
 		),
 		'about_story_two' => array(
 			'section' => 'about', 'label' => __( 'Story paragraph two', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 650,
-			'default' => __( 'We believe that lasting trust is earned through everyday consistency. By focusing on clear product details, easy access to testing records where available, and responsive support whenever questions arise, we are building a brand researchers can count on for the long haul.', 'foxfire-operations' ),
+			'default' => __( 'As the company grows, the commitment stays the same: communicate clearly, make available documentation easy to find, and create an experience customers can navigate with confidence.', 'foxfire-operations' ),
 			'description' => __( 'Second paragraph in the About story.', 'foxfire-operations' ),
+		),
+		'about_story_callout_title' => array(
+			'section' => 'about', 'label' => __( 'Story callout heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 80,
+			'default' => __( 'Focused by design', 'foxfire-operations' ),
+			'description' => __( 'Short heading beside the main About story.', 'foxfire-operations' ),
+		),
+		'about_story_callout_text' => array(
+			'section' => 'about', 'label' => __( 'Story callout text', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 300,
+			'default' => __( 'A smaller, intentional catalog keeps the experience straightforward—from product discovery to testing information and account support.', 'foxfire-operations' ),
+			'description' => __( 'Supporting copy in the story callout.', 'foxfire-operations' ),
+		),
+		'about_founder_enabled' => array(
+			'section' => 'about', 'label' => __( 'Display founder section', 'foxfire-operations' ), 'type' => 'checkbox', 'max' => 3,
+			'default' => 'yes',
+			'description' => __( 'Show or hide the complete founder section on the public About page.', 'foxfire-operations' ),
+		),
+		'about_founder_image' => array(
+			'section' => 'about', 'label' => __( 'Founder image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
+			'default' => '',
+			'description' => __( 'Choose an approved founder portrait from the Media Library. A template portrait of Jay appears while no custom image is selected.', 'foxfire-operations' ),
+		),
+		'about_founder_image_alt' => array(
+			'section' => 'about', 'label' => __( 'Founder image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
+			'default' => __( 'Jay, founder of Foxfire Peptides', 'foxfire-operations' ),
+			'description' => __( 'Briefly describe the approved portrait for visitors using assistive technology.', 'foxfire-operations' ),
+		),
+		'about_founder_eyebrow' => array(
+			'section' => 'about', 'label' => __( 'Founder section label', 'foxfire-operations' ), 'type' => 'text', 'max' => 50,
+			'default' => __( 'Meet the Founder', 'foxfire-operations' ),
+			'description' => __( 'Short label above the founder heading.', 'foxfire-operations' ),
+		),
+		'about_founder_name' => array(
+			'section' => 'about', 'label' => __( 'Founder heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 100,
+			'default' => __( 'Meet Jay', 'foxfire-operations' ),
+			'description' => __( 'Public founder heading.', 'foxfire-operations' ),
+		),
+		'about_founder_role' => array(
+			'section' => 'about', 'label' => __( 'Founder role', 'foxfire-operations' ), 'type' => 'text', 'max' => 100,
+			'default' => __( 'Founder of Foxfire Peptides', 'foxfire-operations' ),
+			'description' => __( 'Role displayed below the founder heading.', 'foxfire-operations' ),
+		),
+		'about_founder_story_one' => array(
+			'section' => 'about', 'label' => __( 'Founder story paragraph one', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 650,
+			'default' => __( 'Foxfire is being built as a human-led company rather than another anonymous peptide storefront. Jay plans to be publicly connected to the brand and accountable for the experience it creates.', 'foxfire-operations' ),
+			'description' => __( 'First paragraph in the founder section. Use only approved biographical information.', 'foxfire-operations' ),
+		),
+		'about_founder_story_two' => array(
+			'section' => 'about', 'label' => __( 'Founder story paragraph two', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 650,
+			'default' => __( 'The aim is straightforward: keep products easy to shop, make available information easy to find, and build lasting relationships through clear communication and dependable service.', 'foxfire-operations' ),
+			'description' => __( 'Second paragraph in the founder section. Use only approved biographical information.', 'foxfire-operations' ),
+		),
+		'about_founder_quote' => array(
+			'section' => 'about', 'label' => __( 'Founder statement', 'foxfire-operations' ), 'type' => 'text', 'max' => 140,
+			'default' => __( 'The Road Is Better Together.', 'foxfire-operations' ),
+			'description' => __( 'Short highlighted statement in the founder section.', 'foxfire-operations' ),
 		),
 		'about_values_title' => array(
 			'section' => 'about', 'label' => __( 'Values heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 100,
-			'default' => __( 'Our Core Values', 'foxfire-operations' ),
-			'description' => __( 'Heading above the four value cards.', 'foxfire-operations' ),
+			'default' => __( 'Built Around Three Commitments', 'foxfire-operations' ),
+			'description' => __( 'Heading above the three brand-pillar cards.', 'foxfire-operations' ),
 		),
 		'about_values_intro' => array(
 			'section' => 'about', 'label' => __( 'Values introduction', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 320,
-			'default' => __( 'Simple standards that guide how we treat our customers, curate our products, and support the community.', 'foxfire-operations' ),
+			'default' => __( 'Three principles shape the store, the information we share, and the relationships we want to build.', 'foxfire-operations' ),
 			'description' => __( 'Supporting text above the value cards.', 'foxfire-operations' ),
+		),
+		'about_value_quality_title' => array(
+			'section' => 'about', 'label' => __( 'Quality pillar heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 60,
+			'default' => __( 'Quality', 'foxfire-operations' ),
+			'description' => __( 'Heading for the first brand pillar.', 'foxfire-operations' ),
+		),
+		'about_value_quality_text' => array(
+			'section' => 'about', 'label' => __( 'Quality pillar text', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 260,
+			'default' => __( 'A focused catalog, carefully presented product information, and a commitment to a dependable customer experience.', 'foxfire-operations' ),
+			'description' => __( 'Supporting copy for the Quality pillar.', 'foxfire-operations' ),
+		),
+		'about_value_transparency_title' => array(
+			'section' => 'about', 'label' => __( 'Transparency pillar heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 60,
+			'default' => __( 'Transparency', 'foxfire-operations' ),
+			'description' => __( 'Heading for the second brand pillar.', 'foxfire-operations' ),
+		),
+		'about_value_transparency_text' => array(
+			'section' => 'about', 'label' => __( 'Transparency pillar text', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 260,
+			'default' => __( 'Available batch and testing information should be easy to locate and straightforward to review.', 'foxfire-operations' ),
+			'description' => __( 'Supporting copy for the Transparency pillar.', 'foxfire-operations' ),
+		),
+		'about_value_community_title' => array(
+			'section' => 'about', 'label' => __( 'Community pillar heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 60,
+			'default' => __( 'Community', 'foxfire-operations' ),
+			'description' => __( 'Heading for the third brand pillar.', 'foxfire-operations' ),
+		),
+		'about_value_community_text' => array(
+			'section' => 'about', 'label' => __( 'Community pillar text', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 260,
+			'default' => __( 'Foxfire is intended to grow through genuine relationships, responsive support, and shared trust.', 'foxfire-operations' ),
+			'description' => __( 'Supporting copy for the Community pillar.', 'foxfire-operations' ),
+		),
+		'about_coa_eyebrow' => array(
+			'section' => 'about', 'label' => __( 'Testing callout label', 'foxfire-operations' ), 'type' => 'text', 'max' => 60,
+			'default' => __( 'Testing & Documentation', 'foxfire-operations' ),
+			'description' => __( 'Short label above the Testing/COA callout.', 'foxfire-operations' ),
+		),
+		'about_coa_title' => array(
+			'section' => 'about', 'label' => __( 'Testing callout heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 120,
+			'default' => __( 'Know What’s Behind the Vial.', 'foxfire-operations' ),
+			'description' => __( 'Heading in the About page Testing/COA callout.', 'foxfire-operations' ),
+		),
+		'about_coa_description' => array(
+			'section' => 'about', 'label' => __( 'Testing callout description', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 320,
+			'default' => __( 'Review available testing status, batch and lot information, and COA documents in one clear directory.', 'foxfire-operations' ),
+			'description' => __( 'Supporting copy in the Testing/COA callout.', 'foxfire-operations' ),
+		),
+		'about_community_title' => array(
+			'section' => 'about', 'label' => __( 'Community statement heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 120,
+			'default' => __( 'The Road Is Better Together.', 'foxfire-operations' ),
+			'description' => __( 'Heading in the closing community statement.', 'foxfire-operations' ),
+		),
+		'about_community_description' => array(
+			'section' => 'about', 'label' => __( 'Community statement text', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 320,
+			'default' => __( 'Foxfire is more than a catalog. It is a brand being built in the open—with a founder customers can recognize and a community that helps shape what comes next.', 'foxfire-operations' ),
+			'description' => __( 'Supporting copy in the closing community statement.', 'foxfire-operations' ),
 		),
 		'about_cta_title' => array(
 			'section' => 'about', 'label' => __( 'Closing heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 100,
-			'default' => __( 'Explore Foxfire Peptides', 'foxfire-operations' ),
+			'default' => __( 'Start With What Matters Most', 'foxfire-operations' ),
 			'description' => __( 'Heading in the About page call to action.', 'foxfire-operations' ),
 		),
 		'about_cta_description' => array(
 			'section' => 'about', 'label' => __( 'Closing description', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 320,
-			'default' => __( 'Browse our catalog of research compounds or check out available batch documentation and certificates of analysis.', 'foxfire-operations' ),
+			'default' => __( 'Explore the focused catalog or review available testing documentation.', 'foxfire-operations' ),
 			'description' => __( 'Supporting text in the About page call to action.', 'foxfire-operations' ),
+		),
+		'about_primary_cta' => array(
+			'section' => 'about', 'label' => __( 'Shop button label', 'foxfire-operations' ), 'type' => 'text', 'max' => 40,
+			'default' => __( 'Shop Products', 'foxfire-operations' ),
+			'description' => __( 'The destination remains the WooCommerce shop.', 'foxfire-operations' ),
+		),
+		'about_secondary_cta' => array(
+			'section' => 'about', 'label' => __( 'Testing button label', 'foxfire-operations' ), 'type' => 'text', 'max' => 60,
+			'default' => __( 'View Testing & COAs', 'foxfire-operations' ),
+			'description' => __( 'The destination remains the Testing/COA page.', 'foxfire-operations' ),
 		),
 		'contact_eyebrow' => array(
 			'section' => 'contact', 'label' => __( 'Contact page eyebrow', 'foxfire-operations' ), 'type' => 'text', 'max' => 80,
@@ -226,11 +352,11 @@ function foxfire_operations_public_content_schema(): array {
 			'description' => __( 'Plain-text answer for question 1.', 'foxfire-operations' ),
 		),
 		'faq_question_2' => array(
-			'section' => 'faq', 'label' => __( 'Question 2', 'foxfire-operations' ), 'type' => 'text', 'max' => 180, 'default' => __( 'What quantity options are available?', 'foxfire-operations' ),
+			'section' => 'faq', 'label' => __( 'Question 2', 'foxfire-operations' ), 'type' => 'text', 'max' => 180, 'default' => __( 'Can I order more than one vial?', 'foxfire-operations' ),
 			'description' => __( 'Leave both fields blank to hide this FAQ item.', 'foxfire-operations' ),
 		),
 		'faq_answer_2' => array(
-			'section' => 'faq', 'label' => __( 'Answer 2', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 700, 'default' => __( 'Each product page shows the quantity options currently available for that item. Pricing and availability may vary by product.', 'foxfire-operations' ),
+			'section' => 'faq', 'label' => __( 'Answer 2', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 700, 'default' => __( 'Yes. Multiple-vial quantities are available on select products. Available quantity options and pricing are shown directly on each product page.', 'foxfire-operations' ),
 			'description' => __( 'Plain-text answer for question 2.', 'foxfire-operations' ),
 		),
 		'faq_question_3' => array(
@@ -270,12 +396,12 @@ function foxfire_operations_public_content_schema(): array {
 			'description' => __( 'Leave both fields blank to hide this FAQ item.', 'foxfire-operations' ),
 		),
 		'faq_answer_7' => array(
-			'section' => 'faq', 'label' => __( 'Answer 7', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 700, 'default' => __( 'Cart and checkout calculate the eligible shipping amount from the destination and current order total. Free shipping is applied automatically when the saved WooCommerce rule is met.', 'foxfire-operations' ),
+			'section' => 'faq', 'label' => __( 'Answer 7', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 700, 'default' => __( 'Shipping is calculated at checkout based on your delivery address and order total. If your order qualifies for free shipping, it will be applied automatically.', 'foxfire-operations' ),
 			'description' => __( 'Plain-text answer for question 7.', 'foxfire-operations' ),
 		),
 		'faq_question_8' => array(
 			'section' => 'faq', 'label' => __( 'Question 8', 'foxfire-operations' ), 'type' => 'text', 'max' => 180, 'default' => __( 'Is an account required to order?', 'foxfire-operations' ),
-			'description' => __( 'Leave both fields blank to hide this FAQ item.', 'foxfire-operations' ),
+			'description' => __( 'Dedicated FAQ page only; this account question is excluded from the homepage. Leave both fields blank to hide it on the FAQ page too.', 'foxfire-operations' ),
 		),
 		'faq_answer_8' => array(
 			'section' => 'faq', 'label' => __( 'Answer 8', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 700, 'default' => __( 'You can browse products without an account. The checkout page reflects the current guest-checkout setting, while an account provides access to saved addresses, orders, tracking, and available COA documents.', 'foxfire-operations' ),
@@ -283,12 +409,12 @@ function foxfire_operations_public_content_schema(): array {
 		),
 		'footer_tagline' => array(
 			'section' => 'footer', 'label' => __( 'Footer tagline', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 220,
-			'default' => __( 'Quality research peptides with transparent testing information.', 'foxfire-operations' ),
+			'default' => __( 'Research compounds with transparent testing, clear documentation, and straightforward ordering.', 'foxfire-operations' ),
 			'description' => __( 'Short brand statement in the footer.', 'foxfire-operations' ),
 		),
 		'footer_research_notice' => array(
 			'section' => 'footer', 'label' => __( 'Footer research notice', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 220,
-			'default' => __( 'For research use only. Not for human consumption.', 'foxfire-operations' ),
+			'default' => __( 'For laboratory research use only. Not for human consumption.', 'foxfire-operations' ),
 			'description' => __( 'Sitewide footer notice. Obtain legal approval before changing it.', 'foxfire-operations' ),
 		),
 	);
@@ -514,7 +640,16 @@ function foxfire_operations_save_public_content(): void {
 	foreach ( $schema as $key => $field ) {
 		$raw = isset( $posted[ $key ] ) && is_string( $posted[ $key ] ) ? trim( $posted[ $key ] ) : '';
 
-		if ( 'email' === $field['type'] ) {
+		if ( 'checkbox' === $field['type'] ) {
+			$value = 'yes' === sanitize_key( $raw ) ? 'yes' : 'no';
+		} elseif ( 'image' === $field['type'] ) {
+			$attachment_id = absint( $raw );
+			if ( $attachment_id > 0 && ( ! ( get_post( $attachment_id ) instanceof WP_Post ) || ! wp_attachment_is_image( $attachment_id ) ) ) {
+				$status = 'invalid-image';
+				break;
+			}
+			$value = (string) $attachment_id;
+		} elseif ( 'email' === $field['type'] ) {
 			$value = sanitize_email( $raw );
 			if ( '' !== $raw && ( '' === $value || ! is_email( $value ) ) ) {
 				$status = 'invalid-email';
@@ -573,6 +708,8 @@ function foxfire_operations_render_content_page(): void {
 			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Site content saved.', 'foxfire-operations' ); ?></p></div>
 		<?php elseif ( 'invalid-email' === $status ) : ?>
 			<div class="notice notice-error"><p><?php esc_html_e( 'Nothing was saved because the public support email was invalid.', 'foxfire-operations' ); ?></p></div>
+		<?php elseif ( 'invalid-image' === $status ) : ?>
+			<div class="notice notice-error"><p><?php esc_html_e( 'Nothing was saved because the selected founder image was not a valid Media Library image.', 'foxfire-operations' ); ?></p></div>
 		<?php endif; ?>
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="ff-content-form">
@@ -595,10 +732,31 @@ function foxfire_operations_render_content_page(): void {
 								<td>
 									<?php if ( 'textarea' === $field['type'] ) : ?>
 										<textarea class="large-text" rows="3" id="foxfire-<?php echo esc_attr( $key ); ?>" name="foxfire_public_content[<?php echo esc_attr( $key ); ?>]" maxlength="<?php echo esc_attr( (string) $field['max'] ); ?>"><?php echo esc_textarea( $value ); ?></textarea>
+									<?php elseif ( 'checkbox' === $field['type'] ) : ?>
+										<input type="hidden" name="foxfire_public_content[<?php echo esc_attr( $key ); ?>]" value="no">
+										<label for="foxfire-<?php echo esc_attr( $key ); ?>">
+											<input type="checkbox" id="foxfire-<?php echo esc_attr( $key ); ?>" name="foxfire_public_content[<?php echo esc_attr( $key ); ?>]" value="yes" <?php checked( 'yes', $value ); ?>>
+											<?php esc_html_e( 'Display this section', 'foxfire-operations' ); ?>
+										</label>
+									<?php elseif ( 'image' === $field['type'] ) : ?>
+										<?php
+										$attachment_id = absint( $value );
+										$preview_url  = $attachment_id > 0 ? wp_get_attachment_image_url( $attachment_id, 'medium' ) : false;
+										?>
+										<div class="ff-content-image-field" data-choose-label="<?php echo esc_attr__( 'Use this image', 'foxfire-operations' ); ?>" data-dialog-title="<?php echo esc_attr__( 'Choose founder image', 'foxfire-operations' ); ?>" data-empty-label="<?php echo esc_attr__( 'Choose image', 'foxfire-operations' ); ?>" data-replace-label="<?php echo esc_attr__( 'Replace image', 'foxfire-operations' ); ?>">
+											<input type="hidden" id="foxfire-<?php echo esc_attr( $key ); ?>" name="foxfire_public_content[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( (string) $attachment_id ); ?>">
+											<div class="ff-content-image-field__preview" <?php echo $preview_url ? '' : 'hidden'; ?>>
+												<img src="<?php echo esc_url( $preview_url ? $preview_url : '' ); ?>" alt="">
+											</div>
+											<div class="ff-content-image-field__actions">
+												<button type="button" class="button ff-content-image-field__choose"><?php echo esc_html( $preview_url ? __( 'Replace image', 'foxfire-operations' ) : __( 'Choose image', 'foxfire-operations' ) ); ?></button>
+												<button type="button" class="button-link-delete ff-content-image-field__remove" <?php echo $preview_url ? '' : 'hidden'; ?>><?php esc_html_e( 'Remove image', 'foxfire-operations' ); ?></button>
+											</div>
+										</div>
 									<?php else : ?>
 										<input class="regular-text" type="<?php echo esc_attr( $field['type'] ); ?>" id="foxfire-<?php echo esc_attr( $key ); ?>" name="foxfire_public_content[<?php echo esc_attr( $key ); ?>]" maxlength="<?php echo esc_attr( (string) $field['max'] ); ?>" value="<?php echo esc_attr( $value ); ?>">
 									<?php endif; ?>
-									<p class="description"><?php echo esc_html( $field['description'] ); ?> <?php esc_html_e( 'Leave blank to use the built-in fallback.', 'foxfire-operations' ); ?></p>
+									<p class="description"><?php echo esc_html( $field['description'] ); ?><?php if ( ! in_array( $field['type'], array( 'checkbox', 'image' ), true ) ) : ?> <?php esc_html_e( 'Leave blank to use the built-in fallback.', 'foxfire-operations' ); ?><?php endif; ?></p>
 								</td>
 							</tr>
 						<?php endforeach; ?>

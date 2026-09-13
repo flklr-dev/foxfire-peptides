@@ -14,15 +14,17 @@ $contact_url = foxfire_get_page_url( 'contact', '/contact/' );
 $faq_url     = foxfire_get_page_url( 'faq', '/faq/' );
 $terms_url   = foxfire_get_page_url( 'terms-and-conditions', '/terms-and-conditions/' );
 $privacy_url = foxfire_get_page_url( 'privacy-policy', '/privacy-policy/' );
-$refund_url  = foxfire_get_page_url( 'refund-and-returns-policy', '/refund-and-returns-policy/' );
 $shipping_url = foxfire_get_page_url( 'shipping-policy', '/shipping-policy/' );
+$research_url = $terms_url . '#tc-ruo';
+$research_page = get_page_by_path( 'research-use-policy', OBJECT, 'page' );
+if ( $research_page instanceof WP_Post && 'publish' === $research_page->post_status ) {
+	$research_url = get_permalink( $research_page );
+}
+$account_url = foxfire_get_wc_page_url( 'myaccount' );
+$orders_url = function_exists( 'wc_get_endpoint_url' ) ? wc_get_endpoint_url( 'orders', '', $account_url ) : $account_url;
 $year        = (string) gmdate( 'Y' );
-$footer_tagline = foxfire_get_managed_content( 'footer_tagline', __( 'Quality research peptides with transparent testing information.', 'foxfire-child' ) );
-$research_notice = foxfire_get_managed_content( 'footer_research_notice', __( 'For research use only. Not for human consumption.', 'foxfire-child' ) );
-$support_email = foxfire_get_managed_content( 'support_email', 'support@foxfirepeptides.com' );
-$support_phone = foxfire_get_managed_content( 'support_phone', '' );
-$support_phone_uri = preg_replace( '/[^0-9+]/', '', $support_phone );
-$contact_hours = foxfire_get_managed_content( 'contact_hours', __( 'Mon – Fri, 9 AM – 5 PM EST', 'foxfire-child' ) );
+$footer_tagline = foxfire_get_managed_content( 'footer_tagline', __( 'Research compounds with transparent testing, clear documentation, and straightforward ordering.', 'foxfire-child' ) );
+$research_notice = foxfire_get_managed_content( 'footer_research_notice', __( 'For laboratory research use only. Not for human consumption.', 'foxfire-child' ) );
 ?>
 
 <div class="ff-site-footer">
@@ -34,56 +36,40 @@ $contact_hours = foxfire_get_managed_content( 'contact_hours', __( 'Mon – Fri,
 			</p>
 		</div>
 
-		<nav class="ff-site-footer__nav" aria-label="<?php esc_attr_e( 'Footer', 'foxfire-child' ); ?>">
+		<nav class="ff-site-footer__nav" aria-labelledby="ff-footer-shop-heading">
+			<h2 id="ff-footer-shop-heading" class="ff-site-footer__section-label"><?php esc_html_e( 'Shop', 'foxfire-child' ); ?></h2>
 			<ul class="ff-site-footer__links">
-				<li><a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Shop', 'foxfire-child' ); ?></a></li>
-				<li><a href="<?php echo esc_url( $testing_url ); ?>"><?php esc_html_e( 'Testing/COA', 'foxfire-child' ); ?></a></li>
-				<li><a href="<?php echo esc_url( $about_url ); ?>"><?php esc_html_e( 'About', 'foxfire-child' ); ?></a></li>
-				<li><a href="<?php echo esc_url( $faq_url ); ?>"><?php esc_html_e( 'FAQ', 'foxfire-child' ); ?></a></li>
-				<li><a href="<?php echo esc_url( $contact_url ); ?>"><?php esc_html_e( 'Contact', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Research Compounds', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $testing_url ); ?>"><?php esc_html_e( 'Testing & COAs', 'foxfire-child' ); ?></a></li>
 			</ul>
 		</nav>
 
-		<div class="ff-site-footer__policies">
-			<p class="ff-site-footer__section-label"><?php esc_html_e( 'Legal', 'foxfire-child' ); ?></p>
+		<nav class="ff-site-footer__information" aria-labelledby="ff-footer-information-heading">
+			<h2 id="ff-footer-information-heading" class="ff-site-footer__section-label"><?php esc_html_e( 'Information', 'foxfire-child' ); ?></h2>
 			<ul class="ff-site-footer__links">
-				<li>
-					<a href="<?php echo esc_url( $terms_url ); ?>">
-						<?php esc_html_e( 'Terms & Conditions', 'foxfire-child' ); ?>
-					</a>
-				</li>
-				<li>
-					<a href="<?php echo esc_url( $privacy_url ); ?>">
-						<?php esc_html_e( 'Privacy Policy', 'foxfire-child' ); ?>
-					</a>
-				</li>
-				<li>
-					<a href="<?php echo esc_url( $refund_url ); ?>">
-						<?php esc_html_e( 'Refund & Returns', 'foxfire-child' ); ?>
-					</a>
-				</li>
-				<li>
-					<a href="<?php echo esc_url( $shipping_url ); ?>">
-						<?php esc_html_e( 'Shipping Policy', 'foxfire-child' ); ?>
-					</a>
-				</li>
+				<li><a href="<?php echo esc_url( $about_url ); ?>"><?php esc_html_e( 'About Foxfire', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $faq_url ); ?>"><?php esc_html_e( 'FAQ', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $contact_url ); ?>"><?php esc_html_e( 'Contact', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $shipping_url ); ?>"><?php esc_html_e( 'Shipping & Returns', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $privacy_url ); ?>"><?php esc_html_e( 'Privacy Policy', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $terms_url ); ?>"><?php esc_html_e( 'Terms & Conditions', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $research_url ); ?>"><?php esc_html_e( 'Research Use Policy', 'foxfire-child' ); ?></a></li>
 			</ul>
-		</div>
+		</nav>
 
-		<div class="ff-site-footer__contact">
-			<p class="ff-site-footer__section-label"><?php esc_html_e( 'Contact', 'foxfire-child' ); ?></p>
-			<p class="ff-site-footer__contact-link">
-				<a href="mailto:<?php echo esc_attr( $support_email ); ?>"><?php echo esc_html( $support_email ); ?></a>
-			</p>
-			<?php if ( '' !== $support_phone && '' !== $support_phone_uri ) : ?>
-				<p class="ff-site-footer__contact-link"><a href="tel:<?php echo esc_attr( $support_phone_uri ); ?>"><?php echo esc_html( $support_phone ); ?></a></p>
-			<?php endif; ?>
-			<p class="ff-site-footer__contact-placeholder"><?php echo esc_html( $contact_hours ); ?></p>
-			<p class="ff-site-footer__contact-link"><a href="<?php echo esc_url( $contact_url ); ?>"><?php esc_html_e( 'Contact form', 'foxfire-child' ); ?></a></p>
-		</div>
+		<nav class="ff-site-footer__account" aria-labelledby="ff-footer-account-heading">
+			<h2 id="ff-footer-account-heading" class="ff-site-footer__section-label"><?php esc_html_e( 'Account', 'foxfire-child' ); ?></h2>
+			<ul class="ff-site-footer__links">
+				<li><a href="<?php echo esc_url( $account_url ); ?>"><?php esc_html_e( 'My Account', 'foxfire-child' ); ?></a></li>
+				<li><a href="<?php echo esc_url( $orders_url ); ?>"><?php esc_html_e( 'Order History', 'foxfire-child' ); ?></a></li>
+			</ul>
+		</nav>
 	</div>
 
 	<div class="ff-site-footer__bottom">
+		<p class="ff-site-footer__research-note">
+			<?php echo esc_html( $research_notice ); ?>
+		</p>
 		<p class="ff-site-footer__copyright">
 			<?php
 			printf(
@@ -93,9 +79,6 @@ $contact_hours = foxfire_get_managed_content( 'contact_hours', __( 'Mon – Fri,
 				esc_html( get_bloginfo( 'name' ) )
 			);
 			?>
-		</p>
-		<p class="ff-site-footer__research-note">
-			<?php echo esc_html( $research_notice ); ?>
 		</p>
 	</div>
 </div>

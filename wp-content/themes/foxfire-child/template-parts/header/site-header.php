@@ -8,7 +8,6 @@
 defined( 'ABSPATH' ) || exit;
 
 $shop_url     = foxfire_get_shop_url();
-$categories   = foxfire_get_nav_product_categories();
 $cart_url     = foxfire_get_wc_page_url( 'cart' );
 $account_url  = foxfire_get_wc_page_url( 'myaccount' );
 $testing_url  = foxfire_get_page_url( 'testing-coa', '/testing-coa/' );
@@ -105,20 +104,8 @@ $is_cart     = function_exists( 'is_cart' ) && is_cart();
 			>
 				<ul class="ff-primary-nav__list">
 					<li class="ff-primary-nav__item">
-						<a class="ff-primary-nav__link <?php echo $is_home ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $home_url ); ?>">
-							<?php esc_html_e( 'Home', 'foxfire-child' ); ?>
-						</a>
-					</li>
-
-					<li class="ff-primary-nav__item">
-						<a class="ff-primary-nav__link <?php echo $is_shop ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $shop_url ); ?>">
-							<?php esc_html_e( 'Shop', 'foxfire-child' ); ?>
-						</a>
-					</li>
-
-					<li class="ff-primary-nav__item">
 						<a class="ff-primary-nav__link <?php echo $is_testing ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $testing_url ); ?>">
-							<?php esc_html_e( 'Testing/COA', 'foxfire-child' ); ?>
+							<?php esc_html_e( 'Testing & COAs', 'foxfire-child' ); ?>
 						</a>
 					</li>
 
@@ -158,7 +145,7 @@ $is_cart     = function_exists( 'is_cart' ) && is_cart();
 				</a>
 
 				<a
-					class="ff-header-cart-btn ff-header-cart-btn--primary <?php echo $is_cart ? 'is-active' : ''; ?>"
+					class="ff-header-cart-btn ff-header-cart-btn--icon <?php echo $is_cart ? 'is-active' : ''; ?>"
 					href="<?php echo esc_url( $cart_url ); ?>"
 					aria-label="<?php esc_attr_e( 'View shopping cart', 'foxfire-child' ); ?>"
 				>
@@ -169,10 +156,10 @@ $is_cart     = function_exists( 'is_cart' ) && is_cart();
 							<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
 						</svg>
 					</span>
-					<span class="ff-header-cart-btn__label"><?php esc_html_e( 'Cart', 'foxfire-child' ); ?></span>
 					<?php foxfire_render_cart_count_badge(); ?>
 				</a>
 			</div>
+			<a class="ff-header-shop-cta <?php echo $is_shop ? 'is-active' : ''; ?>" href="<?php echo esc_url( $shop_url ); ?>" <?php echo $is_shop ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'SHOP RESEARCH COMPOUNDS', 'foxfire-child' ); ?></a>
 		</div>
 	</div>
 </div>

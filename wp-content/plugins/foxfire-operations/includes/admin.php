@@ -62,6 +62,18 @@ function foxfire_operations_enqueue_admin_assets( string $hook_suffix ): void {
 		);
 	}
 
+	if ( $is_content_page ) {
+		wp_enqueue_media();
+		$content_script_path = FOXFIRE_OPERATIONS_DIR . 'assets/site-content.js';
+		wp_enqueue_script(
+			'foxfire-operations-site-content',
+			FOXFIRE_OPERATIONS_URL . 'assets/site-content.js',
+			array(),
+			file_exists( $content_script_path ) ? (string) filemtime( $content_script_path ) : FOXFIRE_OPERATIONS_VERSION,
+			true
+		);
+	}
+
 	if ( ! $is_product_screen || 'post' !== $screen->base ) {
 		return;
 	}

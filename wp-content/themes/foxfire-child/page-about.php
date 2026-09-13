@@ -1,276 +1,205 @@
 <?php
 /**
- * Template Name: About Us
+ * About page template.
  *
- * About Us page for Foxfire Peptides.
- * Structure and layout inspired by modern editorial bento benchmark.
- * Brand tone: Professional, trustworthy, approachable, quality-focused, and community-oriented.
- * Styled strictly per DESIGN.md and client brand copy requirements.
- *
- * @package Foxfire_Child
+ * @package Foxfire_Peptides
  */
 
 defined( 'ABSPATH' ) || exit;
 
 get_header();
 
-$shop_url      = foxfire_get_shop_url();
-$testing_url   = foxfire_get_page_url( 'testing-coa', '/testing-coa/' );
-$hero_portrait = get_stylesheet_directory_uri() . '/assets/images/about-hero-portrait.webp';
-$hero_product  = get_stylesheet_directory_uri() . '/assets/images/about-hero-product.webp';
-$hero_team     = get_stylesheet_directory_uri() . '/assets/images/about-hero-team.webp';
-$hero_portrait_sm = get_stylesheet_directory_uri() . '/assets/images/about-hero-portrait-480.webp';
-$hero_product_sm  = get_stylesheet_directory_uri() . '/assets/images/about-hero-product-480.webp';
-$hero_team_sm     = get_stylesheet_directory_uri() . '/assets/images/about-hero-team-480.webp';
+$shop_url    = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() : home_url( '/shop/' );
+$testing_url = home_url( '/testing-coa/' );
+$founder_enabled  = 'yes' === foxfire_get_managed_content( 'about_founder_enabled', 'yes' );
+$founder_image_id = absint( foxfire_get_managed_content( 'about_founder_image', '0' ) );
+$founder_image    = '';
+
+if ( $founder_image_id ) {
+	$founder_image = wp_get_attachment_image(
+		$founder_image_id,
+		'large',
+		false,
+		array(
+			'class'   => 'ff-about-founder__image',
+			'alt'     => foxfire_get_managed_content( 'about_founder_image_alt', 'Jay, founder of Foxfire Peptides' ),
+			'loading' => 'lazy',
+		)
+	);
+}
+
+if ( ! $founder_image ) {
+	$template_image_path     = get_stylesheet_directory() . '/assets/images/founder-jay.webp';
+	$template_image_fallback = get_stylesheet_directory() . '/assets/images/founder-jay.jpg';
+
+	if ( file_exists( $template_image_path ) || file_exists( $template_image_fallback ) ) {
+		$image_src = file_exists( $template_image_path )
+			? FOXFIRE_CHILD_URI . '/assets/images/founder-jay.webp'
+			: FOXFIRE_CHILD_URI . '/assets/images/founder-jay.jpg';
+		$image_sm  = FOXFIRE_CHILD_URI . '/assets/images/founder-jay-480.webp';
+		$alt_text  = foxfire_get_managed_content( 'about_founder_image_alt', 'Jay, founder of Foxfire Peptides' );
+
+		$founder_image = sprintf(
+			'<img src="%1$s" srcset="%2$s 480w, %1$s 896w" sizes="(max-width: 640px) 100vw, 450px" width="896" height="1200" class="ff-about-founder__image" alt="%3$s" loading="lazy" />',
+			esc_url( $image_src ),
+			esc_url( $image_sm ),
+			esc_attr( $alt_text )
+		);
+	}
+}
 ?>
-<main id="main-content" class="ff-about-page" tabindex="-1">
 
-	<!-- ====================================================================
-	     SECTION 1: HERO & ASYMMETRIC BENTO COLLAGE GRID
-	     ==================================================================== -->
-	<section class="ff-about-hero-section">
-		<div class="ff-about-hero-container">
-
-			<!-- Hero Centered Header -->
-			<header class="ff-about-header">
-				<h1 class="ff-about-header__title"><?php echo esc_html( foxfire_get_managed_content( 'about_hero_title', __( 'Built on Quality, Trust & Community', 'foxfire-child' ) ) ); ?></h1>
-				<p class="ff-about-header__subtitle">
-					<?php echo esc_html( foxfire_get_managed_content( 'about_hero_intro', __( 'Foxfire Peptides is focused on creating a straightforward, transparent experience for research customers. We believe quality products, accessible information, and dependable service are the foundation of lasting relationships.', 'foxfire-child' ) ) ); ?>
+<main id="main-content" class="site-main ff-about-page" tabindex="-1">
+	<section class="ff-about-hero" aria-labelledby="ff-about-title">
+		<div class="ff-about-container">
+			<div class="ff-about-hero__copy">
+				<p class="ff-about-eyebrow"><?php echo esc_html( foxfire_get_managed_content( 'about_hero_eyebrow', 'About Foxfire' ) ); ?></p>
+				<h1 id="ff-about-title" class="ff-about-hero__title"><?php echo esc_html( foxfire_get_managed_content( 'about_hero_title', 'The Road Is Better Together.' ) ); ?></h1>
+				<p class="ff-about-hero__lead"><?php echo esc_html( foxfire_get_managed_content( 'about_hero_intro', 'Foxfire Peptides is being built as a focused, human-led peptide company—with clear product information, a recognizable founder, and genuine relationships at its heart.' ) ); ?></p>
+				<p class="ff-about-hero__values" aria-label="Foxfire brand values">
+					<span><?php esc_html_e( 'Quality', 'foxfire-peptides' ); ?></span>
+					<span class="ff-about-hero__separator" aria-hidden="true">•</span>
+					<span><?php esc_html_e( 'Transparency', 'foxfire-peptides' ); ?></span>
+					<span class="ff-about-hero__separator" aria-hidden="true">•</span>
+					<span><?php esc_html_e( 'Community', 'foxfire-peptides' ); ?></span>
 				</p>
-			</header>
+			</div>
+		</div>
+	</section>
 
-			<!-- 3-Column Bento Grid -->
-			<div class="ff-about-bento-grid">
+	<section class="ff-about-story" aria-labelledby="ff-about-story-title">
+		<div class="ff-about-container ff-about-story__grid">
+			<div class="ff-about-story__copy">
+				<p class="ff-about-eyebrow"><?php esc_html_e( 'Why Foxfire', 'foxfire-peptides' ); ?></p>
+				<h2 id="ff-about-story-title" class="ff-about-section-title"><?php echo esc_html( foxfire_get_managed_content( 'about_story_title', 'A Focused, More Personal Approach' ) ); ?></h2>
+				<p><?php echo esc_html( foxfire_get_managed_content( 'about_story_one', 'Foxfire is designed around a focused catalog rather than an overwhelming warehouse of options. The goal is to make it simple to find a product, understand the available strengths, and move through checkout without unnecessary friction.' ) ); ?></p>
+				<p><?php echo esc_html( foxfire_get_managed_content( 'about_story_two', 'As the company grows, the commitment stays the same: communicate clearly, make available documentation easy to find, and create an experience customers can navigate with confidence.' ) ); ?></p>
+			</div>
 
-				<!-- Column 1 (Left): Tall Portrait Image -->
-				<div class="ff-bento-col ff-bento-col--tall">
-					<div class="ff-bento-card ff-bento-card--image-tall">
-						<img
-							src="<?php echo esc_url( $hero_portrait ); ?>"
-							srcset="<?php echo esc_attr( $hero_portrait_sm . ' 480w, ' . $hero_portrait . ' 800w' ); ?>"
-							sizes="(max-width: 767px) calc(100vw - 40px), 33vw"
-							alt="<?php esc_attr_e( 'Foxfire Peptides team member in a bright, modern studio workspace', 'foxfire-child' ); ?>"
-							class="ff-bento-img"
-							width="800"
-							height="1067"
-							loading="eager"
-							fetchpriority="high"
-							decoding="async"
-						/>
-					</div>
-				</div>
+			<aside class="ff-about-story-card">
+				<p class="ff-about-story-card__label"><?php echo esc_html( foxfire_get_managed_content( 'about_story_callout_title', 'Focused by design' ) ); ?></p>
+				<p><?php echo esc_html( foxfire_get_managed_content( 'about_story_callout_text', 'A smaller, intentional catalog keeps the experience straightforward—from product discovery to testing information and account support.' ) ); ?></p>
+				<ul>
+					<li><?php esc_html_e( 'Simple shopping on every screen', 'foxfire-peptides' ); ?></li>
+					<li><?php esc_html_e( 'Clear product and batch information', 'foxfire-peptides' ); ?></li>
+					<li><?php esc_html_e( 'A recognizable, human-led brand', 'foxfire-peptides' ); ?></li>
+				</ul>
+			</aside>
+		</div>
+	</section>
 
-				<!-- Column 2 (Middle): Orange Pillar Card + Product Image -->
-				<div class="ff-bento-col ff-bento-col--middle">
-					<!-- Orange Brand Callout Card -->
-					<div class="ff-bento-card ff-bento-card--stat-orange">
-						<div class="ff-bento-card__content">
-							<span class="ff-bento-card__eyebrow"><?php esc_html_e( 'Our Commitment', 'foxfire-child' ); ?></span>
-							<h2 class="ff-bento-card__heading"><?php esc_html_e( 'Transparent & Straightforward', 'foxfire-child' ); ?></h2>
-							<p class="ff-bento-card__text"><?php esc_html_e( 'Accessible documentation, dependable service, and clear communication every step of the way.', 'foxfire-child' ); ?></p>
+	<?php if ( $founder_enabled ) : ?>
+		<section class="ff-about-founder" aria-labelledby="ff-about-founder-title">
+			<div class="ff-about-container ff-about-founder__grid">
+				<div class="ff-about-founder__media">
+					<?php if ( $founder_image ) : ?>
+						<?php
+						echo wp_kses(
+							$founder_image,
+							array(
+								'img' => array(
+									'src'      => true,
+									'srcset'   => true,
+									'sizes'    => true,
+									'alt'      => true,
+									'class'    => true,
+									'width'    => true,
+									'height'   => true,
+									'loading'  => true,
+									'decoding' => true,
+								),
+							)
+						);
+						?>
+					<?php else : ?>
+						<div class="ff-about-founder__placeholder" role="img" aria-label="Founder photograph will be added before launch">
+							<span class="ff-about-founder__placeholder-mark" aria-hidden="true">FF</span>
+							<span><?php esc_html_e( 'Human-led by design', 'foxfire-peptides' ); ?></span>
 						</div>
-					</div>
-
-					<!-- Product Image Card -->
-					<div class="ff-bento-card ff-bento-card--image-landscape">
-						<img
-							src="<?php echo esc_url( $hero_product ); ?>"
-							srcset="<?php echo esc_attr( $hero_product_sm . ' 480w, ' . $hero_product . ' 800w' ); ?>"
-							sizes="(max-width: 767px) calc(100vw - 40px), 33vw"
-							alt="<?php esc_attr_e( 'Clean Foxfire Peptides research vials in natural studio light', 'foxfire-child' ); ?>"
-							class="ff-bento-img"
-							width="800"
-							height="600"
-							loading="eager"
-							decoding="async"
-						/>
-					</div>
+					<?php endif; ?>
 				</div>
 
-				<!-- Column 3 (Right): Team Image + Charcoal Brand Card -->
-				<div class="ff-bento-col ff-bento-col--right">
-					<!-- Team Collaboration Image Card -->
-					<div class="ff-bento-card ff-bento-card--image-landscape">
-						<img
-							src="<?php echo esc_url( $hero_team ); ?>"
-							srcset="<?php echo esc_attr( $hero_team_sm . ' 480w, ' . $hero_team . ' 800w' ); ?>"
-							sizes="(max-width: 767px) calc(100vw - 40px), 33vw"
-							alt="<?php esc_attr_e( 'Friendly team members collaborating and supporting researchers', 'foxfire-child' ); ?>"
-							class="ff-bento-img"
-							width="800"
-							height="600"
-							loading="eager"
-							decoding="async"
-						/>
-					</div>
-
-					<!-- Charcoal Brand Callout Card -->
-					<div class="ff-bento-card ff-bento-card--stat-dark">
-						<div class="ff-bento-card__content">
-							<span class="ff-bento-card__eyebrow"><?php esc_html_e( 'Who We Are', 'foxfire-child' ); ?></span>
-							<h2 class="ff-bento-card__heading"><?php esc_html_e( 'Real People Behind Foxfire', 'foxfire-child' ); ?></h2>
-							<p class="ff-bento-card__text"><?php esc_html_e( 'Dedicated to building lasting relationships with the research community through genuine care.', 'foxfire-child' ); ?></p>
-						</div>
-					</div>
+				<div class="ff-about-founder__copy">
+					<p class="ff-about-eyebrow"><?php echo esc_html( foxfire_get_managed_content( 'about_founder_eyebrow', 'Meet the Founder' ) ); ?></p>
+					<h2 id="ff-about-founder-title" class="ff-about-section-title"><?php echo esc_html( foxfire_get_managed_content( 'about_founder_name', 'Meet Jay' ) ); ?></h2>
+					<p class="ff-about-founder__role"><?php echo esc_html( foxfire_get_managed_content( 'about_founder_role', 'Founder of Foxfire Peptides' ) ); ?></p>
+					<p><?php echo esc_html( foxfire_get_managed_content( 'about_founder_story_one', 'Foxfire is being built as a human-led company rather than another anonymous peptide storefront. Jay plans to be publicly connected to the brand and accountable for the experience it creates.' ) ); ?></p>
+					<p><?php echo esc_html( foxfire_get_managed_content( 'about_founder_story_two', 'The aim is straightforward: keep products easy to shop, make available information easy to find, and build lasting relationships through clear communication and dependable service.' ) ); ?></p>
+					<blockquote><?php echo esc_html( foxfire_get_managed_content( 'about_founder_quote', 'The Road Is Better Together.' ) ); ?></blockquote>
 				</div>
+			</div>
+		</section>
+	<?php endif; ?>
 
+	<section class="ff-about-values" aria-labelledby="ff-about-values-title">
+		<div class="ff-about-container">
+			<div class="ff-about-section-header">
+				<p class="ff-about-eyebrow"><?php esc_html_e( 'What Guides Us', 'foxfire-peptides' ); ?></p>
+				<h2 id="ff-about-values-title" class="ff-about-section-title"><?php echo esc_html( foxfire_get_managed_content( 'about_values_title', 'Built Around Three Commitments' ) ); ?></h2>
+				<p class="ff-about-section-intro"><?php echo esc_html( foxfire_get_managed_content( 'about_values_intro', 'Three principles shape the store, the information we share, and the relationships we want to build.' ) ); ?></p>
+			</div>
+
+			<div class="ff-about-values__grid">
+				<article class="ff-about-value-card">
+					<span class="ff-about-value-card__index" aria-hidden="true">01</span>
+					<h3><?php echo esc_html( foxfire_get_managed_content( 'about_value_quality_title', 'Quality' ) ); ?></h3>
+					<p><?php echo esc_html( foxfire_get_managed_content( 'about_value_quality_text', 'A focused catalog, carefully presented product information, and a commitment to a dependable customer experience.' ) ); ?></p>
+				</article>
+				<article class="ff-about-value-card">
+					<span class="ff-about-value-card__index" aria-hidden="true">02</span>
+					<h3><?php echo esc_html( foxfire_get_managed_content( 'about_value_transparency_title', 'Transparency' ) ); ?></h3>
+					<p><?php echo esc_html( foxfire_get_managed_content( 'about_value_transparency_text', 'Available batch and testing information should be easy to locate and straightforward to review.' ) ); ?></p>
+				</article>
+				<article class="ff-about-value-card">
+					<span class="ff-about-value-card__index" aria-hidden="true">03</span>
+					<h3><?php echo esc_html( foxfire_get_managed_content( 'about_value_community_title', 'Community' ) ); ?></h3>
+					<p><?php echo esc_html( foxfire_get_managed_content( 'about_value_community_text', 'Foxfire is intended to grow through genuine relationships, responsive support, and shared trust.' ) ); ?></p>
+				</article>
 			</div>
 		</div>
 	</section>
 
-	<!-- ====================================================================
-	     SECTION 2: A MORE PERSONAL APPROACH & OUR APPROACH PILLARS
-	     ==================================================================== -->
-	<section class="ff-about-story-section" aria-labelledby="about-story-title">
-		<div class="ff-about-story-container">
-
-			<!-- Split 2-Column Story Row -->
-			<div class="ff-about-story-row">
-				<div class="ff-about-story-col ff-about-story-col--heading">
-					<h2 id="about-story-title" class="ff-about-story__heading">
-						<?php echo esc_html( foxfire_get_managed_content( 'about_story_title', __( 'A More Personal Approach', 'foxfire-child' ) ) ); ?>
-					</h2>
+	<section class="ff-about-coa" aria-labelledby="ff-about-coa-title">
+		<div class="ff-about-container">
+			<div class="ff-about-coa__panel">
+				<div class="ff-about-coa__icon" aria-hidden="true">
+					<svg viewBox="0 0 48 48" role="presentation" focusable="false">
+						<path d="M16 5h16v10l8 15a8 8 0 0 1-7 12H15a8 8 0 0 1-7-12l8-15V5Z" />
+						<path d="M14 29h20M18 13h12" />
+					</svg>
 				</div>
-				<div class="ff-about-story-col ff-about-story-col--body">
-					<p>
-						<?php echo esc_html( foxfire_get_managed_content( 'about_story_one', __( 'We want Foxfire to feel different from an anonymous online storefront. Our goal is to make purchasing simple, information easy to find, and communication clear throughout the customer experience.', 'foxfire-child' ) ) ); ?>
-					</p>
-					<p>
-						<?php echo esc_html( foxfire_get_managed_content( 'about_story_two', __( 'We believe that lasting trust is earned through everyday consistency. By focusing on clear product details, easy access to testing records where available, and responsive support whenever questions arise, we are building a brand researchers can count on for the long haul.', 'foxfire-child' ) ) ); ?>
-					</p>
+				<div class="ff-about-coa__copy">
+					<p class="ff-about-eyebrow"><?php echo esc_html( foxfire_get_managed_content( 'about_coa_eyebrow', 'Testing & Documentation' ) ); ?></p>
+					<h2 id="ff-about-coa-title"><?php echo esc_html( foxfire_get_managed_content( 'about_coa_title', 'Know What’s Behind the Vial.' ) ); ?></h2>
+					<p><?php echo esc_html( foxfire_get_managed_content( 'about_coa_description', 'Review available testing status, batch and lot information, and COA documents in one clear directory.' ) ); ?></p>
 				</div>
-			</div>
-
-			<!-- 4-Pillar Horizontal Row (Our Approach) -->
-			<div class="ff-about-stats-bar">
-				<div class="ff-stat-block">
-					<span class="ff-stat-block__value"><?php esc_html_e( 'Quality', 'foxfire-child' ); ?></span>
-					<span class="ff-stat-block__desc"><?php esc_html_e( 'Clear product and testing information where available.', 'foxfire-child' ); ?></span>
-				</div>
-				<div class="ff-stat-divider" aria-hidden="true"></div>
-				<div class="ff-stat-block">
-					<span class="ff-stat-block__value"><?php esc_html_e( 'Transparency', 'foxfire-child' ); ?></span>
-					<span class="ff-stat-block__desc"><?php esc_html_e( 'Easy access to batch and COA documentation.', 'foxfire-child' ); ?></span>
-				</div>
-				<div class="ff-stat-divider" aria-hidden="true"></div>
-				<div class="ff-stat-block">
-					<span class="ff-stat-block__value"><?php esc_html_e( 'Trust', 'foxfire-child' ); ?></span>
-					<span class="ff-stat-block__desc"><?php esc_html_e( 'Straightforward communication and a simple buying experience.', 'foxfire-child' ); ?></span>
-				</div>
-				<div class="ff-stat-divider" aria-hidden="true"></div>
-				<div class="ff-stat-block">
-					<span class="ff-stat-block__value"><?php esc_html_e( 'Community', 'foxfire-child' ); ?></span>
-					<span class="ff-stat-block__desc"><?php esc_html_e( 'Building long-term relationships with the people we serve.', 'foxfire-child' ); ?></span>
-				</div>
-			</div>
-
-		</div>
-	</section>
-
-	<!-- ====================================================================
-	     SECTION 3: OUR CORE VALUES / GUIDING PRINCIPLES
-	     ==================================================================== -->
-	<section class="ff-about-values-section" aria-labelledby="about-values-title">
-		<div class="ff-about-values-container">
-
-			<!-- Centered Section Header -->
-			<header class="ff-about-values-header">
-				<h2 id="about-values-title" class="ff-about-values-header__title"><?php echo esc_html( foxfire_get_managed_content( 'about_values_title', __( 'Our Core Values', 'foxfire-child' ) ) ); ?></h2>
-				<p class="ff-about-values-header__subtitle">
-					<?php echo esc_html( foxfire_get_managed_content( 'about_values_intro', __( 'Simple standards that guide how we treat our customers, curate our products, and support the community.', 'foxfire-child' ) ) ); ?>
-				</p>
-			</header>
-
-			<!-- 4-Column Horizontal Values Row -->
-			<div class="ff-about-values-grid">
-
-				<!-- Value 1: Quality Mindset -->
-				<div class="ff-value-card">
-					<div class="ff-value-card__icon" aria-hidden="true">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-						</svg>
-					</div>
-					<h3 class="ff-value-card__title"><?php esc_html_e( 'Quality Mindset', 'foxfire-child' ); ?></h3>
-					<p class="ff-value-card__desc">
-						<?php esc_html_e( 'Careful attention to detail in everything we offer, accompanied by clear product specifications and testing data where available.', 'foxfire-child' ); ?>
-					</p>
-				</div>
-
-				<!-- Value 2: Open Transparency -->
-				<div class="ff-value-card">
-					<div class="ff-value-card__icon" aria-hidden="true">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-							<polyline points="14 2 14 8 20 8"></polyline>
-							<line x1="16" y1="13" x2="8" y2="13"></line>
-							<line x1="16" y1="17" x2="8" y2="17"></line>
-							<polyline points="10 9 9 9 8 9"></polyline>
-						</svg>
-					</div>
-					<h3 class="ff-value-card__title"><?php esc_html_e( 'Open Transparency', 'foxfire-child' ); ?></h3>
-					<p class="ff-value-card__desc">
-						<?php esc_html_e( 'Easy, direct access to batch testing reports and certificates of analysis so you can order with complete clarity.', 'foxfire-child' ); ?>
-					</p>
-				</div>
-
-				<!-- Value 3: Approachable Support -->
-				<div class="ff-value-card">
-					<div class="ff-value-card__icon" aria-hidden="true">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-						</svg>
-					</div>
-					<h3 class="ff-value-card__title"><?php esc_html_e( 'Approachable Support', 'foxfire-child' ); ?></h3>
-					<p class="ff-value-card__desc">
-						<?php esc_html_e( 'Friendly, responsive assistance from real people who are genuinely happy to help answer questions.', 'foxfire-child' ); ?>
-					</p>
-				</div>
-
-				<!-- Value 4: Long-Term Relationships -->
-				<div class="ff-value-card">
-					<div class="ff-value-card__icon" aria-hidden="true">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-							<circle cx="9" cy="7" r="4"></circle>
-							<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-							<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-						</svg>
-					</div>
-					<h3 class="ff-value-card__title"><?php esc_html_e( 'Community & Trust', 'foxfire-child' ); ?></h3>
-					<p class="ff-value-card__desc">
-						<?php esc_html_e( 'Focused on building lasting relationships with the people we serve, earning your trust through dependable service.', 'foxfire-child' ); ?>
-					</p>
-				</div>
-
+				<a class="ff-about-button ff-about-button--light" href="<?php echo esc_url( $testing_url ); ?>"><?php esc_html_e( 'Explore Testing & COAs', 'foxfire-peptides' ); ?></a>
 			</div>
 		</div>
 	</section>
 
-	<!-- ====================================================================
-	     SECTION 4: CALL TO ACTION
-	     ==================================================================== -->
-	<section class="ff-about-cta-section" aria-labelledby="about-cta-title">
-		<div class="ff-about-cta-container">
-			<div class="ff-about-cta-box">
-				<div class="ff-about-cta-box__text">
-					<h2 id="about-cta-title" class="ff-about-cta-box__title"><?php echo esc_html( foxfire_get_managed_content( 'about_cta_title', __( 'Explore Foxfire Peptides', 'foxfire-child' ) ) ); ?></h2>
-					<p class="ff-about-cta-box__desc">
-						<?php echo esc_html( foxfire_get_managed_content( 'about_cta_description', __( 'Browse our catalog of research compounds or check out available batch documentation and certificates of analysis.', 'foxfire-child' ) ) ); ?>
-					</p>
+	<section class="ff-about-closing" aria-labelledby="ff-about-closing-title">
+		<div class="ff-about-container">
+			<div class="ff-about-community">
+				<p class="ff-about-eyebrow"><?php esc_html_e( 'Community', 'foxfire-peptides' ); ?></p>
+				<h2 id="ff-about-closing-title" class="ff-about-section-title"><?php echo esc_html( foxfire_get_managed_content( 'about_community_title', 'The Road Is Better Together.' ) ); ?></h2>
+				<p><?php echo esc_html( foxfire_get_managed_content( 'about_community_description', 'Foxfire is more than a catalog. It is a brand being built in the open—with a founder customers can recognize and a community that helps shape what comes next.' ) ); ?></p>
+			</div>
+
+			<div class="ff-site-cta" aria-labelledby="ff-about-closing-cta-heading">
+				<div class="ff-site-cta__content">
+					<p class="ff-site-cta__eyebrow"><?php esc_html_e( 'Explore Foxfire', 'foxfire-peptides' ); ?></p>
+					<h2 id="ff-about-closing-cta-heading" class="ff-site-cta__title"><?php echo esc_html( foxfire_get_managed_content( 'about_cta_title', 'Start With What Matters Most' ) ); ?></h2>
+					<p class="ff-site-cta__description"><?php echo esc_html( foxfire_get_managed_content( 'about_cta_description', 'Explore the focused catalog or review available testing documentation.' ) ); ?></p>
 				</div>
-				<div class="ff-about-cta-box__actions">
-					<a href="<?php echo esc_url( $shop_url ); ?>" class="button button--primary ff-btn-orange">
-						<?php esc_html_e( 'Explore Products', 'foxfire-child' ); ?>
-					</a>
-					<a href="<?php echo esc_url( $testing_url ); ?>" class="button button--secondary ff-btn-outline">
-						<?php esc_html_e( 'View Testing & COAs', 'foxfire-child' ); ?>
-					</a>
+				<div class="ff-site-cta__actions">
+					<a class="ff-site-cta__button ff-site-cta__button--primary" href="<?php echo esc_url( $shop_url ); ?>"><?php echo esc_html( foxfire_get_managed_content( 'about_primary_cta', 'Shop Products' ) ); ?></a>
+					<a class="ff-site-cta__button ff-site-cta__button--secondary" href="<?php echo esc_url( $testing_url ); ?>"><?php echo esc_html( foxfire_get_managed_content( 'about_secondary_cta', 'View Testing & COAs' ) ); ?><span class="ff-btn-arrow" aria-hidden="true">↗</span></a>
 				</div>
 			</div>
 		</div>
 	</section>
-
 </main>
+
 <?php
 get_footer();

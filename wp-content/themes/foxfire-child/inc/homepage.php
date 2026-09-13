@@ -36,6 +36,64 @@ function foxfire_homepage_enqueue_assets(): void {
 add_action( 'wp_enqueue_scripts', 'foxfire_homepage_enqueue_assets', 30 );
 
 /**
+ * Homepage FAQ subset in its existing display order.
+ *
+ * The account-required question remains available on the dedicated FAQ page,
+ * but is deliberately excluded here. Missing fields use the existing homepage
+ * answers; explicitly cleared fields stay hidden, matching the admin editor.
+ *
+ * @return array<int, array{question:string,answer:string}>
+ */
+function foxfire_get_homepage_faqs(): array {
+	$defaults = array(
+		1 => array(
+			'question' => __( 'How do I place an order?', 'foxfire-child' ),
+			'answer' => __( 'Browse our products, select the available strength and quantity, add the item to your cart, and complete checkout using your preferred payment method.', 'foxfire-child' ),
+		),
+		2 => array(
+			'question' => __( 'Can I order more than one vial?', 'foxfire-child' ),
+			'answer' => __( 'Yes. Multiple-vial quantities are available on select products. Available quantity options and pricing are shown directly on each product page.', 'foxfire-child' ),
+		),
+		7 => array(
+			'question' => __( 'How is shipping calculated?', 'foxfire-child' ),
+			'answer' => __( 'Shipping is calculated at checkout based on your delivery address and order total. If your order qualifies for free shipping, it will be applied automatically.', 'foxfire-child' ),
+		),
+		3 => array(
+			'question' => __( 'Where can I find testing and COA information?', 'foxfire-child' ),
+			'answer' => __( 'Available batch and testing information can be found on our Testing/COA page. You can also access the corresponding COA report when available.', 'foxfire-child' ),
+		),
+		4 => array(
+			'question' => __( "How do I find my product's batch or lot number?", 'foxfire-child' ),
+			'answer' => __( 'The batch or lot number can be found on the product packaging or vial. You can use that information to look up available documentation in our Testing/COA directory.', 'foxfire-child' ),
+		),
+		5 => array(
+			'question' => __( 'What payment methods are available?', 'foxfire-child' ),
+			'answer' => __( 'Checkout displays the payment methods currently enabled by Foxfire Peptides. Available methods may change after the client approves the production payment provider.', 'foxfire-child' ),
+		),
+		6 => array(
+			'question' => __( 'Are these products for human consumption?', 'foxfire-child' ),
+			'answer' => __( 'Foxfire Peptides provides these products for research-use purposes only. Foxfire does not provide medical guidance, dosing advice, or administration recommendations.', 'foxfire-child' ),
+		),
+	);
+	$saved = get_option( 'foxfire_public_content', array() );
+	$saved = is_array( $saved ) ? $saved : array();
+	$faqs = array();
+	foreach ( $defaults as $index => $default ) {
+		$faq = array();
+		foreach ( array( 'question', 'answer' ) as $part ) {
+			$key = 'faq_' . $part . '_' . $index;
+			$faq[ $part ] = array_key_exists( $key, $saved )
+				? ( is_string( $saved[ $key ] ) ? trim( $saved[ $key ] ) : '' )
+				: $default[ $part ];
+		}
+		if ( '' !== $faq['question'] && '' !== $faq['answer'] ) {
+			$faqs[] = $faq;
+		}
+	}
+	return $faqs;
+}
+
+/**
  * Filter candidate homepage IDs to public products customers can currently buy.
  *
  * @param int[] $candidate_ids Candidate product IDs in display order.

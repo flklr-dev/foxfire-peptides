@@ -123,6 +123,8 @@ body.ff-nav-is-open .site-header {
 }
 
 .ff-site-header {
+	--color-accent-primary: var(--color-brand-orange);
+	--color-text: var(--color-brand-black);
 	position: relative;
 	width: 100%;
 	background-color: rgba(255, 255, 255, 0.98);
@@ -564,7 +566,7 @@ body.ff-nav-is-open .site-header {
 	min-height: 40px;
 	border-radius: var(--radius-md);
 	background: #ffffff;
-	border: 1.5px solid var(--color-border-strong);
+	border: none;
 	color: var(--color-text) !important;
 	text-decoration: none;
 	transition: all var(--transition-fast);
@@ -573,7 +575,6 @@ body.ff-nav-is-open .site-header {
 .ff-header-account-btn:hover,
 .ff-header-account-btn:focus,
 .ff-header-account-btn.is-active {
-	border-color: var(--color-accent-primary);
 	color: var(--color-accent-primary) !important;
 	background: rgba(232, 90, 12, 0.05);
 	text-decoration: none;
@@ -632,9 +633,97 @@ body.ff-nav-is-open .site-header {
 	line-height: 1;
 }
 
+/* Primary catalog CTA follows navigation, account and cart in DOM order. */
+.ff-header-shop-cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 48px;
+	margin-top: var(--space-4);
+	padding: 12px 20px;
+	border: 1px solid var(--color-brand-orange);
+	border-radius: var(--radius-md);
+	background: var(--color-brand-orange);
+	color: #ffffff !important;
+	font-family: var(--font-heading);
+	font-size: 1rem;
+	font-weight: 700;
+	line-height: 1.4;
+	text-align: center;
+	text-decoration: none;
+}
+
+.ff-header-shop-cta:hover {
+	background: #ef5100;
+	border-color: #ef5100;
+	text-decoration: none;
+}
+
+.ff-header-account-btn:focus-visible,
+.ff-header-shop-cta:focus-visible,
+.ff-header-cart-btn--icon:focus-visible {
+	outline: 2px solid var(--color-brand-black);
+	outline-offset: 3px;
+}
+
+.ff-site-header .ff-primary-nav__link:hover,
+.ff-site-header .ff-primary-nav__link:focus,
+.ff-site-header .ff-primary-nav__link.is-active {
+	color: var(--color-brand-black) !important;
+	text-decoration: underline;
+	text-decoration-color: var(--color-brand-orange);
+	text-underline-offset: 5px;
+}
+
+.ff-header-cart-btn--icon {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	flex: 0 0 44px;
+	border-radius: var(--radius-md);
+	color: var(--color-brand-orange) !important;
+	text-decoration: none;
+}
+
+.ff-header-cart-btn--icon .ff-cart-count {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 18px;
+	padding: 0 4px;
+	border-radius: 999px;
+	background: var(--color-brand-orange);
+	color: #ffffff;
+	font-size: 0.75rem;
+	font-weight: 700;
+	text-align: center;
+}
+
+.ff-site-header__logo-mark,
+.ff-mobile-cart-btn .ff-cart-count {
+	color: #ffffff;
+}
+
+.ff-header-account-btn {
+	width: 44px;
+	height: 44px;
+	min-width: 44px;
+	min-height: 44px;
+}
+
+@media (min-width: 1024px) {
+	.ff-site-header .ff-site-header__nav-wrap { gap: 1rem; }
+	.ff-site-header .ff-primary-nav__list { flex-wrap: nowrap; gap: 1rem; }
+	.ff-site-header .ff-primary-nav__link { font-size: 1rem; white-space: nowrap; }
+	.ff-header-shop-cta { margin-top: 0; flex: 0 0 auto; font-size: 0.875rem; padding-inline: 1rem; }
+}
+
 /* --- Footer --- */
 .ff-site-footer {
-	background: var(--color-structure);
+	background: var(--color-brand-black);
 	color: var(--color-text-inverse);
 }
 
@@ -675,6 +764,7 @@ body.ff-nav-is-open .site-header {
 }
 
 .ff-site-footer__name {
+	text-transform: uppercase;
 	margin: 0 0 var(--space-2);
 	font-family: var(--font-heading);
 	font-size: var(--font-size-xl);
@@ -689,6 +779,8 @@ body.ff-nav-is-open .site-header {
 }
 
 .ff-site-footer__section-label {
+	font-family: var(--font-heading);
+	line-height: var(--line-height-heading);
 	margin: 0 0 var(--space-2);
 	font-size: var(--font-size-base);
 	font-weight: var(--font-weight-bold);
@@ -738,7 +830,7 @@ body.ff-nav-is-open .site-header {
 }
 
 .ff-site-footer__research-note {
-	margin-top: var(--space-2);
+	margin-bottom: var(--space-2);
 }
 
 /* --- Desktop layout --- */
@@ -849,7 +941,7 @@ body.ff-nav-is-open .site-header {
 		flex: 0 0 auto;
 		display: flex !important;
 		align-items: center;
-		gap: var(--space-2);
+		gap: 0;
 		margin-left: var(--space-4);
 	}
 

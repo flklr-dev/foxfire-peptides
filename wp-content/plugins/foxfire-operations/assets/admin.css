@@ -197,6 +197,35 @@
 	resize: vertical;
 }
 
+.ff-content-image-field__preview {
+	background: #f6f7f7;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	margin-bottom: 10px;
+	max-width: 320px;
+	overflow: hidden;
+}
+
+.ff-content-image-field__preview[hidden],
+.ff-content-image-field__remove[hidden] {
+	display: none;
+}
+
+.ff-content-image-field__preview img {
+	display: block;
+	height: auto;
+	max-height: 240px;
+	object-fit: cover;
+	width: 100%;
+}
+
+.ff-content-image-field__actions {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
 .ff-content-policy-links ul {
 	display: grid;
 	gap: 10px;

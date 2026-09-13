@@ -7,6 +7,18 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$site_host              = (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+$is_staging_hostname    = 0 === stripos( $site_host, 'staging.' );
+$is_private_environment = 'production' !== wp_get_environment_type() || $is_staging_hostname;
+
+if ( $is_private_environment ) {
+	$no_payment_methods_message = __( 'Checkout is in review mode. Payment methods are intentionally disabled on this staging site, so no order will be submitted.', 'foxfire-child' );
+} elseif ( WC()->customer->get_billing_country() ) {
+	$no_payment_methods_message = __( 'No payment methods are currently available for your billing location. Please verify your details or contact support.', 'foxfire-child' );
+} else {
+	$no_payment_methods_message = __( 'Enter your billing details to view available payment methods.', 'foxfire-child' );
+}
+
 if ( ! wp_doing_ajax() ) {
 	do_action( 'woocommerce_review_order_before_payment' );
 }
@@ -24,7 +36,7 @@ if ( ! wp_doing_ajax() ) {
 					wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $gateway ) );
 				}
 			} else {
-				echo '<li class="woocommerce-notice woocommerce-notice--info woocommerce-info">' . esc_html( apply_filters( 'woocommerce_no_available_payment_methods_message', WC()->customer->get_billing_country() ? __( 'Sorry, it seems that there are no available payment methods for your state. Please contact us if you require assistance or wish to make alternate arrangements.', 'foxfire-child' ) : __( 'Please fill in your details above to see available payment methods.', 'foxfire-child' ) ) ) . '</li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<li class="woocommerce-notice woocommerce-notice--info woocommerce-info">' . esc_html( apply_filters( 'woocommerce_no_available_payment_methods_message', $no_payment_methods_message ) ) . '</li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 			?>
 		</ul>
