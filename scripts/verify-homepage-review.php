@@ -64,7 +64,7 @@ try {
 	ob_start();
 	wc_get_template_part( 'content', 'product' );
 	$catalog_card = ob_get_clean();
-	$check( ! str_contains( $catalog_card, 'ff-product-card__view-product' ) && str_contains( $catalog_card, 'add_to_cart_button' ), 'Shop/catalog cards retain their original WooCommerce actions' );
+	$check( ! str_contains( $catalog_card, 'ff-product-card__view-product' ) && str_contains( $catalog_card, 'add_to_cart_button' ), 'Other product loops retain their original WooCommerce actions outside showcase contexts' );
 } finally {
 	remove_filter( 'pre_option_foxfire_homepage_product_ids', $simulate_selection );
 	wc_set_loop_prop( 'foxfire_homepage_showcase', $original_showcase );

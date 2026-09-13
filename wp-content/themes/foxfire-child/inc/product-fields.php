@@ -88,6 +88,9 @@ function foxfire_get_product_testing_summary( int $product_id = 0 ): string {
  */
 function foxfire_is_tier_pricing_enabled( int $product_id = 0 ): bool {
 	$product_id = $product_id > 0 ? $product_id : get_the_ID();
+	if ( function_exists( 'foxfire_operations_tier_pricing_enabled' ) ) {
+		return foxfire_operations_tier_pricing_enabled( $product_id );
+	}
 	$enabled    = foxfire_get_product_field( 'foxfire_tier_enable', $product_id );
 
 	// Default to enabled (true) if field is not explicitly set to 0/false

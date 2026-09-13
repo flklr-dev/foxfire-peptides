@@ -115,12 +115,15 @@ function foxfire_render_shop_header(): void {
 		return;
 	}
 
-	$title = is_product_category() ? single_term_title( '', false ) : __( 'Premium Research Peptides', 'foxfire-child' );
+	$title = is_product_category() ? single_term_title( '', false ) : __( 'Research Compounds', 'foxfire-child' );
 	$title = foxfire_get_category_display_name( $title );
 
-	$subtitle = is_product_category()
-		? term_description()
-		: __( 'Browse research compounds with available batch, stock, and COA information. Review each product and its available documentation before ordering.', 'foxfire-child' );
+	$catalog_description = __( 'Browse Foxfire research compounds with available batch, stock, and testing documentation. Review individual product details and available documentation before ordering.', 'foxfire-child' );
+	$subtitle = is_product_category() ? term_description() : $catalog_description;
+	// Internal taxonomy notes are not customer-facing category descriptions.
+	if ( false !== stripos( $subtitle, '[PLACEHOLDER]' ) ) {
+		$subtitle = $catalog_description;
+	}
 	?>
 	<header class="ff-shop-header">
 		<div class="ff-shop-header__content">
@@ -160,10 +163,11 @@ function foxfire_remove_duplicate_shop_sorting(): void {
 add_action( 'wp', 'foxfire_remove_duplicate_shop_sorting', 20 );
 
 /**
- * Customize number of products per page.
+ * Display the focused catalog on one page. Restore a positive limit when
+ * pagination is approved again as the catalog grows.
  */
 function foxfire_products_per_page(): int {
-	return 12;
+	return -1;
 }
 add_filter( 'loop_shop_per_page', 'foxfire_products_per_page', 20 );
 
@@ -269,7 +273,7 @@ function foxfire_ajax_search_products(): void {
 	$args = array(
 		'post_type'      => 'product',
 		'post_status'    => 'publish',
-		'posts_per_page' => 50,
+		'posts_per_page' => foxfire_products_per_page(),
 		'orderby'        => 'menu_order title',
 		'order'          => 'ASC',
 	);
@@ -283,12 +287,15 @@ function foxfire_ajax_search_products(): void {
 
 	ob_start();
 
+	$previous_showcase = wc_get_loop_prop( 'foxfire_catalog_showcase', false );
+	wc_set_loop_prop( 'foxfire_catalog_showcase', true );
 	if ( $query->have_posts() ) {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 			wc_get_template_part( 'content', 'product' );
 		}
 	}
+	wc_set_loop_prop( 'foxfire_catalog_showcase', $previous_showcase );
 
 	$html = ob_get_clean();
 	wp_reset_postdata();

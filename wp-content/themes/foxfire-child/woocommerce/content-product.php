@@ -94,7 +94,7 @@ $classes    = wc_get_product_class( array( 'ff-product-card' ), $product );
 			</div>
 
 			<div class="ff-product-card__action">
-				<?php if ( wc_get_loop_prop( 'foxfire_homepage_showcase', false ) ) : ?>
+				<?php if ( wc_get_loop_prop( 'foxfire_homepage_showcase', false ) || wc_get_loop_prop( 'foxfire_catalog_showcase', false ) ) : ?>
 					<a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="button ff-product-card__view-product" aria-label="<?php echo esc_attr( sprintf( __( 'View product: %s', 'foxfire-child' ), $product->get_name() ) ); ?>">
 						<?php esc_html_e( 'VIEW PRODUCT', 'foxfire-child' ); ?>
 					</a>

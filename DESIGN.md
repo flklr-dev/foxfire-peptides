@@ -16,7 +16,7 @@ Five pillars guide every interface decision:
 1. **Simplicity & Speed** — No unnecessary clicks, popups, or scientific jargon that distracts from shopping. Clean, fast catalog browsing inspired by modern benchmarks (e.g. *Crush*).
 2. **Readability** — High contrast, generous type sizes (16px minimum body), clear spacing, designed with a ~50-year-old primary customer in mind.
 3. **Transparent Quality** — Batch lot numbers and Certificate of Analysis (COA) reports are one click away, presented cleanly without intimidating chemistry essays.
-4. **Frictionless Conversion** — Product → Strength (1 or 2) → Quantity (1, 3, or 5 Vials) → Cart Drawer → Checkout.
+4. **Frictionless Conversion** — Product → Strength → Administrator-configured vial quantity → Cart Drawer → Checkout.
 5. **Human Accountability** — Products remain primary, while concise founder and community content shows that a real, publicly associated owner stands behind Foxfire.
 
 ---
@@ -71,14 +71,15 @@ Five pillars guide every interface decision:
   Strength: [ 15mg ]  [ 30mg ]
   ```
 
-### B. 1 / 3 / 5 Vial Purchasing Selector
+### B. Administrator-Configured Vial Purchasing Selector
 - Instead of a plain number stepper, the quantity options are presented as interactive purchase pills:
   ```
   Quantity: [ 1 Vial ]  [ 3 Vials (Save 5%) ]  [ 5 Vials (Save 10%) ]
   ```
 - **Live Price Updates:** Selecting a multi-vial tier updates the unit price and total price dynamically.
-- **Single-Vial Stock Deduction:** Behind the scenes, selecting 3 or 5 vials adds 3 or 5 units to the cart, automatically deducting the exact number of individual vials from the parent stock pool.
-- **Admin Control:** Tiers can be toggled on/off product-by-product in `wp-admin`.
+- **Single-Vial Stock Deduction:** Each configured vial quantity adds that exact number of units to the cart. Normal order stock reduction deducts individual vials from the applicable product or variation stock pool, not bundle inventory.
+- **Admin Control:** Products → Edit → Product data → Quantity Options. Managers can add/remove quantity rows and set a percentage discount or total price for each row; up to 12 unique positive whole quantities. Existing products retain their previous 1/3/5 settings until edited. Variations can override the pricing for their own strength without changing parent quantity choices.
+- **Pricing semantics:** The highest qualifying quantity determines the cart unit price, including quantities between presets. Percentage discounts use the active selected-strength price; a fixed total divided by its configured quantity replaces the unit price. Coupons apply afterward. All quantities represent individual vials, not bundle stock. Validate configuration on the server and preserve prior settings on invalid saves. Variable-product pills show “Choose a strength” until a selection supplies tax-aware server prices.
 
 ### C. Prominent, Simplified COA Block
 - Positioned prominently below the purchase action.
@@ -152,7 +153,7 @@ The following direction was confirmed on September 8, 2026. It is a requirements
 
 ## 11. September 13 Homepage Review and Site-Wide Brand Colors — Approved Local Rollout
 
-The approved brand colors apply across the entire website: the homepage, all other page interiors, and the shared header/footer. They supersede the earlier interim colors in Sections 3 and 9. The current local palette rollout covers the homepage and shared header/footer; remaining page interiors must adopt the same brand colors as their page-by-page updates are implemented. The earlier palette is not an approved alternative for those pages.
+The approved brand colors apply across the entire website: the homepage, all other page interiors, and the shared header/footer. They supersede the earlier interim colors in Sections 3 and 9. The current local palette rollout covers the homepage, Shop/catalog, single product pages and shared header/footer; remaining page interiors must adopt the same brand colors as their page-by-page updates are implemented. The earlier palette is not an approved alternative for those pages.
 
 - Brand orange: `#FF5800`; brand green: `#AFF769`; near black: `#15171A`; white: `#FFFFFF`.
 - Orange is for primary CTAs, highlights and icons. Preserve the original white button text per the user's September 13 clarification; the client did not request a text-color change. White on `#FF5800` has 3.16:1 contrast, below AA for normal-sized text; this remains an accessibility issue to resolve before launch, not a claim of compliance.
@@ -166,8 +167,39 @@ The approved brand colors apply across the entire website: the homepage, all oth
 - Requested hero wording is client-supplied copy, not validation of testing evidence. Launch claims and documents still require verification. Payments remain disabled.
 - Quality Approach: “More Than a Storefront.” with the client-supplied introduction and three steps: Testing Information, Batch Identification, Straightforward Ordering. Retain the numbered boxes and near-black section.
 - Trust Bar: retain four items with the client-supplied wording, including the explicit not-for-human-consumption statement.
-- Featured Research Compounds: add the client-supplied introduction; show only four available products from Foxfire Ops → Homepage Products priorities (extra priorities remain backups). Homepage card buttons say VIEW PRODUCT and navigate to existing product pages without adding anything to the cart. Shop/catalog actions remain unchanged.
+- Featured Research Compounds: add the client-supplied introduction; show only four available products from Foxfire Ops → Homepage Products priorities (extra priorities remain backups). Homepage card buttons say VIEW PRODUCT and navigate to existing product pages without adding anything to the cart. The subsequent Shop review also applies VIEW PRODUCT links to catalog cards.
 - Testing callout: “Know What's Behind Every Vial.” with the client-supplied third-party/batch-specific documentation description and VIEW TESTING & COAs button linked to the existing directory.
 - Homepage FAQ: seven questions; exclude the account-required question (retain it on the dedicated FAQ page). Replace the multi-vial question/answer with the client-supplied wording; preserve the other questions and admin edit/hide behavior.
 - Final homepage CTA: “Ready to Explore Foxfire?” with the client-supplied description and one BROWSE RESEARCH COMPOUNDS button linked to the full catalog. Other pages' CTA sections are unchanged.
 - Shared footer: brand plus Shop, Information, and Account link groups. Order History uses WooCommerce's orders endpoint. Until separate policy pages are supplied, Research Use Policy links to the existing Terms research-use section, and Shipping & Returns links to the Shipping Policy with its returns-policy cross-link. Existing policy bodies are not rewritten or represented as legally approved. Show the laboratory-research-only notice before the copyright.
+
+## 12. September 13 Shop/Catalog Review — Approved Local Rollout
+
+- Heading: Research Compounds. Use the client-supplied description about available batch, stock and testing documentation.
+- Category order: All Compounds → Blends → GLP-1 Research → Peptide Research → Support Compounds. Preserve existing term IDs, URLs and product assignments when updating labels.
+- All Shop/category cards, including live search results, use VIEW PRODUCT links to the existing individual product page. Simple products must not add directly to the cart from the catalog. Actual product-page Add to Cart controls remain unchanged.
+- Show the current focused catalog on one page, without pagination. Keep the underlying pagination support available for a future approved positive page limit.
+- Apply the approved orange, green, near-black and white palette throughout the catalog, including badges, filters, buttons, search/focus states and empty states. Preserve meaningful error colors and readable neutral text; retain white primary-button text as previously requested.
+- Keep the current logo area flexible. Do not invent or replace the primary fox logo, wordmark or favicon; await the exact client-supplied files for the website and other branding.
+
+## 13. September 13 Product Quantity Review — Approved Local Rollout
+
+- Quantity choices are product data, not fixed theme buttons. Edit them at Products → Edit product → Product data → Quantity Options; Add quantity option and Remove change the available presets. Update saves the configuration. Disabling presets restores the standard quantity input.
+- Each row supports a percentage discount or a complete multi-vial total price. The highest qualifying rule applies to cart quantities; variation pricing overrides are optional in the normal Variations editor. Parent quantities remain shared by all strengths. Existing 1/3/5 products need no bulk migration.
+- Product pills, selected total and mobile sticky price use the same server-calculated pricing. Variable products wait for a strength choice, then refresh all preset prices. Stock-ineligible presets are disabled; if none is available, disable Add to Cart and show a concise neutral stock notice. Stock remains counted in individual vials.
+- Keep a saved-settings preview with all configured quantities and clearly identified strengths. Reject malformed/duplicate/non-integer quantities and invalid prices atomically; require a nonce and product edit permissions. Do not require ACF Pro to edit quantity rows.
+
+## 14. September 13 Product Images Review — Approved Local Rollout
+
+- Keep current temporary vial images and the existing Shop layout. Do not redesign, regenerate or refine packaging imagery before final client-approved assets arrive.
+- Products → Edit product → Product image → choose/upload image → Set product image → Update is the single main-image management path. Shop cards (including live search), homepage Featured Products cards and the individual product gallery read that product's Media Library attachment, not hard-coded copies.
+- Product gallery manages additional photos separately. Optional images in Variations intentionally override the main photo for the selected strength; leave these empty to inherit future main-image changes. Uploading a new file alone does not replace the assigned product image.
+- Product-linked thumbnails in cart/checkout also use WooCommerce image data. Standalone homepage hero/brand artwork is a separate asset, not an individual product photo, and does not change when a product image changes.
+- Normal product-save cache invalidation remains in place. If a cached staging/public page still shows the old photo after Update, purge the site cache once and reload; no theme edit or re-import is required. Preserve old Media Library files until they are no longer used elsewhere.
+
+## 15. Single Product Page Brand Palette — Approved Local Rollout
+
+- Use approved orange for product prices, purchase buttons, handling/COA icons and selection/focus accents. Preserve white primary-button text, subject to the known pre-launch contrast issue recorded in Section 11.
+- Product headings, quantity labels and structural text use near black. Keep readable muted text and neutral surfaces; preserve semantic out-of-stock/error colors.
+- Testing/COA links use compact lime surfaces with near-black text; hover reverses to near black with lime text. In-stock dots use lime with dark backing. No lime body text on white.
+- Scope tokens to single product pages, including related product cards and the mobile purchase bar. Do not redesign the page, modify quantities/pricing, replace product images or enable payments as part of this palette correction.

@@ -2,7 +2,7 @@
  * Foxfire Peptides — Product Detail Page (PDP) Interactions (Chunk 1G).
  *
  * Handles:
- * - 1 / 3 / 5 Vial quantity tier pill selection and dynamic price updates.
+ * - Administrator-configured quantity tier pill selection and dynamic price updates.
  * - Single-vial stock deduction quantity sync with form input.
  * - Mobile sticky Add to Cart bar visibility.
  * - Dynamic price sync with WooCommerce variable product dropdowns.
@@ -18,33 +18,61 @@
 		var qtyInput = document.querySelector('form.cart input.qty');
 		var tierContainer = document.querySelector('.ff-tier-selector');
 
-		// 1. Quantity Tier Buttons Interaction
-		if (tierContainer && mainForm) {
-			var tierButtons = tierContainer.querySelectorAll('.ff-tier-btn');
-
+		// Quantity presets are supplied by the operations plugin, never fixed here.
+		var tierButtons = tierContainer ? Array.from(tierContainer.querySelectorAll('.ff-tier-btn')) : [];
+		var initialTierHtml = tierContainer ? tierContainer.innerHTML : '';
+		var quantityUnavailable = false;
+		var presetMax = tierContainer ? Number(tierContainer.dataset.maxQuantity) : -1;
+		function selectTier(btn) {
+			tierButtons.forEach(function (other) {
+				var active = other === btn;
+				other.classList.toggle('is-active', active);
+				other.setAttribute('aria-pressed', active ? 'true' : 'false');
+			});
+			if (btn && qtyInput) {
+				qtyInput.value = btn.dataset.qty;
+				qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
+			}
+			var label = btn && btn.querySelector('.ff-tier-btn__pricing');
+			var summary = tierContainer && tierContainer.querySelector('.ff-tier-selected-price');
+			if (summary) summary.innerHTML = label ? label.innerHTML : '';
+			var stickyPrice = stickyBar && stickyBar.querySelector('.ff-sticky-atc__price');
+			if (stickyPrice && label) {
+				stickyPrice.innerHTML = label.innerHTML;
+				var totalLabel = document.createElement('small');
+				totalLabel.textContent = ' ' + stickyPrice.dataset.totalLabel;
+				stickyPrice.appendChild(totalLabel);
+			}
+		}
+		function syncTierAvailability() {
+			var min = qtyInput ? Number(qtyInput.min || 1) : 1;
+			var max = qtyInput && qtyInput.max !== '' ? Number(qtyInput.max) : Infinity;
+			if (presetMax >= 0) max = Math.min(max, presetMax);
 			tierButtons.forEach(function (btn) {
-				btn.addEventListener('click', function (e) {
-					e.preventDefault();
-
-					var qty = parseInt(btn.getAttribute('data-qty'), 10) || 1;
-
-					// Update active class
-					tierButtons.forEach(function (b) {
-						b.classList.remove('is-active');
-					});
-					btn.classList.add('is-active');
-
-					// Update WooCommerce quantity input
-					if (qtyInput) {
-						qtyInput.value = qty;
-						// Trigger change event for any WC listeners
-						var event = new Event('change', { bubbles: true });
-						qtyInput.dispatchEvent(event);
-					}
+				var qty = Number(btn.dataset.qty);
+				btn.disabled = qty < min || qty > max;
+			});
+			var current = tierButtons.find(function (btn) { return !btn.disabled && btn.classList.contains('is-active'); });
+			var next = current || tierButtons.find(function (btn) { return !btn.disabled; });
+			selectTier(next);
+			if (mainButton) {
+				if (!next) mainButton.disabled = true;
+				else if (quantityUnavailable && !mainButton.classList.contains('disabled')) mainButton.disabled = false;
+			}
+			quantityUnavailable = !next;
+			var note = tierContainer && tierContainer.querySelector('.ff-quantity-stock-note');
+			if (note) note.hidden = !!next;
+		}
+		function bindTierButtons() {
+			tierButtons.forEach(function (btn) {
+				btn.addEventListener('click', function (event) {
+					event.preventDefault();
+					if (!btn.disabled) selectTier(btn);
 				});
 			});
 		}
-
+		bindTierButtons();
+		if (tierContainer && mainForm) syncTierAvailability();
 		// 2. Mobile Sticky Add to Cart
 		if (stickyBar && mainButton) {
 			var stickyTrigger = stickyBar.querySelector('[data-ff-sticky-trigger]');
@@ -90,8 +118,7 @@
 			var originalPriceHtml = $mainPrice.length ? $mainPrice.html() : '';
 
 			window.jQuery(document).on('found_variation', 'form.variations_form', function (event, variation) {
-				if (variation && variation.display_price) {
-					var basePrice = parseFloat(variation.display_price);
+				if (variation && typeof variation.display_price === 'number') {
 
 					// Update main 56px Fox Orange price
 					if ($mainPrice.length && variation.price_html) {
@@ -105,30 +132,35 @@
 						}
 					}
 
-					// Update tier prices if container exists
-					if (tierContainer) {
-						var tier1 = tierContainer.querySelector('[data-tier-price="1"]');
-						var tier3 = tierContainer.querySelector('[data-tier-price="3"]');
-						var tier5 = tierContainer.querySelector('[data-tier-price="5"]');
-
-						var btn3 = tierContainer.querySelector('.ff-tier-btn[data-qty="3"]');
-						var btn5 = tierContainer.querySelector('.ff-tier-btn[data-qty="5"]');
-
-						var disc3 = btn3 ? parseFloat(btn3.getAttribute('data-discount')) || 0 : 0;
-						var disc5 = btn5 ? parseFloat(btn5.getAttribute('data-discount')) || 0 : 0;
-
-						var p1 = basePrice;
-						var p3 = basePrice * 3 * (1 - (disc3 / 100));
-						var p5 = basePrice * 5 * (1 - (disc5 / 100));
-
-						if (tier1) tier1.innerHTML = '$' + p1.toFixed(2);
-						if (tier3) tier3.innerHTML = '$' + p3.toFixed(2);
-						if (tier5) tier5.innerHTML = '$' + p5.toFixed(2);
+					// Use tax-aware prices computed on the server for this strength.
+					if (tierContainer && variation.foxfire_quantity_prices) {
+						presetMax = variation.max_qty === '' ? -1 : Number(variation.max_qty);
+						tierButtons.forEach(function (btn) {
+							var price = variation.foxfire_quantity_prices[btn.dataset.qty];
+							var label = btn.querySelector('.ff-tier-btn__pricing');
+							if (price && label) label.innerHTML = price.html;
+							var badge = btn.querySelector('.ff-tier-btn__badge');
+							if (badge) badge.remove();
+							if (price && price.discount > 0) {
+								badge = document.createElement('span');
+								badge.className = 'ff-tier-btn__badge';
+								badge.textContent = 'Save ' + price.discount + '%';
+								btn.querySelector('.ff-tier-btn__header').appendChild(badge);
+							}
+						});
+						syncTierAvailability();
 					}
 				}
 			});
 
 			window.jQuery(document).on('reset_data', 'form.variations_form', function () {
+				if (tierContainer) {
+					presetMax = Number(tierContainer.dataset.maxQuantity);
+					tierContainer.innerHTML = initialTierHtml;
+					tierButtons = Array.from(tierContainer.querySelectorAll('.ff-tier-btn'));
+					bindTierButtons();
+					syncTierAvailability();
+				}
 				if ($mainPrice.length && originalPriceHtml) {
 					$mainPrice.html(originalPriceHtml);
 				}

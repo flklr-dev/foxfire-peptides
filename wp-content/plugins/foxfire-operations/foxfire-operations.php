@@ -3,7 +3,7 @@
  * Plugin Name: Foxfire Operations
  * Plugin URI:  https://foxfirepeptides.com
  * Description: Secure, theme-independent store operations and client administration for Foxfire Peptides.
- * Version:     0.12.0
+ * Version:     0.13.0
  * Author:      Foxfire Peptides
  * Text Domain: foxfire-operations
  * Requires at least: 6.9
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'FOXFIRE_OPERATIONS_VERSION', '0.12.0' );
+define( 'FOXFIRE_OPERATIONS_VERSION', '0.13.0' );
 define( 'FOXFIRE_OPERATIONS_ROLE_VERSION', '2' );
 define( 'FOXFIRE_OPERATIONS_CONTENT_VERSION', '2' );
 define( 'FOXFIRE_OPERATIONS_FILE', __FILE__ );
@@ -45,6 +45,7 @@ require_once FOXFIRE_OPERATIONS_DIR . 'includes/customer-auth.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/local-mail.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/pricing.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/product-admin.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/quantity-admin.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/promotions.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/orders.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/homepage-merchandising.php';

@@ -67,6 +67,8 @@ do_action( 'woocommerce_before_main_content' );
 		</div>
 
 		<?php
+		$previous_showcase = wc_get_loop_prop( 'foxfire_catalog_showcase', false );
+		wc_set_loop_prop( 'foxfire_catalog_showcase', true );
 		woocommerce_product_loop_start();
 
 		if ( wc_get_loop_prop( 'total' ) ) {
@@ -83,6 +85,7 @@ do_action( 'woocommerce_before_main_content' );
 		}
 
 		woocommerce_product_loop_end();
+		wc_set_loop_prop( 'foxfire_catalog_showcase', $previous_showcase );
 
 		/**
 		 * Hook: woocommerce_after_shop_loop.

@@ -8,6 +8,60 @@
  * WCAG AA contrast, and >=44px touch targets.
  */
 
+/* Approved palette throughout the catalog, including AJAX-rendered cards.
+   Other page interiors adopt these same values during their review rollout. */
+.ff-shop-container {
+	--color-accent-primary: var(--color-brand-orange);
+	--color-accent-primary-hover: #ef5100;
+	--color-accent-primary-active: #dd4b00;
+	--color-text: var(--color-brand-black);
+	--color-structure: var(--color-brand-black);
+	--color-accent-secondary: var(--color-brand-black);
+	--color-accent-secondary-bg: var(--color-brand-green);
+	--focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-brand-orange) 35%, transparent);
+	background: var(--color-bg);
+	color: var(--color-text);
+}
+
+/* Approved PDP palette, including related cards and the mobile purchase bar.
+   Scope to this page so pending cart/account reviews keep their current styles. */
+.single-product {
+	--color-accent-primary: var(--color-brand-orange);
+	--color-accent-primary-hover: #ef5100;
+	--color-accent-primary-active: #dd4b00;
+	--color-text: var(--color-brand-black);
+	--color-structure: var(--color-brand-black);
+	--color-accent-secondary: var(--color-brand-black);
+	--color-accent-secondary-bg: var(--color-brand-green);
+	--focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-brand-orange) 35%, transparent);
+}
+
+.ff-shop-container .ff-badge--tested {
+	border-color: color-mix(in srgb, var(--color-brand-green) 35%, transparent);
+}
+
+.ff-shop-container .ff-category-pills__item:hover .ff-category-pills__count {
+	background-color: color-mix(in srgb, var(--color-brand-orange) 12%, transparent);
+}
+
+.ff-shop-container .ff-shop-search-input:focus,
+.ff-shop-container .woocommerce-ordering select:focus {
+	box-shadow: var(--focus-ring);
+}
+
+.ff-shop-container .ff-shop-search-submit {
+	color: var(--color-brand-orange);
+}
+
+.ff-shop-container .ff-shop-search-submit:hover,
+.ff-shop-container .ff-shop-search-submit:focus {
+	background-color: color-mix(in srgb, var(--color-brand-orange) 8%, transparent);
+}
+
+.ff-shop-container .ff-product-card .button:hover {
+	box-shadow: 0 4px 12px color-mix(in srgb, var(--color-brand-orange) 20%, transparent);
+}
+
 /* ==========================================================================
    1. GLOBAL / BASE WOOCOMMERCE RESETS
    ========================================================================== */
@@ -1721,7 +1775,7 @@ nav.woocommerce-pagination ul.page-numbers li .page-numbers {
 	font-family: var(--font-heading);
 	font-size: 56px !important;
 	font-weight: 800;
-	color: #e85a0c !important;
+	color: var(--color-brand-orange) !important;
 	margin: 0 0 2rem 0 !important;
 	line-height: 1;
 	letter-spacing: -0.02em;
@@ -1737,7 +1791,7 @@ nav.woocommerce-pagination ul.page-numbers li .page-numbers {
 .single-product div.product p.price ins {
 	order: 1;
 	text-decoration: none;
-	color: #e85a0c !important;
+	color: var(--color-brand-orange) !important;
 }
 
 /* 4. PDP Meta Highlights (Batch / SKU / In Stock) */
@@ -1768,8 +1822,8 @@ nav.woocommerce-pagination ul.page-numbers li .page-numbers {
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;
-	background-color: var(--color-accent-secondary);
-	box-shadow: 0 0 0 3px rgba(27, 138, 75, 0.15);
+	background-color: var(--color-brand-green);
+	box-shadow: 0 0 0 2px var(--color-brand-black);
 }
 
 .ff-stock--out-of-stock .ff-pdp-highlights__dot {
@@ -1850,6 +1904,31 @@ a.added_to_cart.wc-forward,
 	display: none !important;
 }
 
+/* Standard quantities remain usable when a manager disables the presets. */
+.single-product form.cart:not(:has(.ff-tier-selector)) .quantity {
+	display: inline-block !important;
+}
+
+.ff-quantity-stock-note {
+	font-size: 1rem;
+	line-height: 1.6;
+	color: var(--color-brand-black);
+	padding: 0.75rem;
+	background: var(--color-bg-subtle);
+	border-radius: 6px;
+}
+
+.ff-quantity-stock-note[hidden] {
+	display: none;
+}
+
+.ff-tier-selection-total {
+	font-size: 1rem;
+	line-height: 1.6;
+	color: var(--color-brand-black);
+	margin: 0.75rem 0;
+}
+
 .single-product table.variations {
 	width: 100% !important;
 	margin: 0 !important;
@@ -1903,7 +1982,7 @@ a.added_to_cart.wc-forward,
 	font-size: 0.9375rem;
 	font-family: var(--font-heading);
 	font-weight: 600;
-	color: #111827;
+	color: var(--color-brand-black);
 	cursor: pointer;
 	transition: border-color 0.2s, box-shadow 0.2s, background-image 0.2s;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
@@ -1911,10 +1990,10 @@ a.added_to_cart.wc-forward,
 }
 
 .single-product table.variations select:focus {
-	border-color: #e85a0c;
+	border-color: var(--color-brand-orange);
 	outline: none;
-	box-shadow: 0 0 0 3px rgba(232, 90, 12, 0.12);
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e85a0c' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+	box-shadow: var(--focus-ring);
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23FF5800' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
 /* Hide reset link and empty single_variation block to eliminate whitespace */
@@ -2054,7 +2133,7 @@ a.added_to_cart.wc-forward,
 
 .ff-pdp-coa-box {
 	background-color: #ffffff;
-	border: 1.5px solid #d1fae5;
+	border: 1.5px solid color-mix(in srgb, var(--color-brand-green) 50%, var(--color-border));
 	border-radius: 16px;
 	padding: 1.25rem 1.375rem;
 	margin-top: 0 !important;
@@ -2079,7 +2158,7 @@ a.added_to_cart.wc-forward,
 }
 
 .ff-pdp-coa-box__icon {
-	color: #1b8a4b;
+	color: var(--color-brand-orange);
 	display: flex;
 	align-items: center;
 	flex-shrink: 0;
@@ -2089,7 +2168,7 @@ a.added_to_cart.wc-forward,
 	font-family: var(--font-heading);
 	font-size: 1rem;
 	font-weight: 700;
-	color: #111827;
+	color: var(--color-brand-black);
 	margin: 0;
 	line-height: 1.2;
 }
@@ -2128,9 +2207,9 @@ a.added_to_cart.wc-forward,
 	padding: 0.5rem 1rem;
 	min-height: 38px;
 	border-radius: 8px;
-	background-color: #e8f6ee;
-	border: 1px solid #a7f3d0;
-	color: var(--color-accent-secondary) !important;
+	background-color: var(--color-brand-green);
+	border: 1px solid var(--color-brand-green);
+	color: var(--color-brand-black) !important;
 	font-family: var(--font-heading);
 	font-size: 0.875rem;
 	font-weight: 700;
@@ -2139,11 +2218,11 @@ a.added_to_cart.wc-forward,
 }
 
 .ff-pdp-coa-box__cta:hover {
-	background-color: var(--color-accent-secondary);
-	color: #ffffff !important;
-	border-color: var(--color-accent-secondary);
+	background-color: var(--color-brand-black);
+	color: var(--color-brand-green) !important;
+	border-color: var(--color-brand-black);
 	transform: translateY(-1px);
-	box-shadow: 0 4px 12px rgba(27, 138, 75, 0.2);
+	box-shadow: 0 4px 12px color-mix(in srgb, var(--color-brand-black) 15%, transparent);
 }
 
 /* ==========================================================================
@@ -2171,7 +2250,7 @@ a.added_to_cart.wc-forward,
 }
 
 .ff-pdp-specs-card__icon {
-	color: #e85a0c;
+	color: var(--color-brand-orange);
 	display: flex;
 	align-items: center;
 	flex-shrink: 0;
@@ -2181,7 +2260,7 @@ a.added_to_cart.wc-forward,
 	font-family: var(--font-heading);
 	font-size: 1rem;
 	font-weight: 700;
-	color: #111827;
+	color: var(--color-brand-black);
 	margin: 0;
 	line-height: 1.2;
 }
@@ -8065,7 +8144,7 @@ span.show-password-input {
 
 .ff-tier-selector__grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
 	gap: 0.75rem;
 	width: 100%;
 }
@@ -8094,17 +8173,28 @@ span.show-password-input {
 }
 
 .ff-tier-btn:hover {
-	border-color: #e85a0c;
-	background-color: #fffaf7;
+	border-color: var(--color-brand-orange);
+	background-color: color-mix(in srgb, var(--color-brand-orange) 4%, white);
 	transform: translateY(-1px);
-	box-shadow: 0 4px 12px rgba(232, 90, 12, 0.08);
+	box-shadow: 0 4px 12px color-mix(in srgb, var(--color-brand-orange) 8%, transparent);
 }
 
 .ff-tier-btn.is-active {
-	border-color: #e85a0c;
+	border-color: var(--color-brand-orange);
 	border-width: 2px;
-	background-color: #fff9f5;
-	box-shadow: 0 0 0 1px #e85a0c, 0 4px 14px rgba(232, 90, 12, 0.12);
+	background-color: color-mix(in srgb, var(--color-brand-orange) 5%, white);
+	box-shadow: 0 0 0 1px var(--color-brand-orange);
+}
+
+.ff-tier-btn:focus-visible {
+	outline: 3px solid var(--color-brand-orange);
+	outline-offset: 3px;
+}
+
+.ff-tier-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
 }
 
 .ff-tier-btn__header {
@@ -8120,20 +8210,20 @@ span.show-password-input {
 	font-family: var(--font-heading);
 	font-size: 1rem;
 	font-weight: 700;
-	color: #1a1a1a;
+	color: var(--color-brand-black);
 	line-height: 1.2;
 }
 
 .ff-tier-btn.is-active .ff-tier-btn__qty {
-	color: var(--color-accent-primary);
+	color: var(--color-brand-black);
 }
 
 .ff-tier-btn__badge {
 	display: inline-block;
 	font-size: 0.6875rem;
 	font-weight: 700;
-	color: var(--color-accent-secondary);
-	background-color: #e8f6ee;
+	color: var(--color-brand-black);
+	background-color: var(--color-bg-subtle);
 	padding: 2px 6px;
 	border-radius: 6px;
 	line-height: 1.2;

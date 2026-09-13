@@ -2,7 +2,7 @@
 /**
  * Product Detail Page (PDP) customizations — Chunk 1G.
  *
- * 1 / 3 / 5 Vial quantity tier selectors, single-vial stock deduction,
+ * Administrator-configured vial quantity selectors, single-vial stock deduction,
  * simplified Certificate of Analysis (COA) block, batch/lot display,
  * storage/handling specs, and mobile sticky Add to Cart bar.
  *
@@ -127,72 +127,50 @@ function foxfire_pdp_meta_highlights(): void {
 add_action( 'woocommerce_single_product_summary', 'foxfire_pdp_meta_highlights', 15 );
 
 /**
- * Output 1 / 3 / 5 Vial quantity selector pills above the Add to Cart button.
+ * Output the product's configured quantity pills above the Add to Cart button.
  */
 function foxfire_render_quantity_tiers(): void {
 	global $product;
-	if ( ! $product instanceof WC_Product ) {
+	if ( ! $product instanceof WC_Product || ! function_exists( 'foxfire_operations_get_quantity_options' ) || ! foxfire_operations_tier_pricing_enabled( $product->get_id() ) ) {
 		return;
 	}
-
-	$product_id = $product->get_id();
-
-	if ( function_exists( 'foxfire_is_tier_pricing_enabled' ) && ! foxfire_is_tier_pricing_enabled( $product_id ) ) {
-		return;
-	}
-
-	$discounts  = function_exists( 'foxfire_get_product_tier_discounts' ) ? foxfire_get_product_tier_discounts( $product_id ) : array( 3 => 0, 5 => 0 );
-	$base_price = (float) $product->get_price();
+	$options = foxfire_operations_get_quantity_options( $product->get_id() );
+	$prices = foxfire_operations_quantity_display_prices( $product, $options );
+	$first = array_key_first( $options );
 	?>
-	<div class="ff-tier-selector" data-base-price="<?php echo esc_attr( (string) $base_price ); ?>">
-		<span class="ff-tier-selector__label"><?php esc_html_e( 'Select Quantity:', 'foxfire-child' ); ?></span>
-		<div class="ff-tier-selector__grid">
-			<!-- 1 Vial -->
-			<button type="button" class="ff-tier-btn is-active" data-qty="1">
-				<span class="ff-tier-btn__header">
-					<span class="ff-tier-btn__qty"><?php esc_html_e( '1 Vial', 'foxfire-child' ); ?></span>
-				</span>
-				<span class="ff-tier-btn__pricing" data-tier-price="1">
-					<?php echo wc_price( $base_price ); ?>
-				</span>
-			</button>
-
-			<!-- 3 Vials -->
-			<button type="button" class="ff-tier-btn" data-qty="3" data-discount="<?php echo esc_attr( (string) $discounts[3] ); ?>">
-				<span class="ff-tier-btn__header">
-					<span class="ff-tier-btn__qty"><?php esc_html_e( '3 Vials', 'foxfire-child' ); ?></span>
-					<?php if ( ! empty( $discounts[3] ) && $discounts[3] > 0 ) : ?>
-						<span class="ff-tier-btn__badge"><?php printf( esc_html__( 'Save %s%%', 'foxfire-child' ), esc_html( (string) $discounts[3] ) ); ?></span>
-					<?php endif; ?>
-				</span>
-				<span class="ff-tier-btn__pricing" data-tier-price="3">
-					<?php
-					$p3 = $base_price * 3 * ( 1 - ( (float) $discounts[3] / 100 ) );
-					echo wc_price( $p3 );
-					?>
-				</span>
-			</button>
-
-			<!-- 5 Vials -->
-			<button type="button" class="ff-tier-btn" data-qty="5" data-discount="<?php echo esc_attr( (string) $discounts[5] ); ?>">
-				<span class="ff-tier-btn__header">
-					<span class="ff-tier-btn__qty"><?php esc_html_e( '5 Vials', 'foxfire-child' ); ?></span>
-					<?php if ( ! empty( $discounts[5] ) && $discounts[5] > 0 ) : ?>
-						<span class="ff-tier-btn__badge"><?php printf( esc_html__( 'Save %s%%', 'foxfire-child' ), esc_html( (string) $discounts[5] ) ); ?></span>
-					<?php endif; ?>
-				</span>
-				<span class="ff-tier-btn__pricing" data-tier-price="5">
-					<?php
-					$p5 = $base_price * 5 * ( 1 - ( (float) $discounts[5] / 100 ) );
-					echo wc_price( $p5 );
-					?>
-				</span>
-			</button>
+	<div class="ff-tier-selector" data-base-price="<?php echo esc_attr( (string) $product->get_price() ); ?>" data-max-quantity="<?php echo esc_attr( $product->get_max_purchase_quantity() ); ?>">
+		<span class="ff-tier-selector__label" id="ff-quantity-label"><?php esc_html_e( 'Select Quantity:', 'foxfire-child' ); ?></span>
+		<div class="ff-tier-selector__grid" role="group" aria-labelledby="ff-quantity-label">
+			<?php foreach ( $options as $quantity => $rule ) : ?>
+				<button type="button" class="ff-tier-btn<?php echo $quantity === $first ? ' is-active' : ''; ?>" data-qty="<?php echo esc_attr( $quantity ); ?>" aria-pressed="<?php echo $quantity === $first ? 'true' : 'false'; ?>">
+					<span class="ff-tier-btn__header">
+						<span class="ff-tier-btn__qty"><?php echo esc_html( sprintf( _n( '%s Vial', '%s Vials', $quantity, 'foxfire-child' ), number_format_i18n( $quantity ) ) ); ?></span>
+						<?php if ( 'discount' === $rule['mode'] && (float) $rule['value'] > 0 ) : ?>
+							<span class="ff-tier-btn__badge"><?php echo esc_html( sprintf( __( 'Save %s%%', 'foxfire-child' ), $rule['value'] ) ); ?></span>
+						<?php endif; ?>
+					</span>
+					<span class="ff-tier-btn__pricing" data-tier-price="<?php echo esc_attr( $quantity ); ?>"><?php echo $product->is_type( 'variable' ) ? esc_html__( 'Choose a strength', 'foxfire-child' ) : wp_kses_post( $prices[ $quantity ]['html'] ); ?></span>
+				</button>
+			<?php endforeach; ?>
 		</div>
+		<p class="ff-tier-selection-total" aria-live="polite"><?php esc_html_e( 'Selected total:', 'foxfire-child' ); ?> <strong class="ff-tier-selected-price"></strong></p>
+		<p class="ff-quantity-stock-note" role="status" hidden><?php esc_html_e( 'The available quantity options exceed current stock. Please check back or contact us.', 'foxfire-child' ); ?></p>
 	</div>
 	<?php
 }
 add_action( 'woocommerce_before_add_to_cart_quantity', 'foxfire_render_quantity_tiers', 10 );
+
+/** Match the first configured preset when a product does not offer one vial. */
+function foxfire_quantity_initial_value( $args, $product ) {
+	if ( is_product() && $product instanceof WC_Product && function_exists( 'foxfire_operations_get_quantity_options' ) ) {
+		$id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
+		if ( foxfire_operations_tier_pricing_enabled( $id ) ) {
+			$args['input_value'] = array_key_first( foxfire_operations_get_quantity_options( $id ) );
+		}
+	}
+	return $args;
+}
+add_filter( 'woocommerce_quantity_input_args', 'foxfire_quantity_initial_value', 20, 2 );
 
 /**
  * Render 2-column specifications & batch verification grid below the main product area.
@@ -324,7 +302,7 @@ function foxfire_render_mobile_sticky_atc(): void {
 				<?php endif; ?>
 				<div class="ff-sticky-atc__text">
 					<p class="ff-sticky-atc__title"><?php the_title(); ?></p>
-					<p class="ff-sticky-atc__price"><?php echo wp_kses_post( $price_html ); ?></p>
+					<p class="ff-sticky-atc__price" data-total-label="<?php esc_attr_e( 'total', 'foxfire-child' ); ?>"><?php echo wp_kses_post( $price_html ); ?></p>
 				</div>
 			</div>
 

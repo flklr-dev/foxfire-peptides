@@ -35,7 +35,7 @@ function foxfire_operations_register_product_fields() {
 					'label'     => __( 'WooCommerce product controls', 'foxfire-operations' ),
 					'name'      => '',
 					'type'      => 'message',
-					'message'   => __( 'Use Product data for SKU, regular/sale price, and inventory. For products sold in different strengths, use Attributes and Variations and give every variation its own price, SKU, and stock value. Use Catalog visibility to mark a product as featured.', 'foxfire-operations' ),
+					'message'   => __( 'Use Product data for SKU, regular/sale price, and inventory. For products sold in different strengths, use Attributes and Variations and give every variation its own price, SKU, and stock value. Use Catalog visibility to mark a product as featured. To replace the main photo, use Product image, select or upload an image, and click Update. This same product image appears on Shop cards, homepage Featured Products cards, and the product page. Use Product gallery for extra photos. Leave variation images empty to use the main product image, or choose a separate photo for a specific strength. Existing vial images are temporary; keep them until the final approved images are supplied.', 'foxfire-operations' ),
 					'new_lines' => 'wpautop',
 					'esc_html'  => 1,
 				),
@@ -161,7 +161,7 @@ function foxfire_operations_register_product_fields() {
 					'label'        => __( 'Pricing order', 'foxfire-operations' ),
 					'name'         => '',
 					'type'         => 'message',
-					'message'      => __( 'Quantity discounts apply to the current WooCommerce price (including an active sale price). Coupons are applied afterward by WooCommerce.', 'foxfire-operations' ),
+					'message'      => __( 'Manage the available vial quantities and prices in Product data → Quantity Options. Use Variations for optional strength-specific price overrides. Existing quantity settings are preserved until changed there.', 'foxfire-operations' ),
 					'new_lines'    => 'wpautop',
 					'esc_html'     => 1,
 				),
@@ -466,12 +466,9 @@ function foxfire_operations_render_product_column( $column, $product_id ) {
 			return;
 		}
 
-		$discounts = foxfire_operations_get_tier_discounts( $product_id );
-		printf(
-			'<span class="foxfire-ops-tier">3+: %1$s%%<br>5+: %2$s%%</span>',
-			esc_html( wc_format_localized_decimal( $discounts[3] ) ),
-			esc_html( wc_format_localized_decimal( $discounts[5] ) )
-		);
+		foreach ( foxfire_operations_get_quantity_options( $product_id ) as $quantity => $rule ) {
+			echo '<span class="foxfire-ops-tier">' . esc_html( $quantity . '+: ' ) . ( 'discount' === $rule['mode'] ? esc_html( $rule['value'] . '%' ) : wp_kses_post( wc_price( $rule['value'] ) ) . ' ' . esc_html__( 'total', 'foxfire-operations' ) ) . '</span><br>';
+		}
 	}
 }
 add_action( 'manage_product_posts_custom_column', 'foxfire_operations_render_product_column', 10, 2 );
@@ -618,7 +615,8 @@ function foxfire_operations_render_pricing_preview_metabox( $post ) {
 			$variation = wc_get_product( $variation_id );
 			if ( $variation && '' !== $variation->get_price( 'edit' ) ) {
 				$rows[] = array(
-					'label' => wp_strip_all_tags( wc_get_formatted_variation( $variation, true, false, true ) ),
+					'id' => $variation_id,
+					'label' => wp_strip_all_tags( wc_get_formatted_variation( $variation, true, false, false ) ),
 					'price' => (float) $variation->get_price( 'edit' ),
 				);
 			}
@@ -635,25 +633,23 @@ function foxfire_operations_render_pricing_preview_metabox( $post ) {
 		return;
 	}
 
-	$discounts = foxfire_operations_get_tier_discounts( $post->ID );
-	$enabled   = foxfire_operations_tier_pricing_enabled( $post->ID );
-
-	echo '<div class="foxfire-pricing-preview" data-product-type="' . esc_attr( $product->get_type() ) . '">';
-	echo '<p>' . esc_html__( 'Preview uses the current active WooCommerce price. An active sale price is discounted first; coupons apply afterward.', 'foxfire-operations' ) . '</p>';
-	echo '<div class="foxfire-pricing-preview__scroll"><table class="widefat striped"><thead><tr>';
-	echo '<th>' . esc_html__( 'Item', 'foxfire-operations' ) . '</th><th>' . esc_html__( '1-unit total', 'foxfire-operations' ) . '</th><th>' . esc_html__( '3-unit total', 'foxfire-operations' ) . '</th><th>' . esc_html__( '5-unit total', 'foxfire-operations' ) . '</th>';
+	$options = foxfire_operations_get_quantity_options( $post->ID );
+	$enabled = foxfire_operations_tier_pricing_enabled( $post->ID );
+	echo '<div class="foxfire-pricing-preview">';
+	echo '<p>' . esc_html__( 'Saved settings preview. Update the product to refresh this table. Discounts use the active price; fixed totals replace it. Coupons apply afterward. Variation overrides are included.', 'foxfire-operations' ) . '</p>';
+	echo '<div class="foxfire-pricing-preview__scroll"><table class="widefat striped"><thead><tr><th>' . esc_html__( 'Item', 'foxfire-operations' ) . '</th>';
+	foreach ( $options as $quantity => $rule ) {
+		echo '<th>' . esc_html( sprintf( __( '%s-vial total', 'foxfire-operations' ), $quantity ) ) . '</th>';
+	}
 	echo '</tr></thead><tbody>';
 	foreach ( $rows as $row ) {
-		$tier_3_price = $enabled ? foxfire_operations_calculate_tier_unit_price( $row['price'], 3, $discounts ) : $row['price'];
-		$tier_5_price = $enabled ? foxfire_operations_calculate_tier_unit_price( $row['price'], 5, $discounts ) : $row['price'];
-		printf(
-			'<tr data-base-price="%1$s"><th scope="row">%2$s</th><td data-tier="1">%3$s</td><td data-tier="3">%4$s</td><td data-tier="5">%5$s</td></tr>',
-			esc_attr( $row['price'] ),
-			esc_html( $row['label'] ),
-			wp_kses_post( wc_price( $row['price'] ) ),
-			wp_kses_post( wc_price( $tier_3_price * 3 ) ),
-			wp_kses_post( wc_price( $tier_5_price * 5 ) )
-		);
+		$rules = foxfire_operations_get_quantity_options( $post->ID, $row['id'] ?? 0 );
+		echo '<tr><th scope="row">' . esc_html( $row['label'] ) . '</th>';
+		foreach ( $options as $quantity => $rule ) {
+			$unit = $enabled ? foxfire_operations_quantity_unit_price( $row['price'], $quantity, $rules ) : $row['price'];
+			echo '<td>' . wp_kses_post( wc_price( $unit * $quantity ) ) . '</td>';
+		}
+		echo '</tr>';
 	}
 	echo '</tbody></table></div></div>';
 }
@@ -669,7 +665,7 @@ function foxfire_operations_acf_dependency_notice() {
 	}
 
 	echo '<div class="notice notice-error"><p>';
-	echo esc_html__( 'Foxfire Operations requires Advanced Custom Fields for product batch, COA, and quantity-pricing controls.', 'foxfire-operations' );
+	echo esc_html__( 'Foxfire Operations requires Advanced Custom Fields for product batch and COA controls. Quantity Options use the native Product data panel.', 'foxfire-operations' );
 	echo '</p></div>';
 }
 add_action( 'admin_notices', 'foxfire_operations_acf_dependency_notice' );
