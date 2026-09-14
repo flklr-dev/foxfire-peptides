@@ -266,6 +266,18 @@ function foxfire_operations_password_reset_expiration(): int {
 }
 add_filter( 'password_reset_expiration', 'foxfire_operations_password_reset_expiration' );
 
+/** WooCommerce auto-signs in after reset; require explicit sign-in instead. */
+function foxfire_operations_require_login_after_password_reset( $user ): void {
+	if ( ! $user instanceof WP_User ) {
+		return;
+	}
+	// Clear the new automatic login and revoke the reset user's other sessions.
+	wp_logout();
+	WP_Session_Tokens::get_instance( $user->ID )->destroy_all();
+	// WooCommerce then redirects to My Account with its password-reset success notice.
+}
+add_action( 'woocommerce_customer_reset_password', 'foxfire_operations_require_login_after_password_reset', 999 );
+
 /**
  * Limit privileged WordPress sessions more aggressively than customer logins.
  *

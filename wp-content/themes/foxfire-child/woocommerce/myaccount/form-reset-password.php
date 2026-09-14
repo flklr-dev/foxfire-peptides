@@ -30,7 +30,7 @@ do_action( 'woocommerce_before_reset_password_form' );
 				</label>
 				<div class="ff-password-input-wrap">
 					<input type="password" class="ff-form-input woocommerce-Input woocommerce-Input--text input-text" name="password_1" id="password_1" autocomplete="new-password" required />
-					<button type="button" class="ff-pwd-toggle" aria-label="<?php esc_attr_e( 'Toggle password visibility', 'foxfire-child' ); ?>">
+					<button type="button" class="ff-pwd-toggle" aria-controls="password_1" aria-pressed="false" aria-label="<?php esc_attr_e( 'Show password', 'foxfire-child' ); ?>">
 						<svg class="ff-pwd-eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
 						<svg class="ff-pwd-eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-.722-3.25"/><path d="M2 8a10.645 10.645 0 0 0 20 0"/><path d="m20 15-1.726-2.05"/><path d="m4 15 1.726-2.05"/><path d="m9 18 .722-3.25"/></svg>
 					</button>
@@ -43,7 +43,7 @@ do_action( 'woocommerce_before_reset_password_form' );
 				</label>
 				<div class="ff-password-input-wrap">
 					<input type="password" class="ff-form-input woocommerce-Input woocommerce-Input--text input-text" name="password_2" id="password_2" autocomplete="new-password" required />
-					<button type="button" class="ff-pwd-toggle" aria-label="<?php esc_attr_e( 'Toggle password visibility', 'foxfire-child' ); ?>">
+					<button type="button" class="ff-pwd-toggle" aria-controls="password_2" aria-pressed="false" aria-label="<?php esc_attr_e( 'Show password', 'foxfire-child' ); ?>">
 						<svg class="ff-pwd-eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
 						<svg class="ff-pwd-eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-.722-3.25"/><path d="M2 8a10.645 10.645 0 0 0 20 0"/><path d="m20 15-1.726-2.05"/><path d="m4 15 1.726-2.05"/><path d="m9 18 .722-3.25"/></svg>
 					</button>

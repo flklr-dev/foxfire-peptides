@@ -55,7 +55,7 @@ add_filter( 'woocommerce_account_menu_items', 'foxfire_account_custom_menu_items
  */
 add_filter( 'woocommerce_get_endpoint_url', function( $url, $endpoint, $value, $permalink ) {
 	if ( 'batch-coa' === $endpoint ) {
-		return home_url( '/testing-coa/' );
+		return trailingslashit( $permalink ) . 'batch-coa/';
 	}
 	return $url;
 }, 10, 4 );

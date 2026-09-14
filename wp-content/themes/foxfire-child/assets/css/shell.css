@@ -565,7 +565,7 @@ body.ff-nav-is-open .site-header {
 	min-width: 40px;
 	min-height: 40px;
 	border-radius: var(--radius-md);
-	background: #ffffff;
+	background: transparent;
 	border: none;
 	color: var(--color-text) !important;
 	text-decoration: none;
@@ -576,7 +576,7 @@ body.ff-nav-is-open .site-header {
 .ff-header-account-btn:focus,
 .ff-header-account-btn.is-active {
 	color: var(--color-accent-primary) !important;
-	background: rgba(232, 90, 12, 0.05);
+	background: transparent;
 	text-decoration: none;
 }
 
@@ -910,17 +910,7 @@ body.ff-nav-is-open .site-header {
 		position: relative;
 	}
 
-	.ff-primary-nav__link.is-active::after,
-	.ff-primary-nav__link--active::after {
-		content: "";
-		position: absolute;
-		bottom: 2px;
-		left: 0.5rem;
-		right: 0.5rem;
-		height: 2px;
-		background-color: var(--color-accent-primary);
-		border-radius: 2px;
-	}
+	/* Active links use the shared text underline, not a second painted line. */
 
 	.ff-primary-nav__submenu-toggle {
 		display: none;

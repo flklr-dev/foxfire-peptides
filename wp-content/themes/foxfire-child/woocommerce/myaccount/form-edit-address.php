@@ -22,7 +22,7 @@ do_action( 'woocommerce_before_edit_account_address_form' );
 		<div class="ff-edit-address-header">
 			<div class="ff-edit-address-header__title-group">
 				<div class="ff-edit-address-header__icon" aria-hidden="true">
-					<svg class="ff-shopee-loc-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e85a0c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<svg class="ff-shopee-loc-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF5800" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 						<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
 						<circle cx="12" cy="10" r="3"></circle>
 					</svg>

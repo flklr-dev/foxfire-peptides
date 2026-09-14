@@ -9,10 +9,63 @@
 
 	var FoxfireAccount = {
 		init: function () {
+			this.bindLogoutConfirmation();
 			this.bindTabs();
 			this.bindPasswordToggles();
 			this.bindAddressPairing();
 			this.bindOrderMoreToggles();
+		},
+
+		bindLogoutConfirmation: function () {
+			var dialog = document.getElementById('ff-logout-dialog');
+			if (!dialog || typeof dialog.showModal !== 'function') return;
+			var logoutUrl = '';
+			var trigger = null;
+
+			$(document).on('click', '.ff-account-menu-item--customer-logout .ff-account-menu-link', function (e) {
+				if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+				e.preventDefault();
+				if (dialog.open) return;
+				// Preserve WooCommerce's signed logout URL, including its nonce.
+				logoutUrl = this.href;
+				trigger = this;
+				dialog.returnValue = '';
+				dialog.showModal();
+				document.body.classList.add('ff-logout-modal-open');
+			});
+			dialog.addEventListener('close', function () {
+				document.body.classList.remove('ff-logout-modal-open');
+				var url = logoutUrl;
+				logoutUrl = '';
+				if (dialog.returnValue === 'confirm' && url) {
+					window.location.assign(url);
+				} else if (trigger) {
+					trigger.focus();
+				}
+			});
+			dialog.addEventListener('cancel', function () {
+				// Escape is cancellation, never confirmation.
+				dialog.returnValue = 'cancel';
+			});
+			dialog.addEventListener('keydown', function (e) {
+				if (e.key !== 'Tab') return;
+				var buttons = dialog.querySelectorAll('button:not([disabled])');
+				var first = buttons[0];
+				var last = buttons[buttons.length - 1];
+				if (e.shiftKey && document.activeElement === first) {
+					e.preventDefault();
+					last.focus();
+				} else if (!e.shiftKey && document.activeElement === last) {
+					e.preventDefault();
+					first.focus();
+				}
+			});
+			dialog.addEventListener('click', function (e) {
+				var bounds = dialog.getBoundingClientRect();
+				if (e.target === dialog && (e.clientX < bounds.left || e.clientX > bounds.right || e.clientY < bounds.top || e.clientY > bounds.bottom)) {
+					dialog.close('cancel');
+				}
+			});
 		},
 
 		bindOrderMoreToggles: function () {
@@ -98,15 +151,16 @@
 			$(document).on('click', '.ff-pwd-toggle', function (e) {
 				e.preventDefault();
 				var $btn = $(this);
-				var $input = $btn.siblings('input');
+				// WooCommerce wraps reset inputs in span.password-input at runtime.
+				var $input = $btn.closest('.ff-password-input-wrap').find('input').first();
 
 				if ($input.length) {
 					if ($input.attr('type') === 'password') {
 						$input.attr('type', 'text');
-						$btn.attr('aria-label', 'Hide password').addClass('is-visible');
+						$btn.attr('aria-label', 'Hide password').attr('aria-pressed', 'true').addClass('is-visible');
 					} else {
 						$input.attr('type', 'password');
-						$btn.attr('aria-label', 'Show password').removeClass('is-visible');
+						$btn.attr('aria-label', 'Show password').attr('aria-pressed', 'false').removeClass('is-visible');
 					}
 				}
 			});

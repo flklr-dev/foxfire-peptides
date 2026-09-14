@@ -59,7 +59,7 @@ function foxfire_operations_register_product_fields() {
 					'label'         => __( 'Testing Status', 'foxfire-operations' ),
 					'name'          => 'foxfire_testing_summary',
 					'type'          => 'select',
-					'instructions'  => __( 'Use only a factual workflow status; this does not make a quality or regulatory claim.', 'foxfire-operations' ),
+					'instructions'  => __( 'Shown in the directory Status column. Leave blank for automatic document availability. Report Available requires a linked report. This is a workflow status, not a quality or regulatory claim.', 'foxfire-operations' ),
 					'choices'       => array(
 						'Information Pending'   => __( 'Information Pending', 'foxfire-operations' ),
 						'Information Available' => __( 'Information Available', 'foxfire-operations' ),
@@ -71,6 +71,16 @@ function foxfire_operations_register_product_fields() {
 					'ui'            => 1,
 					'return_format' => 'value',
 					'wrapper'       => array( 'width' => 50 ),
+				),
+				array(
+					'key'          => 'field_foxfire_testing_notes',
+					'label'        => __( 'Testing Summary', 'foxfire-operations' ),
+					'name'         => 'foxfire_testing_notes',
+					'type'         => 'textarea',
+					'instructions' => __( 'Describe the available testing for the batch above using factual, document-supported wording. Shown separately from Status in the directory. Clear this field to remove the summary. Maximum 500 characters.', 'foxfire-operations' ),
+					'maxlength'    => 500,
+					'rows'         => 3,
+					'new_lines'    => '',
 				),
 				array(
 					'key'          => 'field_foxfire_coa_url',
@@ -85,7 +95,7 @@ function foxfire_operations_register_product_fields() {
 					'label'         => __( 'COA Report File', 'foxfire-operations' ),
 					'name'          => 'foxfire_coa_file',
 					'type'          => 'file',
-					'instructions'  => __( 'Upload a PDF or an image of the report. This takes precedence over the URL on the storefront.', 'foxfire-operations' ),
+					'instructions'  => __( 'Upload or choose a PDF/image for the batch above, then click Update. This file takes precedence over COA Report URL and appears on the product page and testing directory. Remove the selected file and choose another to replace the current report. New checkout orders save the batch/report reference; previous orders retain their saved report. Keep old reports in Media for earlier batches. Correct a specific order report in its Foxfire Batch / COA Documents panel, then Update the order.', 'foxfire-operations' ),
 					'return_format' => 'url',
 					'library'       => 'all',
 					'mime_types'    => 'pdf,jpg,jpeg,png,webp',
@@ -287,6 +297,22 @@ function foxfire_operations_validate_testing_status( $valid, $value ) {
 		: __( 'Choose one of the available testing workflow statuses.', 'foxfire-operations' );
 }
 add_filter( 'acf/validate_value/name=foxfire_testing_summary', 'foxfire_operations_validate_testing_status', 10, 2 );
+
+/** Keep the public testing summary plain text and bounded. */
+function foxfire_operations_sanitize_testing_notes( $value ): string {
+	$value = sanitize_textarea_field( (string) $value );
+	return function_exists( 'mb_substr' ) ? mb_substr( $value, 0, 500 ) : substr( $value, 0, 500 );
+}
+add_filter( 'acf/update_value/name=foxfire_testing_notes', 'foxfire_operations_sanitize_testing_notes' );
+
+function foxfire_operations_validate_testing_notes( $valid, $value ) {
+	if ( true !== $valid ) {
+		return $valid;
+	}
+	$length = function_exists( 'mb_strlen' ) ? mb_strlen( (string) $value ) : strlen( (string) $value );
+	return $length <= 500 ? true : __( 'Keep the testing summary within 500 characters.', 'foxfire-operations' );
+}
+add_filter( 'acf/validate_value/name=foxfire_testing_notes', 'foxfire_operations_validate_testing_notes', 10, 2 );
 
 /**
  * Validate a tier percentage without silently accepting an unsafe value.

@@ -21,12 +21,12 @@ $contact_eyebrow           = foxfire_get_managed_content( 'contact_eyebrow', __(
 $contact_title             = foxfire_get_managed_content( 'contact_title', __( 'Contact Us', 'foxfire-child' ) );
 $contact_intro             = foxfire_get_managed_content( 'contact_intro', __( 'Have questions about products, batch documentation, or your order? We are here to help.', 'foxfire-child' ) );
 $contact_direct_title      = foxfire_get_managed_content( 'contact_direct_title', __( 'How to Reach Us', 'foxfire-child' ) );
-$contact_direct_desc       = foxfire_get_managed_content( 'contact_direct_description', __( 'Our team is available Monday through Friday to assist with inquiries, documentation, and orders.', 'foxfire-child' ) );
-$support_email             = foxfire_get_managed_content( 'support_email', 'support@foxfirepeptides.com' );
+$contact_direct_desc       = foxfire_get_managed_content( 'contact_direct_description', __( 'Send us a message anytime for assistance with inquiries, documentation, or orders. We’ll respond as soon as possible.', 'foxfire-child' ) );
+$support_email             = foxfire_get_managed_content( 'support_email', 'info@foxfirepeptides.com' );
 $support_phone             = foxfire_get_managed_content( 'support_phone', '' );
 $support_phone_uri         = preg_replace( '/[^0-9+]/', '', $support_phone );
-$contact_response_time     = foxfire_get_managed_content( 'contact_response_time', __( '12–24 business hours', 'foxfire-child' ) );
-$contact_hours             = foxfire_get_managed_content( 'contact_hours', __( 'Mon – Fri, 9 AM – 5 PM EST', 'foxfire-child' ) );
+$contact_response_time     = foxfire_get_managed_content( 'contact_response_time', __( 'We’ll respond as soon as possible', 'foxfire-child' ) );
+$contact_hours             = foxfire_get_managed_content( 'contact_hours', __( 'Messages Accepted 24/7', 'foxfire-child' ) );
 $contact_trust_note        = foxfire_get_managed_content( 'contact_trust_note', __( 'Every inquiry is received and handled directly by the Foxfire team.', 'foxfire-child' ) );
 $contact_form_title        = foxfire_get_managed_content( 'contact_form_title', __( 'Send Us a Message', 'foxfire-child' ) );
 $contact_form_description  = foxfire_get_managed_content( 'contact_form_description', __( 'Fill in the details below and we will get back to you as soon as possible.', 'foxfire-child' ) );
@@ -64,7 +64,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['foxfire_contact_sub
 	} elseif ( ! empty( $_POST['ff_website_hp'] ) ) {
 		// Silent success — don't tip off bots.
 		$form_status  = 'success';
-		$form_message = __( 'Thank you! Your message has been received. We will be in touch shortly.', 'foxfire-child' );
+		$form_message = __( 'Thank you. Your message has been received. We’ll get back to you as soon as possible.', 'foxfire-child' );
 
 	} else {
 
@@ -113,7 +113,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['foxfire_contact_sub
 
 				// 6. Build notification email.
 				$admin_email  = get_option( 'admin_email' );
-				$recipient_email = is_email( $support_email ) ? $support_email : $admin_email;
+				$recipient_email = is_email( $support_email ) ? $support_email : 'info@foxfirepeptides.com';
 				$site_name    = get_bloginfo( 'name' );
 				$subject_text = $allowed_subjects[ $subject_key ];
 
@@ -140,26 +140,27 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['foxfire_contact_sub
 					'Content-Type: text/plain; charset=UTF-8',
 				);
 
-				wp_mail( $recipient_email, $email_subject, $email_body, $headers );
+				$mail_sent = wp_mail( $recipient_email, $email_subject, $email_body, $headers );
 
 				// 7. Increment rate-limit counter (1-hour TTL).
 				set_transient( $ip_key, $submit_count + 1, HOUR_IN_SECONDS );
 
-				$form_status  = 'success';
-				$form_message = sprintf(
-					/* translators: %s: public support response-time estimate. */
-					__( 'Thank you! Your message has been sent. Our team will respond within %s.', 'foxfire-child' ),
-					$contact_response_time
-				);
+				if ( $mail_sent ) {
+					$form_status  = 'success';
+					$form_message = __( 'Thank you. Your message has been received. We’ll get back to you as soon as possible.', 'foxfire-child' );
 
-				// Clear form on success.
-				$form_data = array(
-					'name'         => '',
-					'email'        => '',
-					'order_number' => '',
-					'subject'      => 'general',
-					'message'      => '',
-				);
+					// Clear form only when the mail transport accepts the message.
+					$form_data = array(
+						'name'         => '',
+						'email'        => '',
+						'order_number' => '',
+						'subject'      => 'general',
+						'message'      => '',
+					);
+				} else {
+					$form_status  = 'error';
+					$form_message = __( 'Your message could not be sent. Please try again later or contact us using the email address shown on this page.', 'foxfire-child' );
+				}
 			}
 		}
 	}
@@ -229,8 +230,8 @@ get_header();
 								</svg>
 							</div>
 							<div class="ff-contact-info-item__content">
-								<span class="ff-contact-info-item__label"><?php esc_html_e( 'Response Time', 'foxfire-child' ); ?></span>
-								<span class="ff-contact-info-item__value"><?php echo esc_html( $contact_response_time ); ?></span>
+								<span class="ff-contact-info-item__label"><?php esc_html_e( 'Contact', 'foxfire-child' ); ?></span>
+								<span class="ff-contact-info-item__value"><?php echo esc_html( $contact_hours ); ?></span>
 							</div>
 						</div>
 
@@ -245,8 +246,8 @@ get_header();
 								</svg>
 							</div>
 							<div class="ff-contact-info-item__content">
-								<span class="ff-contact-info-item__label"><?php esc_html_e( 'Hours', 'foxfire-child' ); ?></span>
-								<span class="ff-contact-info-item__value"><?php echo esc_html( $contact_hours ); ?></span>
+								<span class="ff-contact-info-item__label"><?php esc_html_e( 'Response', 'foxfire-child' ); ?></span>
+								<span class="ff-contact-info-item__value"><?php echo esc_html( $contact_response_time ); ?></span>
 							</div>
 						</div>
 

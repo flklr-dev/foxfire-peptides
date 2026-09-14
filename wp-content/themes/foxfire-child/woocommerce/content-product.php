@@ -71,7 +71,7 @@ $classes    = wc_get_product_class( array( 'ff-product-card' ), $product );
 			$terms = get_the_terms( $product_id, 'product_cat' );
 			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) :
 				$first_cat = reset( $terms );
-				$cat_name  = str_replace( ' (TBD)', '', $first_cat->name );
+				$cat_name  = foxfire_get_category_display_name( $first_cat->name );
 				?>
 				<span class="ff-product-card__category"><?php echo esc_html( $cat_name ); ?></span>
 			<?php endif; ?>
@@ -94,7 +94,7 @@ $classes    = wc_get_product_class( array( 'ff-product-card' ), $product );
 			</div>
 
 			<div class="ff-product-card__action">
-				<?php if ( wc_get_loop_prop( 'foxfire_homepage_showcase', false ) || wc_get_loop_prop( 'foxfire_catalog_showcase', false ) ) : ?>
+				<?php if ( wc_get_loop_prop( 'foxfire_homepage_showcase', false ) || wc_get_loop_prop( 'foxfire_catalog_showcase', false ) || in_array( wc_get_loop_prop( 'name' ), array( 'cross-sells', 'related' ), true ) ) : ?>
 					<a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="button ff-product-card__view-product" aria-label="<?php echo esc_attr( sprintf( __( 'View product: %s', 'foxfire-child' ), $product->get_name() ) ); ?>">
 						<?php esc_html_e( 'VIEW PRODUCT', 'foxfire-child' ); ?>
 					</a>

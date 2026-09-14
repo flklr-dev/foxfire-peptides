@@ -13,6 +13,7 @@ define( 'FOXFIRE_CHILD_URI', get_stylesheet_directory_uri() );
 
 require_once FOXFIRE_CHILD_DIR . '/inc/shell.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/layout.php';
+require_once FOXFIRE_CHILD_DIR . '/inc/legal-policies.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/product-fields.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/shop.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/pdp.php';

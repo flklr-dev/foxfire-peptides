@@ -48,10 +48,13 @@ require_once FOXFIRE_OPERATIONS_DIR . 'includes/product-admin.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/quantity-admin.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/promotions.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/orders.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/customer-documents.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/homepage-merchandising.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/content-admin.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/seo.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/store-settings.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/checkout-review.php';
+require_once FOXFIRE_OPERATIONS_DIR . 'includes/legal-acknowledgement.php';
 require_once FOXFIRE_OPERATIONS_DIR . 'includes/admin.php';
 
 register_activation_hook( __FILE__, 'foxfire_operations_activate' );

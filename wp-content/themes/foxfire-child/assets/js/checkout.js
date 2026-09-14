@@ -56,6 +56,9 @@
 				e.preventDefault();
 				e.stopPropagation();
 				var $terms = $('#terms');
+				if ($(this).attr('data-review-mode') === '1') {
+					return false;
+				}
 				if ($terms.length && !$terms.is(':checked')) {
 					$terms.focus();
 					var $wrap = $terms.closest('.woocommerce-terms-and-conditions-wrapper');
@@ -69,6 +72,9 @@
 
 			// Validation & Button loading state on submit
 			$('form.checkout').on('checkout_place_order', function () {
+				if ($('#place_order').attr('data-review-mode') === '1') {
+					return false;
+				}
 				if (window.navigator && window.navigator.onLine === false) {
 					self.resetProcessingState();
 					self.showCheckoutNotice(
@@ -236,6 +242,10 @@
 			var $btn = $('#place_order');
 
 			if (!$btn.length) {
+				return;
+			}
+			if ($btn.attr('data-review-mode') === '1') {
+				$btn.prop('disabled', true).addClass('is-disabled');
 				return;
 			}
 

@@ -23,8 +23,7 @@
 	color: var(--color-text);
 }
 
-/* Approved PDP palette, including related cards and the mobile purchase bar.
-   Scope to this page so pending cart/account reviews keep their current styles. */
+/* Approved PDP palette, including related cards and the mobile purchase bar. */
 .single-product {
 	--color-accent-primary: var(--color-brand-orange);
 	--color-accent-primary-hover: #ef5100;
@@ -34,6 +33,86 @@
 	--color-accent-secondary: var(--color-brand-black);
 	--color-accent-secondary-bg: var(--color-brand-green);
 	--focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-brand-orange) 35%, transparent);
+}
+
+/* Approved Cart/Checkout palette. Body scope includes address/payment dialogs,
+   empty/recovery states, order confirmation and the cart drawer. */
+.woocommerce-cart,
+.woocommerce-checkout {
+	--color-accent-primary: var(--color-brand-orange);
+	--color-accent-primary-hover: #ef5100;
+	--color-accent-primary-active: #dd4b00;
+	--color-accent-primary-subtle: color-mix(in srgb, var(--color-brand-orange) 8%, white);
+	--color-text: var(--color-brand-black);
+	--color-structure: var(--color-brand-black);
+	--color-accent-secondary: var(--color-brand-black);
+	--color-accent-secondary-bg: var(--color-brand-green);
+	--color-success: var(--color-brand-black);
+	--focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-brand-orange) 35%, transparent);
+}
+
+.woocommerce-cart .woocommerce-info,
+.woocommerce-checkout .woocommerce-info {
+	background-color: var(--color-bg-subtle);
+	border-left-color: var(--color-brand-orange);
+}
+
+.woocommerce-cart .woocommerce-info::before,
+.woocommerce-checkout .woocommerce-info::before {
+	color: var(--color-brand-orange);
+}
+
+.woocommerce-cart .woocommerce-message,
+.woocommerce-checkout .woocommerce-message {
+	background-color: var(--color-bg-subtle);
+	border-left-color: var(--color-brand-black);
+}
+
+.woocommerce-cart .woocommerce-message::before,
+.woocommerce-checkout .woocommerce-message::before {
+	color: var(--color-brand-black);
+}
+
+/* Keep informational/shipping text readable, reserving lime for compact status. */
+.woocommerce-cart .ff-shipping-icon--unlocked {
+	color: var(--color-brand-orange);
+}
+
+.woocommerce-checkout .ff-checkout-header__badge,
+.woocommerce-checkout .ff-thankyou-status-icon {
+	background-color: var(--color-brand-green);
+	color: var(--color-brand-black);
+}
+
+.woocommerce-checkout .ff-checkout-header__badge {
+	border-color: var(--color-brand-green);
+}
+
+.woocommerce-checkout .ff-checkout-item__qty-badge,
+.woocommerce-checkout .ff-thankyou-item__qty {
+	background-color: var(--color-brand-black);
+}
+
+.woocommerce-checkout #payment #place_order:disabled,
+.woocommerce-checkout #payment #place_order.is-disabled {
+	background-color: #6b6b6b !important;
+}
+
+:is(.woocommerce-cart, .woocommerce-checkout).woocommerce-page .button:hover:not(:disabled):not(.is-disabled) {
+	box-shadow: 0 4px 12px color-mix(in srgb, var(--color-brand-orange) 20%, transparent);
+}
+
+.woocommerce-checkout .ff-checkout-processing-toast {
+	background-color: color-mix(in srgb, var(--color-brand-black) 92%, transparent);
+}
+
+.woocommerce-checkout .ff-address-modal__backdrop,
+.woocommerce-cart .ff-cart-drawer-overlay {
+	background: color-mix(in srgb, var(--color-brand-black) 45%, transparent);
+}
+
+.woocommerce-cart .ff-checkout-recovery {
+	background: color-mix(in srgb, var(--color-brand-orange) 3%, white);
 }
 
 .ff-shop-container .ff-badge--tested {
@@ -3155,7 +3234,7 @@ a.added_to_cart.wc-forward,
 	background-color: var(--color-accent-primary-hover) !important;
 	border-color: var(--color-accent-primary-hover) !important;
 	transform: translateY(-1px);
-	box-shadow: 0 4px 12px rgba(232, 90, 12, 0.25);
+	box-shadow: 0 4px 12px color-mix(in srgb, var(--color-brand-orange) 25%, transparent);
 }
 
 .ff-update-cart-btn {
@@ -3274,7 +3353,7 @@ a.added_to_cart.wc-forward,
 	font-weight: var(--font-weight-bold) !important;
 	border-radius: var(--radius-md) !important;
 	text-decoration: none !important;
-	box-shadow: 0 4px 14px rgba(232, 90, 12, 0.28);
+	box-shadow: 0 4px 14px color-mix(in srgb, var(--color-brand-orange) 28%, transparent);
 	transition: all var(--transition-fast) !important;
 	text-align: center;
 }
@@ -3282,7 +3361,7 @@ a.added_to_cart.wc-forward,
 .ff-cart-proceed-wrap .checkout-button:hover {
 	background-color: var(--color-accent-primary-hover) !important;
 	transform: translateY(-1px);
-	box-shadow: 0 6px 20px rgba(232, 90, 12, 0.38);
+	box-shadow: 0 6px 20px color-mix(in srgb, var(--color-brand-orange) 38%, transparent);
 }
 
 /* Embedded Guarantee Box */
@@ -3361,9 +3440,9 @@ a.added_to_cart.wc-forward,
 	width: 88px;
 	height: 88px;
 	border-radius: 50%;
-	background-color: rgba(232, 90, 12, 0.08);
-	border: 1.5px solid rgba(232, 90, 12, 0.2);
-	box-shadow: 0 8px 24px rgba(232, 90, 12, 0.08);
+	background-color: color-mix(in srgb, var(--color-brand-orange) 8%, transparent);
+	border: 1.5px solid color-mix(in srgb, var(--color-brand-orange) 20%, transparent);
+	box-shadow: 0 8px 24px color-mix(in srgb, var(--color-brand-orange) 8%, transparent);
 }
 
 .ff-cart-empty__title {
@@ -3390,7 +3469,7 @@ a.added_to_cart.wc-forward,
 	padding: 1.25rem;
 	max-width: 520px;
 	background: #fffaf6;
-	border: 1px solid rgba(232, 90, 12, 0.24);
+	border: 1px solid color-mix(in srgb, var(--color-brand-orange) 24%, transparent);
 	border-radius: var(--radius-md);
 	box-shadow: 0 8px 24px rgba(31, 30, 29, 0.06);
 }
@@ -3445,7 +3524,7 @@ a.added_to_cart.wc-forward,
 	border-radius: var(--radius-md);
 	border: none !important;
 	text-decoration: none !important;
-	box-shadow: 0 4px 16px rgba(232, 90, 12, 0.28);
+	box-shadow: 0 4px 16px color-mix(in srgb, var(--color-brand-orange) 28%, transparent);
 	transition: all var(--transition-fast);
 }
 
@@ -3453,7 +3532,7 @@ a.added_to_cart.wc-forward,
 .ff-cart-empty__btn:focus {
 	background-color: var(--color-accent-primary-hover);
 	transform: translateY(-2px);
-	box-shadow: 0 8px 24px rgba(232, 90, 12, 0.38);
+	box-shadow: 0 8px 24px color-mix(in srgb, var(--color-brand-orange) 38%, transparent);
 	color: #ffffff !important;
 	text-decoration: none !important;
 }
@@ -3462,6 +3541,15 @@ a.added_to_cart.wc-forward,
    H. Full-Width Cross-Sells Section (Below Cart Grid)
    -------------------------------------------------------------------------- */
 .ff-cart-cross-sells-wrap {
+	/* Match the already-approved catalog cards without changing the cart layout. */
+	--color-accent-primary: var(--color-brand-orange);
+	--color-accent-primary-hover: #ef5100;
+	--color-accent-primary-active: #dd4b00;
+	--color-text: var(--color-brand-black);
+	--color-structure: var(--color-brand-black);
+	--color-accent-secondary: var(--color-brand-black);
+	--color-accent-secondary-bg: var(--color-brand-green);
+	--focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-brand-orange) 35%, transparent);
 	margin-top: var(--space-7);
 	padding-top: var(--space-6);
 	border-top: 1px solid var(--color-border);
@@ -3842,7 +3930,7 @@ body.ff-drawer-open {
 	font-weight: var(--font-weight-bold);
 	border-radius: var(--radius-md);
 	text-decoration: none;
-	box-shadow: 0 4px 14px rgba(232, 90, 12, 0.25);
+	box-shadow: 0 4px 14px color-mix(in srgb, var(--color-brand-orange) 25%, transparent);
 	transition: all var(--transition-fast);
 }
 
@@ -4117,8 +4205,8 @@ body.ff-drawer-open {
 	font-size: 0.8125rem;
 	font-weight: var(--font-weight-bold);
 	color: var(--color-accent-secondary);
-	background-color: rgba(34, 197, 94, 0.08);
-	border: 1px solid rgba(34, 197, 94, 0.2);
+	background-color: color-mix(in srgb, var(--color-brand-green) 8%, transparent);
+	border: 1px solid color-mix(in srgb, var(--color-brand-green) 20%, transparent);
 	padding: 0.375rem 0.875rem;
 	border-radius: 9999px;
 }
@@ -4169,12 +4257,12 @@ body.ff-drawer-open {
 	height: 4px;
 	background: repeating-linear-gradient(
 		45deg,
-		#e85a0c,
-		#e85a0c 12px,
+		var(--color-brand-orange),
+		var(--color-brand-orange) 12px,
 		transparent 12px,
 		transparent 18px,
-		#1b8a4b 18px,
-		#1b8a4b 30px,
+		var(--color-brand-black) 18px,
+		var(--color-brand-black) 30px,
 		transparent 30px,
 		transparent 36px
 	);
@@ -4400,7 +4488,7 @@ body.ff-modal-locked {
 .ff-address-modal__close:focus {
 	border-color: var(--color-accent-primary) !important;
 	color: var(--color-accent-primary) !important;
-	background: rgba(232, 90, 12, 0.05) !important;
+	background: color-mix(in srgb, var(--color-brand-orange) 5%, transparent) !important;
 	box-shadow: none !important;
 }
 
@@ -4591,13 +4679,13 @@ body.ff-modal-locked {
 	border: none;
 	border-radius: var(--radius-md);
 	cursor: pointer;
-	box-shadow: 0 4px 12px rgba(232, 90, 12, 0.25);
+	box-shadow: 0 4px 12px color-mix(in srgb, var(--color-brand-orange) 25%, transparent);
 	transition: all var(--transition-fast);
 }
 
 .ff-address-modal__save-btn:hover {
 	background-color: var(--color-accent-primary-hover);
-	box-shadow: 0 6px 18px rgba(232, 90, 12, 0.35);
+	box-shadow: 0 6px 18px color-mix(in srgb, var(--color-brand-orange) 35%, transparent);
 }
 
 /* Form Fields Styling */
@@ -4706,7 +4794,7 @@ body.ff-modal-locked {
 .ff-edit-address-form textarea:focus {
 	border-color: var(--color-accent-primary) !important;
 	outline: none !important;
-	box-shadow: 0 0 0 3px rgba(232, 90, 12, 0.12) !important;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-orange) 12%, transparent) !important;
 }
 
 .woocommerce-checkout input.has-error,
@@ -4995,6 +5083,37 @@ body.ff-modal-locked {
 	margin: 0 0 1.25rem !important;
 }
 
+/* Payment availability is a calm status, not a default WooCommerce error banner. */
+.woocommerce-checkout #payment .ff-payment-notice {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+	margin: 0 0 1rem;
+	padding: 1rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background: var(--color-bg-subtle);
+	color: var(--color-brand-black);
+	box-shadow: none;
+}
+
+.woocommerce-checkout #payment .ff-payment-notice__icon {
+	flex: 0 0 20px;
+	margin-top: 0.2rem;
+	color: var(--color-brand-orange);
+}
+
+.woocommerce-checkout #payment .ff-payment-notice__message {
+	min-width: 0;
+	margin: 0 !important;
+	padding: 0;
+	color: var(--color-brand-black) !important;
+	font-family: var(--font-body);
+	font-size: 1rem;
+	line-height: 1.6;
+	overflow-wrap: anywhere;
+}
+
 /* Segmented Unified Payment Container */
 .ff-payment-methods,
 .woocommerce-checkout #payment ul.payment_methods {
@@ -5035,7 +5154,7 @@ body.ff-modal-locked {
 
 .ff-payment-methods li.wc_payment_method.is-selected,
 .woocommerce-checkout #payment ul.payment_methods li.wc_payment_method.is-selected {
-	background-color: rgba(232, 90, 12, 0.02) !important;
+	background-color: color-mix(in srgb, var(--color-brand-orange) 2%, transparent) !important;
 }
 
 .ff-payment-method-header {
@@ -5237,7 +5356,7 @@ body.ff-modal-locked {
 	border: none !important;
 	cursor: pointer !important;
 	text-decoration: none !important;
-	box-shadow: 0 4px 14px rgba(232, 90, 12, 0.28);
+	box-shadow: 0 4px 14px color-mix(in srgb, var(--color-brand-orange) 28%, transparent);
 	transition: all var(--transition-fast) !important;
 	text-align: center;
 }
@@ -5246,7 +5365,7 @@ body.ff-modal-locked {
 .woocommerce-checkout #place_order:hover:not(:disabled):not(.is-disabled) {
 	background-color: var(--color-accent-primary-hover) !important;
 	transform: translateY(-1px);
-	box-shadow: 0 6px 20px rgba(232, 90, 12, 0.38);
+	box-shadow: 0 6px 20px color-mix(in srgb, var(--color-brand-orange) 38%, transparent);
 }
 
 /* Disabled Place Order button when Terms & Conditions is not checked */
@@ -5323,7 +5442,7 @@ body.ff-modal-locked {
 }
 
 .ff-checkout-processing-toast {
-	background-color: rgba(17, 17, 17, 0.92);
+	background-color: color-mix(in srgb, var(--color-brand-black) 92%, transparent);
 	color: #ffffff;
 	padding: 1.75rem 2.25rem;
 	border-radius: 18px;
@@ -5354,7 +5473,7 @@ body.ff-modal-locked {
 	width: 44px;
 	height: 44px;
 	border: 3.5px solid rgba(255, 255, 255, 0.18);
-	border-top-color: var(--color-accent-primary, #e85a0c);
+	border-top-color: var(--color-accent-primary, var(--color-brand-orange));
 	border-radius: 50%;
 	animation: ffProcessingSpin 0.8s linear infinite;
 	margin-bottom: 0.25rem;
@@ -5582,13 +5701,13 @@ body.woocommerce-order-received,
 	width: 58px;
 	height: 58px;
 	border-radius: 50%;
-	background-color: rgba(34, 197, 94, 0.12);
+	background-color: color-mix(in srgb, var(--color-brand-green) 12%, transparent);
 	color: var(--color-accent-secondary);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	margin-bottom: 0.875rem;
-	box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.06);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand-green) 6%, transparent);
 	flex-shrink: 0;
 }
 
@@ -5961,12 +6080,12 @@ body.woocommerce-order-received,
 	height: 4px;
 	background: repeating-linear-gradient(
 		45deg,
-		#e85a0c,
-		#e85a0c 12px,
+		var(--color-brand-orange),
+		var(--color-brand-orange) 12px,
 		transparent 12px,
 		transparent 18px,
-		#1b8a4b 18px,
-		#1b8a4b 30px,
+		var(--color-brand-black) 18px,
+		var(--color-brand-black) 30px,
 		transparent 30px,
 		transparent 36px
 	);
@@ -6073,7 +6192,7 @@ body.woocommerce-order-received,
 	border: none !important;
 	cursor: pointer !important;
 	text-decoration: none !important;
-	box-shadow: 0 4px 14px rgba(232, 90, 12, 0.28);
+	box-shadow: 0 4px 14px color-mix(in srgb, var(--color-brand-orange) 28%, transparent);
 	transition: all var(--transition-fast) !important;
 	text-align: center;
 	margin-top: 0.25rem;
@@ -6082,7 +6201,7 @@ body.woocommerce-order-received,
 .ff-thankyou-continue-btn:hover {
 	background-color: var(--color-accent-primary-hover) !important;
 	transform: translateY(-1px);
-	box-shadow: 0 6px 20px rgba(232, 90, 12, 0.38);
+	box-shadow: 0 6px 20px color-mix(in srgb, var(--color-brand-orange) 38%, transparent);
 	color: #ffffff !important;
 }
 
@@ -6171,6 +6290,116 @@ body.woocommerce-order-received,
 	max-width: 1040px;
 	margin: 2rem auto 4rem;
 	padding: 0 var(--space-4);
+}
+
+/* Customer Portal review: preserve layout and inherit the approved site palette. */
+.ff-logout-modal-open { overflow: hidden; }
+.ff-logout-dialog {
+	width: min(360px, calc(100% - 2rem));
+	margin: auto;
+	padding: 1.5rem;
+	border: 1px solid var(--color-border, #e0e0e0);
+	border-radius: 8px;
+	background: #FFFFFF;
+	color: #15171A;
+}
+.ff-logout-dialog::backdrop { background: rgba(21, 23, 26, 0.45); }
+.ff-logout-dialog h2 {
+	margin: 0 0 1.5rem;
+	font-size: 1.5rem;
+	color: #15171A;
+}
+.ff-logout-dialog__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
+	margin: 0;
+}
+.ff-logout-dialog__actions button {
+	min-height: 44px;
+	padding: 0.625rem 1.25rem;
+	border: 1px solid #15171A;
+	border-radius: 6px;
+	background: #FFFFFF;
+	color: #15171A;
+	font-size: 1rem;
+	font-weight: 700;
+}
+.ff-logout-dialog__actions .ff-logout-dialog__confirm {
+	background: #FF5800;
+	border-color: #FF5800;
+	color: #FFFFFF;
+}
+.ff-logout-dialog__actions button:hover {
+	background: #15171A;
+	border-color: #15171A;
+	color: #FFFFFF;
+}
+.ff-logout-dialog__actions button:focus,
+.ff-logout-dialog__actions button:focus-visible {
+	box-shadow: none;
+	outline: 2px solid #15171A;
+	outline-offset: 3px;
+}
+
+body.woocommerce-account {
+	--color-accent-primary: #FF5800;
+	--color-accent-primary-hover: #15171A;
+	--color-accent-primary-active: #15171A;
+	--color-text: #15171A;
+	--color-bg: #FFFFFF;
+	--color-accent-secondary: #15171A;
+	--color-accent-secondary-bg: #AFF769;
+}
+
+.woocommerce-account .ff-account-avatar {
+	background-color: #15171A;
+}
+
+.woocommerce-account .ff-order-badge--completed,
+.woocommerce-account .ff-order-badge--shipped {
+	background-color: #15171A;
+	color: #FFFFFF;
+}
+.woocommerce-account .ff-order-badge--processing,
+.woocommerce-account .ff-order-badge--on-hold {
+	background-color: rgba(255, 88, 0, 0.1);
+	color: #15171A;
+}
+
+.woocommerce-account .ff-account-menu-link:hover,
+.woocommerce-account .ff-account-menu-item.is-active .ff-account-menu-link,
+.woocommerce-account .ff-auth-logo-badge,
+.woocommerce-account .ff-dashboard-card__icon--orange {
+	background-color: rgba(255, 88, 0, 0.08);
+}
+
+.ff-customer-documents {
+	margin: 1rem 0 1.5rem;
+}
+
+.ff-customer-document-row {
+	padding: 1rem 0;
+	border-bottom: 1px solid var(--color-border, #e0e0e0);
+	overflow-wrap: anywhere;
+}
+
+.ff-customer-document-row:last-child { border-bottom: 0; }
+.ff-customer-document-row p { margin: 0.5rem 0; }
+.ff-customer-document-link {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	background: #AFF769;
+	color: #15171A !important;
+	font-weight: 700;
+}
+.ff-customer-document-link:hover,
+.ff-customer-document-link:focus-visible {
+	background: #15171A;
+	color: #AFF769 !important;
 }
 
 .ff-account-page a {
@@ -6379,7 +6608,7 @@ body.woocommerce-order-received,
 	width: 42px;
 	height: 42px;
 	border-radius: 50%;
-	background-color: #0f172a;
+	background-color: #15171A;
 	color: #ffffff;
 	font-family: var(--font-heading);
 	font-size: 0.9375rem;
@@ -6447,13 +6676,13 @@ body.woocommerce-order-received,
 
 .ff-account-menu-link:hover {
 	color: var(--color-accent-primary) !important;
-	background-color: rgba(232, 90, 12, 0.05);
+	background-color: rgba(255, 88, 0, 0.05);
 	text-decoration: none !important;
 }
 
 .ff-account-menu-item.is-active .ff-account-menu-link {
 	color: var(--color-accent-primary) !important;
-	background-color: rgba(232, 90, 12, 0.08);
+	background-color: rgba(255, 88, 0, 0.08);
 	font-weight: 700;
 	border-left: none;
 	text-decoration: none !important;
@@ -6619,7 +6848,7 @@ body.woocommerce-order-received,
 }
 
 .ff-dashboard-card__icon--orange {
-	background-color: rgba(232, 90, 12, 0.1);
+	background-color: rgba(255, 88, 0, 0.1);
 	color: var(--color-accent-primary);
 }
 
@@ -6779,23 +7008,23 @@ body.woocommerce-order-received,
 }
 
 .ff-order-badge--completed {
-	background-color: rgba(34, 197, 94, 0.12);
-	color: #16a34a;
+	background-color: #15171A;
+	color: #FFFFFF;
 }
 
 .ff-order-badge--processing {
-	background-color: rgba(59, 130, 246, 0.12);
-	color: #2563eb;
+	background-color: rgba(255, 88, 0, 0.1);
+	color: #15171A;
 }
 
 .ff-order-badge--shipped {
-	background-color: rgba(14, 116, 144, 0.12);
-	color: #0e7490;
+	background-color: #15171A;
+	color: #FFFFFF;
 }
 
 .ff-order-badge--on-hold {
-	background-color: rgba(245, 158, 11, 0.12);
-	color: #d97706;
+	background-color: rgba(255, 88, 0, 0.1);
+	color: #15171A;
 }
 
 .ff-order-badge--failed,
@@ -6944,7 +7173,7 @@ body.woocommerce-order-received,
 }
 
 .ff-order-more-toggle:hover {
-	color: var(--color-accent-hover);
+	color: var(--color-accent-primary-hover);
 }
 
 .ff-order-more-arrow {
@@ -6999,8 +7228,8 @@ body.woocommerce-order-received,
 	font-size: 0.8125rem;
 	font-weight: 600;
 	color: var(--color-accent-primary) !important;
-	background-color: rgba(232, 90, 12, 0.06);
-	border: 1px solid rgba(232, 90, 12, 0.22);
+	background-color: rgba(255, 88, 0, 0.06);
+	border: 1px solid rgba(255, 88, 0, 0.22);
 	border-radius: var(--radius-sm);
 	text-decoration: none !important;
 	transition: all var(--transition-fast);
@@ -7012,7 +7241,7 @@ body.woocommerce-order-received,
 	color: #ffffff !important;
 	border-color: var(--color-accent-primary);
 	transform: translateY(-1px);
-	box-shadow: 0 2px 6px rgba(232, 90, 12, 0.25);
+	box-shadow: 0 2px 6px rgba(255, 88, 0, 0.25);
 }
 
 .ff-order-view-btn:hover svg {
@@ -7122,7 +7351,7 @@ body.woocommerce-order-received,
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
-	background-color: rgba(232, 90, 12, 0.08);
+	background-color: rgba(255, 88, 0, 0.08);
 	color: var(--color-accent-primary);
 	display: flex;
 	align-items: center;
@@ -7180,7 +7409,7 @@ body.woocommerce-order-received,
 .ff-view-order-back-btn:hover {
 	color: var(--color-accent-primary) !important;
 	border-color: var(--color-accent-primary);
-	background-color: rgba(232, 90, 12, 0.04);
+	background-color: rgba(255, 88, 0, 0.04);
 }
 
 /* 2. Address & Billing Row Section (Checkout Style) */
@@ -7235,7 +7464,7 @@ body.woocommerce-order-received,
 	font-family: var(--font-heading);
 	font-size: 0.875rem;
 	font-weight: 700;
-	color: #0f172a;
+	color: #15171A;
 }
 
 .ff-view-order-address-content .ff-address-phone,
@@ -7554,7 +7783,7 @@ body.woocommerce-order-received,
 	width: 32px;
 	height: 32px;
 	border-radius: 50%;
-	background-color: rgba(232, 90, 12, 0.08);
+	background-color: rgba(255, 88, 0, 0.08);
 	flex-shrink: 0;
 }
 
@@ -7577,8 +7806,8 @@ body.woocommerce-order-received,
 	font-size: 0.8125rem;
 	font-weight: 600;
 	color: var(--color-accent-primary) !important;
-	background-color: rgba(232, 90, 12, 0.06);
-	border: 1px solid rgba(232, 90, 12, 0.22);
+	background-color: rgba(255, 88, 0, 0.06);
+	border: 1px solid rgba(255, 88, 0, 0.22);
 	border-radius: var(--radius-sm);
 	text-decoration: none !important;
 	transition: all var(--transition-fast);
@@ -7590,7 +7819,7 @@ body.woocommerce-order-received,
 	color: #ffffff !important;
 	border-color: var(--color-accent-primary);
 	transform: translateY(-1px);
-	box-shadow: 0 2px 6px rgba(232, 90, 12, 0.25);
+	box-shadow: 0 2px 6px rgba(255, 88, 0, 0.25);
 }
 
 .ff-address-card__edit-btn:hover svg {
@@ -7623,7 +7852,7 @@ body.woocommerce-order-received,
 	font-family: var(--font-heading);
 	font-size: 1rem;
 	font-weight: 700;
-	color: #0f172a;
+	color: #15171A;
 	display: block;
 }
 
@@ -7684,7 +7913,7 @@ body.woocommerce-order-received,
 	width: 36px;
 	height: 36px;
 	border-radius: 50%;
-	background-color: rgba(232, 90, 12, 0.08);
+	background-color: rgba(255, 88, 0, 0.08);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -7728,7 +7957,7 @@ body.woocommerce-order-received,
 .ff-edit-address-back-btn:hover {
 	color: var(--color-accent-primary) !important;
 	border-color: var(--color-accent-primary);
-	background-color: rgba(232, 90, 12, 0.04);
+	background-color: rgba(255, 88, 0, 0.04);
 }
 
 .ff-edit-address-form {
@@ -7759,14 +7988,14 @@ body.woocommerce-order-received,
 	border: none;
 	border-radius: var(--radius-md);
 	cursor: pointer;
-	box-shadow: 0 4px 12px rgba(232, 90, 12, 0.25);
+	box-shadow: 0 4px 12px rgba(255, 88, 0, 0.25);
 	transition: all var(--transition-fast);
 	text-decoration: none !important;
 }
 
 .ff-edit-address-submit-btn:hover {
 	background-color: var(--color-accent-primary-hover);
-	box-shadow: 0 6px 18px rgba(232, 90, 12, 0.35);
+	box-shadow: 0 6px 18px rgba(255, 88, 0, 0.35);
 	transform: translateY(-1px);
 }
 
@@ -7894,7 +8123,7 @@ body.woocommerce-order-received,
 .ff-form-input:focus {
 	outline: none !important;
 	border-color: var(--color-accent-primary) !important;
-	box-shadow: 0 0 0 3px rgba(232, 90, 12, 0.15) !important;
+	box-shadow: 0 0 0 3px rgba(255, 88, 0, 0.15) !important;
 }
 
 .ff-password-input-wrap {
@@ -8034,7 +8263,7 @@ span.show-password-input {
 	width: 52px;
 	height: 52px;
 	border-radius: 50%;
-	background-color: rgba(232, 90, 12, 0.1);
+	background-color: rgba(255, 88, 0, 0.1);
 	color: var(--color-accent-primary);
 	display: flex;
 	align-items: center;
@@ -8473,6 +8702,10 @@ span.show-password-input {
 
 /* ---- Page wrapper ---- */
 .ff-policy-page {
+	--color-accent-primary: var(--color-brand-orange);
+	--color-accent-primary-hover: var(--color-brand-black);
+	--color-text: var(--color-brand-black);
+	--focus-ring: 0 0 0 3px rgb(255 88 0 / 25%);
 	background-color: var(--color-bg);
 }
 
@@ -8563,7 +8796,7 @@ span.show-password-input {
 }
 
 .ff-policy-toc__list li {
-	font-size: 0.9rem;
+	font-size: 1rem;
 	line-height: 1.5;
 }
 
@@ -8576,7 +8809,7 @@ span.show-password-input {
 
 .ff-policy-toc__list a:hover,
 .ff-policy-toc__list a:focus {
-	color: var(--color-accent-primary);
+	color: var(--color-brand-black);
 	border-bottom-color: var(--color-accent-primary);
 }
 
@@ -8589,6 +8822,7 @@ span.show-password-input {
 .ff-policy-section {
 	padding: 2rem 0;
 	border-bottom: 1px solid #f0f0f0;
+	scroll-margin-top: 7rem;
 }
 
 .ff-policy-section:last-child {
@@ -8637,7 +8871,9 @@ span.show-password-input {
 }
 
 .ff-policy-section a {
-	color: var(--color-accent-primary);
+	color: var(--color-brand-black);
+	text-decoration: underline;
+	text-decoration-color: var(--color-brand-orange);
 	text-underline-offset: 2px;
 }
 
@@ -8832,6 +9068,15 @@ span.show-password-input {
    A. About Us Page (.ff-about-page) — Bento & Editorial Layout
    -------------------------------------------------------------------------- */
 .ff-about-page {
+	--color-accent-primary: #FF5800;
+	--color-accent-primary-hover: #15171A;
+	--color-accent-primary-active: #15171A;
+	--color-accent-secondary: #15171A;
+	--color-accent-secondary-bg: #AFF769;
+	--color-text: #15171A;
+	--color-bg: #FFFFFF;
+	--color-structure: #15171A;
+	--focus-ring: 0 0 0 3px rgba(255, 88, 0, 0.2);
 	width: 100%;
 	background-color: #ffffff;
 	color: var(--color-text, #1f1f1f);
@@ -8942,11 +9187,11 @@ span.show-password-input {
 	justify-content: center;
 	min-height: 190px;
 	flex: 1;
-	box-shadow: 0 8px 24px rgba(232, 90, 12, 0.16);
+	box-shadow: 0 8px 24px rgba(255, 88, 0, 0.16);
 }
 
 .ff-bento-card--stat-dark {
-	background-color: #161616;
+	background-color: #15171A;
 	color: #ffffff;
 	padding: 2.25rem 2rem;
 	display: flex;
@@ -9195,6 +9440,7 @@ span.show-password-input {
 	border-radius: 18px;
 	padding: 3rem 3.5rem;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
 	gap: 3rem;
@@ -9220,7 +9466,27 @@ span.show-password-input {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
-	flex-shrink: 0;
+	flex: 0 1 auto;
+}
+
+.ff-about-cta-box__text {
+	flex: 1 1 20rem;
+}
+
+.ff-about-page .ff-btn-orange:hover,
+.ff-about-page .ff-btn-orange:active {
+	background-color: #15171A !important;
+	border-color: #15171A !important;
+}
+
+.ff-about-page .ff-btn-outline {
+	border-color: #15171A !important;
+}
+
+.ff-about-page .ff-about-cta-box__actions a:focus-visible {
+	outline: 2px solid #15171A;
+	outline-offset: 3px;
+	box-shadow: var(--focus-ring);
 }
 
 .ff-btn-orange {
@@ -9338,6 +9604,11 @@ span.show-password-input {
    B. Contact Us Page (.ff-contact-page)
    -------------------------------------------------------------------------- */
 .ff-contact-page {
+	--color-accent-primary: #FF5800;
+	--color-accent-primary-hover: #15171A;
+	--color-accent-primary-active: #15171A;
+	--color-text: #15171A;
+	--color-bg: #FFFFFF;
 	width: 100%;
 	background-color: var(--color-bg, #ffffff);
 	color: var(--color-text, #1f1f1f);
@@ -9533,7 +9804,7 @@ a.ff-contact-info-item__link:hover {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--color-accent-secondary, #1b8a4b);
+	color: #FF5800;
 	flex-shrink: 0;
 	margin-top: 0.1rem;
 }
@@ -9594,13 +9865,13 @@ a.ff-contact-info-item__link:hover {
 }
 
 .ff-form-alert--success {
-	background-color: var(--color-accent-secondary-bg, #e8f6ee);
-	border: 1px solid #b8e0c8;
-	color: var(--color-accent-secondary, #1b8a4b);
+	background-color: #AFF769;
+	border: 1px solid #15171A;
+	color: #15171A;
 }
 
 .ff-form-alert--success .ff-form-alert__icon {
-	color: var(--color-accent-secondary, #1b8a4b);
+	color: #15171A;
 }
 
 .ff-form-alert--error {
@@ -9693,7 +9964,7 @@ a.ff-contact-info-item__link:hover {
 .ff-form-textarea:focus {
 	outline: none;
 	border-color: var(--color-accent-primary, #e85a0c);
-	box-shadow: 0 0 0 3px rgba(232, 90, 12, 0.2);
+	box-shadow: 0 0 0 3px rgba(255, 88, 0, 0.2);
 }
 
 .ff-form-input--invalid {
@@ -9726,7 +9997,7 @@ a.ff-contact-info-item__link:hover {
 	background-color: var(--color-accent-primary-hover, #c94d0a) !important;
 	border-color: var(--color-accent-primary-hover, #c94d0a) !important;
 	transform: translateY(-1px);
-	box-shadow: 0 4px 12px rgba(232, 90, 12, 0.2);
+	box-shadow: 0 4px 12px rgba(255, 88, 0, 0.2);
 }
 
 .ff-contact-submit-btn:active {
@@ -9807,6 +10078,10 @@ a.ff-contact-info-item__link:hover {
 		align-items: flex-start;
 		gap: 2rem;
 		padding: 2.5rem 2rem;
+	}
+
+	.ff-about-cta-box__text {
+		flex: 0 1 auto;
 	}
 
 	.ff-about-cta-box__actions {

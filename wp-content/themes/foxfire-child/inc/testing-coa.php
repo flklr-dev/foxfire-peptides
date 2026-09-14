@@ -80,7 +80,7 @@ function foxfire_get_coa_catalog_items(): array {
 	$products = wc_get_products(
 		array(
 			'status'  => 'publish',
-			'limit'   => 50,
+			'limit'   => -1,
 			'orderby' => 'title',
 			'order'   => 'ASC',
 		)
@@ -126,7 +126,7 @@ function foxfire_get_coa_catalog_items(): array {
 			'coa_url'         => $has_coa ? $coa_url : '',
 			'coa_label'       => $coa_label,
 			'has_coa'         => $has_coa,
-			'status'          => $has_coa ? __( 'Report Available', 'foxfire-child' ) : __( 'Awaiting Document', 'foxfire-child' ),
+			'status'          => foxfire_get_product_testing_status( $product_id ),
 		);
 	}
 

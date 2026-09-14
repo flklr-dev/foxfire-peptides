@@ -84,7 +84,7 @@ $formatted_address = implode( ', ', $address_parts );
 						<!-- Desktop Header: Title on left, Action button on right (NO chevron on web) -->
 						<div class="ff-shopee-address__header">
 							<div class="ff-shopee-address__title">
-								<svg class="ff-shopee-loc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e85a0c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<svg class="ff-shopee-loc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 									<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
 									<circle cx="12" cy="10" r="3"></circle>
 								</svg>
@@ -110,7 +110,7 @@ $formatted_address = implode( ', ', $address_parts );
 						<!-- Mobile View: Clean original Shopee row (Hidden on desktop) -->
 						<div class="ff-shopee-address__mobile-view">
 							<div class="ff-shopee-address__mobile-pin">
-								<svg class="ff-shopee-loc-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#e85a0c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<svg class="ff-shopee-loc-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 									<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
 									<circle cx="12" cy="10" r="3"></circle>
 								</svg>
@@ -158,7 +158,7 @@ $formatted_address = implode( ', ', $address_parts );
 				
 				<div class="ff-address-modal__header">
 					<h3 class="ff-address-modal__title" id="ffAddressModalTitle">
-						<svg class="ff-shopee-loc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e85a0c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<svg class="ff-shopee-loc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
 							<circle cx="12" cy="10" r="3"></circle>
 						</svg>
@@ -208,7 +208,7 @@ $formatted_address = implode( ', ', $address_parts );
 								<p class="form-row form-row-wide create-account ff-checkbox-row">
 									<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
 										<input class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" id="createaccount" <?php checked( ( true === $checkout->get_value( 'createaccount' ) || ( true === apply_filters( 'woocommerce_create_account_default_checked', false ) ) ), true ); ?> type="checkbox" name="createaccount" value="1" />
-										<span><?php esc_html_e( 'Save my information for faster analytical research reorders', 'foxfire-child' ); ?></span>
+										<span><?php esc_html_e( 'Save my information for faster checkout', 'foxfire-child' ); ?></span>
 									</label>
 								</p>
 							<?php endif; ?>

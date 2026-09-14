@@ -1,0 +1,1049 @@
+{
+  "terms": {
+    "title": "Terms & Conditions",
+    "effective": "September 14, 2026",
+    "updated": "September 14, 2026",
+    "email": "info@foxfirepeptides.com",
+    "sections": [
+      {
+        "id": "tc-acceptance",
+        "title": "Acceptance of Terms",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "By accessing or using FoxfirePeptides.com (the “Site”), creating an account, or placing an order, you agree to these Terms & Conditions, our Privacy Policy, Refund & Returns Policy, Shipping Policy, and other policies incorporated by reference."
+          },
+          {
+            "type": "p",
+            "text": "If you do not agree to these Terms, please do not use the Site or place an order."
+          },
+          {
+            "type": "p",
+            "text": "These Terms govern your use of the Site and transactions with Foxfire Peptides."
+          }
+        ]
+      },
+      {
+        "id": "tc-eligibility",
+        "title": "Eligibility",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "You must be at least 18 years of age and have the legal capacity to enter into a binding agreement to use this Site or place an order."
+          },
+          {
+            "type": "p",
+            "text": "By using the Site or placing an order, you represent that you satisfy these requirements."
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides reserves the right to refuse or cancel an order when these eligibility requirements are not satisfied."
+          }
+        ]
+      },
+      {
+        "id": "tc-ruo",
+        "title": "Research Use Only",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Products offered by Foxfire Peptides are sold solely for lawful laboratory and scientific research purposes and are designated Research Use Only (“RUO”)."
+          },
+          {
+            "type": "p",
+            "text": "Products are not intended for human consumption, therapeutic use, diagnostic use, veterinary use, or other non-research applications."
+          },
+          {
+            "type": "p",
+            "text": "Products are not represented as FDA-approved drugs, medical devices, or dietary supplements."
+          },
+          {
+            "type": "p",
+            "text": "By purchasing from Foxfire Peptides, you agree that products will be used only for lawful research purposes and in accordance with applicable laws and regulations."
+          }
+        ]
+      },
+      {
+        "id": "tc-prohibited",
+        "title": "Prohibited Uses",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Products purchased from Foxfire Peptides may not be used for:"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Human consumption",
+              "Therapeutic, medical, or diagnostic purposes",
+              "Veterinary or animal-use purposes",
+              "Any unlawful purpose",
+              "Unauthorized resale or redistribution"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "Customers are responsible for ensuring that their purchase, possession, handling, and use comply with applicable laws and regulations."
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides reserves the right to refuse or cancel an order when it reasonably believes these Terms are being violated."
+          }
+        ]
+      },
+      {
+        "id": "tc-products",
+        "title": "Product Information",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Foxfire Peptides strives to provide accurate product descriptions, images, specifications, inventory information, and available testing documentation. However, errors or differences may occur."
+          },
+          {
+            "type": "p",
+            "text": "Product availability is subject to inventory and may change without notice."
+          },
+          {
+            "type": "p",
+            "text": "Where available, Certificates of Analysis (“COAs”) and other testing documentation are provided on a batch or lot basis."
+          },
+          {
+            "type": "p",
+            "text": "Product images are representative, and actual packaging, labeling, or presentation may vary."
+          }
+        ]
+      },
+      {
+        "id": "tc-orders",
+        "title": "Orders and Acceptance",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Submission of an order constitutes an offer to purchase and does not guarantee acceptance."
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides reserves the right to refuse, limit, hold, or cancel an order because of suspected fraud or unauthorized activity, pricing or website errors, insufficient inventory, inability to verify payment or order information, suspected violations of these Terms, or other lawful reasons."
+          },
+          {
+            "type": "p",
+            "text": "If Foxfire Peptides cancels an order after payment has been received, any applicable refund will be handled in accordance with our Refund & Returns Policy."
+          }
+        ]
+      },
+      {
+        "id": "tc-pricing",
+        "title": "Pricing and Payment",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Prices are displayed in U.S. Dollars (USD) unless otherwise stated and may change without notice."
+          },
+          {
+            "type": "p",
+            "text": "The price applicable to an order is the price displayed when the order is submitted, subject to correction of obvious errors."
+          },
+          {
+            "type": "p",
+            "text": "Applicable taxes, shipping charges, or other charges may be added where required."
+          },
+          {
+            "type": "p",
+            "text": "Payment must be successfully received or verified before an order is processed."
+          },
+          {
+            "type": "p",
+            "text": "Third-party payment providers are subject to their own terms, policies, restrictions, and availability."
+          }
+        ]
+      },
+      {
+        "id": "tc-shipping",
+        "title": "Shipping",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Orders are shipped only to locations currently serviced by Foxfire Peptides and are subject to applicable laws and shipping restrictions."
+          },
+          {
+            "type": "p",
+            "text": "Processing and delivery estimates are estimates and are not guaranteed."
+          },
+          {
+            "type": "p",
+            "text": "Shipping rates, available methods, tracking, delivery procedures, address requirements, lost or damaged shipment procedures, and other shipping terms are governed by our Shipping Policy."
+          },
+          {
+            "type": "p",
+            "text": "Customers are responsible for providing complete and accurate delivery information."
+          }
+        ]
+      },
+      {
+        "id": "tc-returns",
+        "title": "Returns and Refunds",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Returns, replacements, refunds, damaged shipments, incorrect items, cancellations, and other order-resolution matters are governed by our Refund & Returns Policy, which is incorporated into these Terms by reference."
+          },
+          {
+            "type": "p",
+            "text": "Eligibility for a return, replacement, or refund depends upon the circumstances and requirements stated in that policy and applicable law."
+          }
+        ]
+      },
+      {
+        "id": "tc-accounts",
+        "title": "Customer Accounts",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Customers may create an account to access available features such as order history, account information, and available COA documentation."
+          },
+          {
+            "type": "p",
+            "text": "Customers are responsible for providing accurate information, maintaining the confidentiality of their login credentials, and promptly notifying Foxfire Peptides of suspected unauthorized account activity."
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides may suspend or terminate accounts associated with fraud, misuse, violations of these Terms, or unlawful activity."
+          }
+        ]
+      },
+      {
+        "id": "tc-ip",
+        "title": "Intellectual Property",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "The Foxfire Peptides name, logos, graphics, product imagery, original written material, website design elements, and other proprietary content are owned by or licensed to Foxfire Peptides and are protected by applicable intellectual-property laws."
+          },
+          {
+            "type": "p",
+            "text": "Site content may not be copied, reproduced, distributed, modified, commercially exploited, or used to create derivative works without prior written authorization, except as permitted by applicable law."
+          }
+        ]
+      },
+      {
+        "id": "tc-third-party",
+        "title": "Third-Party Services",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "The Site may use or link to independent third-party services, including payment, shipping, hosting, analytics, communications, or infrastructure providers."
+          },
+          {
+            "type": "p",
+            "text": "These services operate under their own terms and privacy practices."
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides does not control independent third-party services and is not responsible for their acts or omissions except to the extent required by applicable law."
+          }
+        ]
+      },
+      {
+        "id": "tc-disclaimers",
+        "title": "Disclaimers",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "To the fullest extent permitted by applicable law, the Site and its content are provided on an “as is” and “as available” basis."
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides does not warrant that the Site will always be uninterrupted, error-free, or free of harmful components."
+          },
+          {
+            "type": "p",
+            "text": "Products are offered for lawful research use only. Foxfire Peptides does not represent its products as appropriate for human, therapeutic, diagnostic, or veterinary use."
+          },
+          {
+            "type": "p",
+            "text": "Nothing on the Site is intended as medical advice or as a substitute for advice from a licensed healthcare professional."
+          }
+        ]
+      },
+      {
+        "id": "tc-liability",
+        "title": "Limitation of Liability",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "To the fullest extent permitted by applicable law, Foxfire Peptides and its owners, employees, agents, and affiliates will not be liable for indirect, incidental, special, consequential, exemplary, or punitive damages arising from use of the Site, purchase or use of products, or violation of these Terms."
+          },
+          {
+            "type": "p",
+            "text": "To the extent permitted by applicable law, aggregate liability arising from a particular order will not exceed the amount actually paid for that order."
+          }
+        ]
+      },
+      {
+        "id": "tc-indemnification",
+        "title": "Indemnification",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "To the extent permitted by applicable law, you agree to indemnify and hold harmless Foxfire Peptides and its owners, employees, agents, and affiliates from claims, losses, liabilities, damages, and reasonable expenses arising from your unlawful use or misuse of products, material breach of these Terms, or violation of applicable law or third-party rights."
+          }
+        ]
+      },
+      {
+        "id": "tc-changes",
+        "title": "Changes to Terms",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Foxfire Peptides may update these Terms from time to time."
+          },
+          {
+            "type": "p",
+            "text": "Revised Terms become effective when posted or on the effective date stated in the revised Terms."
+          },
+          {
+            "type": "p",
+            "text": "The “Last Updated” date will identify the latest revision."
+          }
+        ]
+      },
+      {
+        "id": "tc-contact",
+        "title": "Contact",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Foxfire Peptides"
+          },
+          {
+            "type": "p",
+            "text": "Website: FoxfirePeptides.com"
+          },
+          {
+            "type": "p",
+            "text": "Email: info@foxfirepeptides.com"
+          }
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "effective": "September 2026",
+    "updated": "September 2026",
+    "email": "info@foxfirepeptides.com",
+    "sections": [
+      {
+        "id": "pp-intro",
+        "title": "Introduction",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Foxfire Peptides (“we,” “us,” or “our”) respects the privacy of visitors and customers who use FoxfirePeptides.com (the “Site”)."
+          },
+          {
+            "type": "p",
+            "text": "This Privacy Policy explains what personal information we collect, how we use it, when it may be shared, and the choices available to you."
+          },
+          {
+            "type": "p",
+            "text": "By using the Site, you acknowledge the practices described in this Privacy Policy."
+          }
+        ]
+      },
+      {
+        "id": "pp-collect",
+        "title": "Information We Collect",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "We may collect information you provide when you create an account, place an order, contact us, or otherwise interact with the Site."
+          },
+          {
+            "type": "p",
+            "text": "This may include:"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Name",
+              "Email address",
+              "Phone number",
+              "Billing and shipping information",
+              "Account information",
+              "Order and transaction history",
+              "Communications you send to us"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "The Site may also automatically collect limited technical information such as your IP address, browser or device information, pages visited, and cookies and similar technologies used for website functionality, security, and performance."
+          }
+        ]
+      },
+      {
+        "id": "pp-use",
+        "title": "How We Use Your Information",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "We may use information collected through the Site to:"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Process and fulfill orders",
+              "Maintain customer accounts",
+              "Communicate about orders, shipping, accounts, or customer inquiries",
+              "Process and verify transactions",
+              "Provide customer support",
+              "Maintain and improve the Site",
+              "Detect or prevent fraud, misuse, or unauthorized activity",
+              "Maintain appropriate business and transaction records",
+              "Comply with applicable legal requirements"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "We do not sell personal information to third parties for their own marketing purposes."
+          }
+        ]
+      },
+      {
+        "id": "pp-payments",
+        "title": "Payments",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Payments may be processed through third-party payment providers. Foxfire Peptides does not directly store complete payment credentials submitted through third-party payment services."
+          },
+          {
+            "type": "p",
+            "text": "When you use a third-party payment service, information necessary to complete the transaction may be processed by that provider and will also be subject to the provider's applicable terms and privacy practices."
+          },
+          {
+            "type": "p",
+            "text": "Available payment methods may vary and will be displayed during checkout."
+          }
+        ]
+      },
+      {
+        "id": "pp-sharing",
+        "title": "When We Share Information",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "We may share information with service providers when reasonably necessary to operate the Site, process transactions, fulfill orders, provide customer support, or maintain website functionality."
+          },
+          {
+            "type": "p",
+            "text": "These may include:"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Payment service providers",
+              "Website hosting providers",
+              "Shipping and delivery providers",
+              "Email and communication services",
+              "Website, e-commerce, security, and other technology providers"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "We may also disclose information when reasonably necessary to comply with applicable law, legal process, or a valid request from an appropriate authority."
+          }
+        ]
+      },
+      {
+        "id": "pp-cookies",
+        "title": "Cookies and Website Technology",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "The Site may use cookies and similar technologies necessary to operate features such as customer accounts, shopping carts, checkout, security, and website preferences."
+          },
+          {
+            "type": "p",
+            "text": "We may also use analytics or similar technologies to understand Site usage and improve performance. Where required, choices regarding non-essential cookies will be provided."
+          },
+          {
+            "type": "p",
+            "text": "You can control certain cookies through your browser settings, although disabling essential cookies may prevent portions of the Site from functioning properly."
+          }
+        ]
+      },
+      {
+        "id": "pp-retention",
+        "title": "Data Retention and Security",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "We retain personal information for as long as reasonably necessary for the purposes for which it was collected, including maintaining order and transaction records, providing customer support, preventing fraud, resolving disputes, and satisfying applicable legal or business requirements."
+          },
+          {
+            "type": "p",
+            "text": "We use reasonable administrative, technical, and organizational measures designed to protect personal information. However, no Internet transmission or electronic storage system can be guaranteed to be completely secure."
+          }
+        ]
+      },
+      {
+        "id": "pp-privacy-choices",
+        "title": "Your Privacy Choices",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Depending on applicable law and where you reside, you may have rights regarding your personal information, which may include requesting access to, correction of, or deletion of certain personal information."
+          },
+          {
+            "type": "p",
+            "text": "To make a privacy-related request, contact us at info@foxfirepeptides.com."
+          },
+          {
+            "type": "p",
+            "text": "Certain information may need to be retained when reasonably necessary for transaction records, fraud prevention, dispute resolution, security, or applicable legal requirements."
+          }
+        ]
+      },
+      {
+        "id": "pp-children",
+        "title": "Age Requirement",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "The Site is intended for individuals 18 years of age or older. We do not knowingly collect personal information from individuals under 18."
+          },
+          {
+            "type": "p",
+            "text": "If we become aware that we have collected personal information from an individual under 18, we will take reasonable steps to delete it."
+          }
+        ]
+      },
+      {
+        "id": "pp-contact",
+        "title": "Changes and Contact Information",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "We may update this Privacy Policy from time to time to reflect changes to our practices, services, or applicable requirements. When changes are made, the “Last Updated” date at the top of this page will be revised."
+          },
+          {
+            "type": "p",
+            "text": "Questions or requests regarding this Privacy Policy may be directed to:"
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides"
+          },
+          {
+            "type": "p",
+            "text": "Website: FoxfirePeptides.com"
+          },
+          {
+            "type": "p",
+            "text": "Email: info@foxfirepeptides.com"
+          },
+          {
+            "type": "p",
+            "text": "You may also contact us through the Contact page on the Site."
+          }
+        ]
+      }
+    ]
+  },
+  "refund": {
+    "title": "Refund & Returns Policy",
+    "effective": "September 2026",
+    "updated": "September 2026",
+    "email": "info@foxfirepeptides.com",
+    "sections": [
+      {
+        "id": "rr-overview",
+        "title": "Overview",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "This Refund & Returns Policy explains how Foxfire Peptides handles returns, refunds, cancellations, damaged or incorrect orders, and shipping-related issues for orders placed through FoxfirePeptides.com."
+          },
+          {
+            "type": "p",
+            "text": "Because our products are research-grade compounds supplied for laboratory and research purposes, all sales are final except as specifically provided in this Policy."
+          },
+          {
+            "type": "p",
+            "text": "This Policy should be read together with our Terms and Conditions."
+          }
+        ]
+      },
+      {
+        "id": "rr-returns",
+        "title": "Returns",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Due to the nature of our products, we do not accept physical returns after an order has been shipped."
+          },
+          {
+            "type": "p",
+            "text": "We will, however, review claims involving damaged shipments, incorrect products, missing items, verified fulfillment errors, or other qualifying shipping issues."
+          },
+          {
+            "type": "p",
+            "text": "Approval of a claim does not necessarily entitle the customer to a cash refund. Approved claims will be resolved in accordance with this Policy."
+          }
+        ]
+      },
+      {
+        "id": "rr-eligible",
+        "title": "Eligible Issues",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "We may review claims involving:"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "An incorrect product sent by Foxfire Peptides",
+              "Products damaged during shipment",
+              "Items missing from an order",
+              "Other verified fulfillment errors",
+              "Shipments confirmed lost following appropriate carrier investigation"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "Claims are reviewed based on the circumstances of the individual order."
+          }
+        ]
+      },
+      {
+        "id": "rr-window",
+        "title": "Reporting an Order Issue",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Damage, incorrect products, missing items, or other order discrepancies should be reported to Foxfire Peptides within 72 hours of carrier-confirmed delivery."
+          },
+          {
+            "type": "p",
+            "text": "Claims submitted after this period may not be eligible for replacement, credit, or refund."
+          },
+          {
+            "type": "p",
+            "text": "Lost or significantly delayed shipments should be reported as soon as reasonably possible so that we can review the tracking information and, when appropriate, initiate an investigation with the shipping carrier."
+          }
+        ]
+      },
+      {
+        "id": "rr-evidence",
+        "title": "Information Required",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "When reporting an order issue, please provide:"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Your Foxfire Peptides order number",
+              "A description of the problem",
+              "Clear photographs of the product and packaging when applicable",
+              "Any other information reasonably necessary to verify the claim"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "Additional documentation may be requested when necessary to investigate an order or shipping issue."
+          }
+        ]
+      },
+      {
+        "id": "rr-damaged",
+        "title": "Damaged, Missing, or Incorrect Orders",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "If we verify that an order was damaged during shipment, contained an incorrect item, was missing an item, or involved a fulfillment error on our part, Foxfire Peptides will determine an appropriate resolution."
+          },
+          {
+            "type": "p",
+            "text": "Depending on the circumstances, Foxfire Peptides may provide a replacement, reshipment, store credit, refund, or another appropriate resolution."
+          }
+        ]
+      },
+      {
+        "id": "rr-lost",
+        "title": "Lost Shipments",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "If tracking indicates that a shipment may be lost or significantly delayed, please contact us so that we can review the shipment and, when appropriate, initiate an investigation with the carrier."
+          },
+          {
+            "type": "p",
+            "text": "Lost-shipment claims may be subject to carrier tracking information, investigation results, and applicable carrier policies."
+          },
+          {
+            "type": "p",
+            "text": "Once the circumstances have been reviewed, Foxfire Peptides will determine an appropriate resolution in accordance with this Policy."
+          }
+        ]
+      },
+      {
+        "id": "rr-cancellation",
+        "title": "Cancellations",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Cancellation requests submitted before processing begins are subject to approval."
+          },
+          {
+            "type": "p",
+            "text": "Once an order has entered processing or fulfillment, cancellation cannot be guaranteed."
+          },
+          {
+            "type": "p",
+            "text": "Orders that have already shipped cannot be cancelled."
+          },
+          {
+            "type": "p",
+            "text": "If you need to request a cancellation, contact us as soon as possible and include your order number."
+          }
+        ]
+      },
+      {
+        "id": "rr-non-refundable",
+        "title": "Non-Refundable Situations",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Except where otherwise required by applicable law, refunds or replacements generally will not be provided for:"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Change of mind after an order has been processed or shipped",
+              "Loss, failed delivery, or other issues resulting from incorrect or incomplete shipping information provided by the customer",
+              "Damage resulting from improper storage or handling after delivery",
+              "Products that have been opened, used, altered, or otherwise compromised after delivery",
+              "Refused deliveries or packages not accepted by the customer",
+              "Issues reported outside the applicable reporting period without reasonable justification"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "rr-refunds",
+        "title": "Refunds",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "When a refund is approved, Foxfire Peptides will generally issue the refund through the original payment method when reasonably possible."
+          },
+          {
+            "type": "p",
+            "text": "If the original payment method does not support a practical refund process, we may arrange another appropriate refund method with the customer."
+          },
+          {
+            "type": "p",
+            "text": "Processing times may vary depending on the payment method or financial service involved."
+          }
+        ]
+      },
+      {
+        "id": "rr-statutory",
+        "title": "Statutory Rights",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Nothing in this Policy is intended to limit or exclude any rights that cannot legally be waived or excluded under applicable law."
+          }
+        ]
+      },
+      {
+        "id": "rr-contact",
+        "title": "Contact Us",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "To report an order issue, request a cancellation or refund review, or ask a question regarding an order, contact:"
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides"
+          },
+          {
+            "type": "p",
+            "text": "Website: FoxfirePeptides.com"
+          },
+          {
+            "type": "p",
+            "text": "Email: info@foxfirepeptides.com"
+          },
+          {
+            "type": "p",
+            "text": "You may also contact us through the Contact page on the Site."
+          },
+          {
+            "type": "p",
+            "text": "Please include your order number and a description of the issue when contacting us regarding an existing order."
+          }
+        ]
+      }
+    ]
+  },
+  "shipping": {
+    "title": "Shipping Policy",
+    "effective": "September 2026",
+    "updated": "September 2026",
+    "email": "info@foxfirepeptides.com",
+    "sections": [
+      {
+        "id": "sp-overview",
+        "title": "Overview",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "This Shipping Policy explains the processing, shipment, tracking, and delivery of orders placed through FoxfirePeptides.com."
+          },
+          {
+            "type": "p",
+            "text": "All products offered by Foxfire Peptides are supplied for laboratory research and analytical purposes in accordance with our Terms and Conditions."
+          },
+          {
+            "type": "p",
+            "text": "This Policy should be read together with our Refund & Returns Policy and Terms and Conditions."
+          }
+        ]
+      },
+      {
+        "id": "sp-processing",
+        "title": "Order Processing & Handling",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Orders are generally processed Monday through Friday, excluding recognized holidays."
+          },
+          {
+            "type": "p",
+            "text": "Most in-stock orders are prepared for shipment within 1–2 business days after payment has been confirmed."
+          },
+          {
+            "type": "p",
+            "text": "Orders requiring payment verification will begin processing after payment has been successfully verified."
+          },
+          {
+            "type": "p",
+            "text": "Processing times may occasionally be extended due to order volume, inventory availability, holidays, carrier disruptions, or other circumstances outside our reasonable control."
+          }
+        ]
+      },
+      {
+        "id": "sp-methods",
+        "title": "Shipping Methods & Transit Times",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Available shipping methods, shipping charges, and estimated transit times are displayed during checkout when applicable."
+          },
+          {
+            "type": "p",
+            "text": "Transit and delivery estimates are provided for convenience and are not guaranteed delivery dates."
+          },
+          {
+            "type": "p",
+            "text": "Carrier delays caused by weather, transportation disruptions, high shipping volume, natural disasters, remote delivery locations, or other circumstances outside the reasonable control of Foxfire Peptides may affect delivery times."
+          }
+        ]
+      },
+      {
+        "id": "sp-rates",
+        "title": "Shipping Rates & Free Shipping",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Applicable shipping charges are displayed during checkout before an order is completed."
+          },
+          {
+            "type": "p",
+            "text": "Any free-shipping offers, promotional shipping rates, or minimum-order requirements will be displayed on the Site or during checkout when available."
+          }
+        ]
+      },
+      {
+        "id": "sp-tracking",
+        "title": "Tracking & Delivery Confirmation",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "When tracking is available, shipment confirmation and tracking information will be sent to the email address associated with the order."
+          },
+          {
+            "type": "p",
+            "text": "Carrier tracking information may not update immediately after shipment."
+          },
+          {
+            "type": "p",
+            "text": "Customers are responsible for monitoring available tracking information and promptly reporting significant delivery issues."
+          }
+        ]
+      },
+      {
+        "id": "sp-address",
+        "title": "Shipping Address Accuracy",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Customers are responsible for providing a complete and accurate shipping address when placing an order."
+          },
+          {
+            "type": "p",
+            "text": "If you discover an error in your shipping information, contact Foxfire Peptides as soon as possible."
+          },
+          {
+            "type": "p",
+            "text": "We will make reasonable efforts to correct an address before shipment, but changes cannot be guaranteed once an order has entered processing or fulfillment. Shipping addresses generally cannot be changed after an order has been shipped."
+          }
+        ]
+      },
+      {
+        "id": "sp-undeliverable",
+        "title": "Undeliverable, Refused, or Returned Packages",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Packages may be returned by the carrier because of an incorrect or incomplete address, refusal of delivery, failure to claim the package, or other delivery-related circumstances."
+          },
+          {
+            "type": "p",
+            "text": "If a package is returned to Foxfire Peptides, we will review the circumstances of the order."
+          },
+          {
+            "type": "p",
+            "text": "Additional shipping charges may apply if reshipment is approved."
+          },
+          {
+            "type": "p",
+            "text": "Any refund, replacement, credit, or reshipment involving a returned or undeliverable package will be handled in accordance with our Refund & Returns Policy."
+          }
+        ]
+      },
+      {
+        "id": "sp-lost-delayed",
+        "title": "Lost, Delayed, or Missing Shipments",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "If tracking indicates that a shipment is significantly delayed, has stopped moving, or may be lost, please contact Foxfire Peptides so that we can review the tracking information and, when appropriate, initiate an investigation with the shipping carrier."
+          },
+          {
+            "type": "p",
+            "text": "If tracking shows a package as delivered but it has not been received, customers should first check the delivery location, household members, parcel lockers, mailrooms, and other reasonable delivery locations."
+          },
+          {
+            "type": "p",
+            "text": "Carrier investigations and lost-shipment claims may be subject to carrier tracking information, investigation results, and applicable carrier policies."
+          },
+          {
+            "type": "p",
+            "text": "Once the circumstances have been reviewed, Foxfire Peptides will determine an appropriate resolution in accordance with our Refund & Returns Policy."
+          }
+        ]
+      },
+      {
+        "id": "sp-damaged",
+        "title": "Damaged Shipments",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Damage to a shipment should be reported to Foxfire Peptides within 72 hours of carrier-confirmed delivery."
+          },
+          {
+            "type": "p",
+            "text": "When reporting damage, please retain the product and original packaging and provide:"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Your order number",
+              "A description of the damage",
+              "Clear photographs of the product and packaging when applicable",
+              "Any additional information reasonably necessary to review the claim"
+            ]
+          },
+          {
+            "type": "p",
+            "text": "Damaged-shipment claims and available resolutions will be handled in accordance with our Refund & Returns Policy."
+          }
+        ]
+      },
+      {
+        "id": "sp-packaging",
+        "title": "Packaging & Product Handling",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Foxfire Peptides takes reasonable measures to package products securely for shipment."
+          },
+          {
+            "type": "p",
+            "text": "Upon delivery, customers should inspect their order and follow any storage or handling information provided with the product or packaging."
+          },
+          {
+            "type": "p",
+            "text": "Any visible shipping damage or other order discrepancy should be reported in accordance with this Policy and our Refund & Returns Policy."
+          }
+        ]
+      },
+      {
+        "id": "sp-geographic",
+        "title": "Geographic Availability",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Foxfire Peptides ships only to locations that we currently service and where shipment of the applicable products is permitted."
+          },
+          {
+            "type": "p",
+            "text": "Available shipping destinations will be determined during checkout."
+          },
+          {
+            "type": "p",
+            "text": "We reserve the right to decline or cancel an order when we are unable to ship to the requested destination or where shipment is restricted or prohibited."
+          }
+        ]
+      },
+      {
+        "id": "sp-contact",
+        "title": "Shipping Support & Inquiries",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "For questions regarding an existing shipment, tracking information, or delivery issue, contact:"
+          },
+          {
+            "type": "p",
+            "text": "Foxfire Peptides"
+          },
+          {
+            "type": "p",
+            "text": "Website: FoxfirePeptides.com"
+          },
+          {
+            "type": "p",
+            "text": "Email: info@foxfirepeptides.com"
+          },
+          {
+            "type": "p",
+            "text": "You may also contact us through the Contact page on the Site."
+          },
+          {
+            "type": "p",
+            "text": "Please include your order number and a description of the issue when contacting us regarding an existing shipment."
+          }
+        ]
+      }
+    ]
+  }
+}

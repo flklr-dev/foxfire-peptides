@@ -11,6 +11,7 @@ wp-config-local.php
 !wp-content/
 
 # Uploads & generated files
+/output/pdf/foxfire-local-demo-coa*
 wp-content/uploads/
 wp-content/cache/
 wp-content/upgrade/

@@ -34,7 +34,7 @@ do_action( 'woocommerce_before_account_navigation' );
 		<ul class="ff-account-menu">
 			<?php
 			foreach ( wc_get_account_menu_items() as $endpoint => $label ) :
-				$url       = ( 'batch-coa' === $endpoint ) ? home_url( '/testing-coa/' ) : wc_get_account_endpoint_url( $endpoint );
+				$url       = wc_get_account_endpoint_url( $endpoint );
 				$classes   = wc_get_account_menu_item_classes( $endpoint );
 				$is_active = false !== strpos( $classes, 'is-active' );
 				?>
@@ -63,5 +63,13 @@ do_action( 'woocommerce_before_account_navigation' );
 	</div>
 
 </nav>
+
+<dialog id="ff-logout-dialog" class="ff-logout-dialog" aria-labelledby="ff-logout-title">
+	<h2 id="ff-logout-title"><?php esc_html_e( 'Log out?', 'foxfire-child' ); ?></h2>
+	<form method="dialog" class="ff-logout-dialog__actions">
+		<button type="submit" value="cancel" class="ff-logout-dialog__cancel" autofocus><?php esc_html_e( 'Cancel', 'foxfire-child' ); ?></button>
+		<button type="submit" value="confirm" class="ff-logout-dialog__confirm"><?php esc_html_e( 'Log out', 'foxfire-child' ); ?></button>
+	</form>
+</dialog>
 
 <?php do_action( 'woocommerce_after_account_navigation' ); ?>

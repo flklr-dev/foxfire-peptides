@@ -7,12 +7,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$site_host              = (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST );
-$is_staging_hostname    = 0 === stripos( $site_host, 'staging.' );
-$is_private_environment = 'production' !== wp_get_environment_type() || $is_staging_hostname;
+$is_review_mode = function_exists( 'foxfire_operations_checkout_is_review_mode' ) && foxfire_operations_checkout_is_review_mode();
 
-if ( $is_private_environment ) {
-	$no_payment_methods_message = __( 'Checkout is in review mode. Payment methods are intentionally disabled on this staging site, so no order will be submitted.', 'foxfire-child' );
+if ( $is_review_mode ) {
+	$available_gateways = array();
+	$no_payment_methods_message = foxfire_operations_checkout_review_message();
 } elseif ( WC()->customer->get_billing_country() ) {
 	$no_payment_methods_message = __( 'No payment methods are currently available for your billing location. Please verify your details or contact support.', 'foxfire-child' );
 } else {
@@ -28,18 +27,22 @@ if ( ! wp_doing_ajax() ) {
 	
 	<h2 class="ff-checkout-payment__title"><?php esc_html_e( 'Payment Method', 'foxfire-child' ); ?></h2>
 
-	<?php if ( WC()->cart->needs_payment() ) : ?>
-		<ul class="wc_payment_methods payment_methods methods ff-payment-methods">
-			<?php
-			if ( ! empty( $available_gateways ) ) {
-				foreach ( $available_gateways as $gateway ) {
-					wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $gateway ) );
-				}
-			} else {
-				echo '<li class="woocommerce-notice woocommerce-notice--info woocommerce-info">' . esc_html( apply_filters( 'woocommerce_no_available_payment_methods_message', $no_payment_methods_message ) ) . '</li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			}
-			?>
-		</ul>
+	<?php if ( $is_review_mode || WC()->cart->needs_payment() ) : ?>
+		<?php if ( ! empty( $available_gateways ) ) : ?>
+			<ul class="wc_payment_methods payment_methods methods ff-payment-methods">
+				<?php foreach ( $available_gateways as $gateway ) : ?>
+					<?php wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $gateway ) ); ?>
+				<?php endforeach; ?>
+			</ul>
+		<?php else : ?>
+			<div class="ff-payment-notice" role="status" aria-atomic="true">
+				<svg class="ff-payment-notice__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+					<circle cx="12" cy="12" r="9" />
+					<path d="M12 11v6m0-10v.01" />
+				</svg>
+				<p class="ff-payment-notice__message"><?php echo esc_html( apply_filters( 'woocommerce_no_available_payment_methods_message', $no_payment_methods_message ) ); ?></p>
+			</div>
+		<?php endif; ?>
 	<?php endif; ?>
 
 	<div class="form-row place-order ff-checkout-place-order">
@@ -55,7 +58,7 @@ if ( ! wp_doing_ajax() ) {
 
 		<?php do_action( 'woocommerce_review_order_before_submit' ); ?>
 
-		<?php echo apply_filters( 'woocommerce_order_button_html', '<button type="submit" class="button alt ff-place-order-btn" name="woocommerce_checkout_place_order" id="place_order" value="' . esc_attr( $order_button_text ) . '" data-value="' . esc_attr( $order_button_text ) . '">' . esc_html( $order_button_text ) . ' &rarr;</button>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<?php echo apply_filters( 'woocommerce_order_button_html', '<button type="submit" class="button alt ff-place-order-btn' . ( $is_review_mode ? ' is-disabled' : '' ) . '" name="woocommerce_checkout_place_order" id="place_order" value="' . esc_attr( $order_button_text ) . '" data-value="' . esc_attr( $order_button_text ) . '"' . ( $is_review_mode ? ' data-review-mode="1" disabled' : '' ) . '>' . esc_html( $order_button_text ) . ' &rarr;</button>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
 		<?php do_action( 'woocommerce_review_order_after_submit' ); ?>
 

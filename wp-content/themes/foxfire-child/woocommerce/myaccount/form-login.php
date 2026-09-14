@@ -136,7 +136,7 @@ $enable_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_regis
 								printf(
 									/* translators: 1: terms url, 2: privacy url */
 									esc_html__( 'By creating an account, you agree to the %1$sTerms of Service%2$s and %3$sPrivacy Policy%4$s.', 'foxfire-child' ),
-									'<a href="' . esc_url( home_url( '/terms/' ) ) . '" target="_blank" class="ff-terms-link">',
+									'<a href="' . esc_url( wc_get_page_permalink( 'terms' ) ?: home_url( '/terms-and-conditions/' ) ) . '" target="_blank" rel="noopener noreferrer" class="ff-terms-link">',
 									'</a>',
 									'<a href="' . esc_url( home_url( '/privacy-policy/' ) ) . '" target="_blank" class="ff-terms-link">',
 									'</a>'

@@ -93,7 +93,7 @@ $bill_email = $order->get_billing_email();
 			<!-- Delivery Address Row -->
 			<div class="ff-view-order-address-row">
 				<div class="ff-view-order-address-label">
-					<svg class="ff-shopee-loc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e85a0c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<svg class="ff-shopee-loc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5800" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 						<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
 						<circle cx="12" cy="10" r="3"></circle>
 					</svg>

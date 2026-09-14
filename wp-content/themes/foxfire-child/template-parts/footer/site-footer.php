@@ -25,6 +25,7 @@ $orders_url = function_exists( 'wc_get_endpoint_url' ) ? wc_get_endpoint_url( 'o
 $year        = (string) gmdate( 'Y' );
 $footer_tagline = foxfire_get_managed_content( 'footer_tagline', __( 'Research compounds with transparent testing, clear documentation, and straightforward ordering.', 'foxfire-child' ) );
 $research_notice = foxfire_get_managed_content( 'footer_research_notice', __( 'For laboratory research use only. Not for human consumption.', 'foxfire-child' ) );
+$contact_email = foxfire_get_managed_content( 'support_email', 'info@foxfirepeptides.com' );
 ?>
 
 <div class="ff-site-footer">
@@ -34,6 +35,9 @@ $research_notice = foxfire_get_managed_content( 'footer_research_notice', __( 'F
 			<p class="ff-site-footer__tagline">
 				<?php echo esc_html( $footer_tagline ); ?>
 			</p>
+			<ul class="ff-site-footer__links">
+				<li><a href="mailto:<?php echo esc_attr( $contact_email ); ?>"><?php echo esc_html( $contact_email ); ?></a></li>
+			</ul>
 		</div>
 
 		<nav class="ff-site-footer__nav" aria-labelledby="ff-footer-shop-heading">

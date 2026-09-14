@@ -26,6 +26,9 @@ function foxfire_get_product_batch_lot( int $product_id = 0 ): string {
  */
 function foxfire_get_product_coa_url( int $product_id = 0 ): string {
 	$product_id = $product_id > 0 ? $product_id : get_the_ID();
+	if ( function_exists( 'foxfire_operations_product_document' ) ) {
+		return foxfire_operations_product_document( $product_id )['url'];
+	}
 	$file_url   = foxfire_get_product_field( 'foxfire_coa_file', $product_id );
 
 	if ( is_string( $file_url ) && '' !== $file_url ) {
@@ -74,13 +77,26 @@ function foxfire_get_product_coa_label( int $product_id = 0 ): string {
  */
 function foxfire_get_product_testing_summary( int $product_id = 0 ): string {
 	$product_id = $product_id > 0 ? $product_id : get_the_ID();
-	$summary    = foxfire_get_product_field( 'foxfire_testing_summary', $product_id );
+	// The legacy summary key stores the workflow select; keep its data intact.
+	$summary    = foxfire_get_product_field( 'foxfire_testing_notes', $product_id );
 
 	if ( is_string( $summary ) && '' !== trim( $summary ) && 'Purity & Identity Verified' !== trim( $summary ) ) {
 		return trim( $summary );
 	}
 
 	return __( 'Not provided', 'foxfire-child' );
+}
+
+/** Workflow status is separate from the factual testing summary. */
+function foxfire_get_product_testing_status( int $product_id = 0 ): string {
+	$product_id = $product_id > 0 ? $product_id : get_the_ID();
+	$status = (string) foxfire_get_product_field( 'foxfire_testing_summary', $product_id );
+	$allowed = array( 'Information Pending', 'Information Available', 'Report Available', 'On File', 'Archived' );
+	$has_coa = foxfire_product_has_coa_document( $product_id );
+	if ( in_array( $status, $allowed, true ) && ( 'Report Available' !== $status || $has_coa ) ) {
+		return $status;
+	}
+	return $has_coa ? __( 'Report Available', 'foxfire-child' ) : __( 'Awaiting Document', 'foxfire-child' );
 }
 
 /**

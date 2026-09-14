@@ -26,11 +26,11 @@ $shop_url  = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() 
 			</p>
 
 			<h1 class="ff-testing-hero__title">
-				<?php esc_html_e( 'Testing & COA Information', 'foxfire-child' ); ?>
+				<?php esc_html_e( 'Testing & COA Documentation', 'foxfire-child' ); ?>
 			</h1>
 
 			<p class="ff-testing-hero__lead">
-				<?php esc_html_e( 'Access available testing information and Certificates of Analysis for Foxfire products and batches.', 'foxfire-child' ); ?>
+				<?php esc_html_e( 'Access available third-party testing and batch-specific documentation for Foxfire research compounds.', 'foxfire-child' ); ?>
 			</p>
 
 			<!-- Quality Approach Pillars -->
@@ -44,7 +44,7 @@ $shop_url  = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() 
 						</svg>
 					</div>
 					<span class="ff-testing-benchmark__title"><?php esc_html_e( 'Batch Information', 'foxfire-child' ); ?></span>
-					<span class="ff-testing-benchmark__sub"><?php esc_html_e( 'Product and lot/batch details where available.', 'foxfire-child' ); ?></span>
+					<span class="ff-testing-benchmark__sub"><?php esc_html_e( 'View available product and batch/lot identification.', 'foxfire-child' ); ?></span>
 				</div>
 
 				<div class="ff-testing-benchmark">
@@ -55,7 +55,7 @@ $shop_url  = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() 
 						</svg>
 					</div>
 					<span class="ff-testing-benchmark__title"><?php esc_html_e( 'Testing Information', 'foxfire-child' ); ?></span>
-					<span class="ff-testing-benchmark__sub"><?php esc_html_e( 'View the available testing summary for the selected batch.', 'foxfire-child' ); ?></span>
+					<span class="ff-testing-benchmark__sub"><?php esc_html_e( 'Review available third-party testing information for each batch.', 'foxfire-child' ); ?></span>
 				</div>
 
 				<div class="ff-testing-benchmark">
@@ -68,7 +68,7 @@ $shop_url  = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() 
 						</svg>
 					</div>
 					<span class="ff-testing-benchmark__title"><?php esc_html_e( 'COA Access', 'foxfire-child' ); ?></span>
-					<span class="ff-testing-benchmark__sub"><?php esc_html_e( 'View the available Certificate of Analysis report.', 'foxfire-child' ); ?></span>
+					<span class="ff-testing-benchmark__sub"><?php esc_html_e( 'View available Certificates of Analysis and supporting laboratory documentation.', 'foxfire-child' ); ?></span>
 				</div>
 			</div>
 		</div>
