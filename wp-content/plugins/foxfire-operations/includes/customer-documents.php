@@ -107,7 +107,7 @@ function foxfire_operations_render_customer_documents(): void {
 	$page = max( 1, absint( $_GET['coa-page'] ?? 1 ) );
 	$result = wc_get_orders( array( 'customer_id' => get_current_user_id(), 'limit' => 10, 'page' => $page, 'paginate' => true, 'orderby' => 'date', 'order' => 'DESC', 'status' => array_keys( wc_get_order_statuses() ) ) );
 	echo '<div class="ff-section-title-wrap"><h1 class="ff-section-title">' . esc_html__( 'Batch / COA Lookup', 'foxfire-operations' ) . '</h1>';
-	echo '<p class="ff-section-subtext">' . esc_html__( 'Review available documents for products in your orders. Match the batch number with your vial label. Older orders without a saved batch show current product references only.', 'foxfire-operations' ) . '</p></div>';
+	echo '<p class="ff-section-subtext">' . esc_html__( 'Batch-specific documents are displayed when available. Always match the batch number shown on your product label with the corresponding COA before reviewing documentation.', 'foxfire-operations' ) . '</p></div>';
 	foreach ( $result->orders as $order ) {
 		echo '<h2 class="ff-view-order-section-title"><a href="' . esc_url( $order->get_view_order_url() ) . '">' . esc_html( sprintf( __( 'Order #%s', 'foxfire-operations' ), $order->get_order_number() ) ) . '</a></h2>';
 		foxfire_operations_render_order_documents( $order );

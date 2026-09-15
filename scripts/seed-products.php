@@ -362,10 +362,10 @@ $tesa_image_id   = foxfire_seed_product_image_id_by_filename( 'tesamorelin.jpg',
 
 $coa_page_url   = foxfire_get_page_url( 'testing-coa', '/testing-coa/' );
 
-$cat_glp1      = foxfire_seed_ensure_category( 'GLP-1 Research', 'glp-1-agonists', 'GLP-1 receptor research compounds.' );
-$cat_recovery  = foxfire_seed_ensure_category( 'Peptide Research', 'recovery-healing', 'Compounds for laboratory peptide research.' );
+$cat_glp1      = foxfire_seed_ensure_category( 'Metabolic Research', 'metabolic-research', 'Compounds for laboratory metabolic research.' );
+$cat_recovery  = foxfire_seed_ensure_category( 'Regenerative Research', 'regenerative-research', 'Compounds for laboratory regenerative research.' );
 $cat_blends    = foxfire_seed_ensure_category( 'Blends', 'blends', 'Specialized multi-peptide research blends.' );
-$cat_support   = foxfire_seed_ensure_category( 'Support Compounds', 'support-compounds', 'Ancillary and cellular support research compounds.' );
+$cat_support   = foxfire_seed_ensure_category( 'Specialty Research', 'specialty-research', 'Specialized compounds for laboratory research.' );
 
 $placeholder_desc = '[PLACEHOLDER] Research specifications for this product will be provided by the client. For laboratory research use only.';
 $placeholder_short = '[PLACEHOLDER] Laboratory research compound. Lyophilized powder in sterile vial.';

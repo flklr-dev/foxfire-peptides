@@ -17,6 +17,11 @@ function esc_attr( $value ) { return esc_html( $value ); }
 function esc_url( $value ) { return esc_attr( $value ); }
 function esc_html_e( $value, $domain = '' ) { echo esc_html( $value ); }
 function esc_attr_e( $value, $domain = '' ) { echo esc_attr( $value ); }
+function wp_kses_post( $value ) { return $value; }
+function wpautop( $value ) {
+	$paragraphs = preg_split( '/\n\s*\n/', trim( $value ) );
+	return '<p>' . implode( "</p>\n<p>", $paragraphs ) . '</p>';
+}
 function absint( $value ) { return abs( (int) $value ); }
 function foxfire_get_shop_url() { return 'http://localhost:8080/shop/'; }
 function foxfire_get_page_url( $slug, $fallback ) { return 'http://localhost:8080/' . $slug . '/'; }
@@ -45,13 +50,24 @@ function render_about() {
 }
 $html = render_about();
 $schema = foxfire_operations_public_content_schema();
-foreach ( array( 'about_hero_title', 'about_hero_intro', 'about_commitment_text', 'about_people_text', 'about_story_title', 'about_story_one', 'about_story_two', 'about_values_title', 'about_values_intro', 'about_cta_title', 'about_cta_description', 'about_primary_cta', 'about_secondary_cta' ) as $key ) {
+foreach ( array( 'about_hero_title', 'about_hero_intro', 'about_commitment_text', 'about_people_text', 'about_story_title', 'about_story_one', 'about_story_two', 'about_values_title', 'about_values_intro', 'about_partner_title', 'about_partner_closing', 'about_cta_title', 'about_cta_description', 'about_primary_cta', 'about_secondary_cta' ) as $key ) {
 	check( str_contains( $html, esc_html( $schema[ $key ]['default'] ) ), 'Approved default rendered: ' . $key );
 }
 check( str_contains( $html, 'Transparent &amp; Straightforward' ) && str_contains( $html, 'Real People Behind Foxfire' ), 'Reviewed collage headings retained' );
 check( substr_count( $html, 'class="ff-stat-block"' ) === 4 && substr_count( $html, 'class="ff-value-card"' ) === 4, 'Both four-column values sections retained' );
 check( ! str_contains( $html, 'purchasing simple' ) && ! str_contains( $html, 'ff-about-founder' ), 'Reviewed story wording and layout replace later redesign' );
 check( str_contains( $html, 'href="http://localhost:8080/shop/"' ) && str_contains( $html, 'href="http://localhost:8080/testing-coa/"' ), 'CTA links use existing Shop and Testing routes' );
+$values_position = strpos( $html, 'class="ff-about-values-section"' );
+$partner_position = strpos( $html, 'class="ff-about-partner-section"' );
+$cta_position = strpos( $html, 'class="ff-about-cta-section"' );
+check( false !== $values_position && $values_position < $partner_position && $partner_position < $cta_position, 'Partner section appears between Our Core Values and Explore Foxfire' );
+$partner_end = strpos( $html, 'class="ff-about-cta-section"', $partner_position );
+$partner_html = substr( $html, $partner_position, $partner_end - $partner_position );
+check( 7 === substr_count( $partner_html, '<p>' ), 'The complete partner message retains its seven readable paragraphs' );
+foreach ( preg_split( '/\n\s*\n/', $schema['about_partner_body']['default'] ) as $paragraph ) {
+	check( str_contains( $partner_html, esc_html( $paragraph ) ), 'Approved partner paragraph rendered without rewriting' );
+}
+check( str_contains( $partner_html, 'Foxfire Peptides — Built for the Long Road.' ), 'The closing brand message is rendered in the partner section' );
 foreach ( array( 'portrait', 'product', 'team' ) as $slot ) {
 	check( $schema[ 'about_image_' . $slot ]['type'] === 'image' && str_contains( $html, 'about-hero-' . $slot . '.webp' ), 'Independent Media field and placeholder: ' . $slot );
 	check( is_file( ABSPATH . 'wp-content/themes/foxfire-child/assets/images/about-hero-' . $slot . '.webp' ) && is_file( ABSPATH . 'wp-content/themes/foxfire-child/assets/images/about-hero-' . $slot . '-480.webp' ), 'Responsive placeholder files exist: ' . $slot );

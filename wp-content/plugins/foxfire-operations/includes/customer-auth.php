@@ -178,6 +178,76 @@ function foxfire_operations_clear_successful_login_limit( string $user_login, WP
 }
 add_action( 'wp_login', 'foxfire_operations_clear_successful_login_limit', 10, 2 );
 
+/** Whether this request is the dedicated My Account registration form. */
+function foxfire_operations_is_account_registration_request(): bool {
+	return isset( $_POST['register'], $_POST['woocommerce-register-nonce'] );
+}
+
+/** Whether a required registration acknowledgement was explicitly checked. */
+function foxfire_operations_registration_acknowledgement_checked( string $field ): bool {
+	if ( ! isset( $_POST[ $field ] ) || ! is_string( $_POST[ $field ] ) ) {
+		return false;
+	}
+
+	return '1' === sanitize_text_field( wp_unslash( $_POST[ $field ] ) );
+}
+
+/**
+ * Enforce registration acknowledgements on the server.
+ *
+ * Browser-required attributes improve usability but are not a security
+ * boundary. Checkout account creation has its own legal acknowledgement and
+ * is intentionally outside this My Account registration check.
+ */
+function foxfire_operations_validate_registration_acknowledgements( WP_Error $errors, string $username, string $email ): WP_Error {
+	unset( $username, $email );
+
+	if ( ! foxfire_operations_is_account_registration_request() ) {
+		return $errors;
+	}
+
+	if ( ! foxfire_operations_registration_acknowledgement_checked( 'terms_agree' ) ) {
+		$errors->add(
+			'foxfire_registration_terms_required',
+			__( 'Please agree to the Terms & Conditions and Privacy Policy to create an account.', 'foxfire-operations' )
+		);
+	}
+
+	if ( ! foxfire_operations_registration_acknowledgement_checked( 'age_research_agree' ) ) {
+		$errors->add(
+			'foxfire_registration_research_required',
+			__( 'Please confirm that you are at least 18 and acknowledge the laboratory research-use restriction.', 'foxfire-operations' )
+		);
+	}
+
+	return $errors;
+}
+add_filter( 'woocommerce_registration_errors', 'foxfire_operations_validate_registration_acknowledgements', 20, 3 );
+
+/** Record the accepted registration statements without storing request data. */
+function foxfire_operations_record_registration_acknowledgements( int $customer_id ): void {
+	if ( ! foxfire_operations_is_account_registration_request() ||
+		! foxfire_operations_registration_acknowledgement_checked( 'terms_agree' ) ||
+		! foxfire_operations_registration_acknowledgement_checked( 'age_research_agree' )
+	) {
+		return;
+	}
+
+	$accepted_gmt = gmdate( 'Y-m-d H:i:s' );
+	update_user_meta( $customer_id, '_foxfire_registration_terms_accepted_gmt', $accepted_gmt );
+	update_user_meta( $customer_id, '_foxfire_registration_research_acknowledged_gmt', $accepted_gmt );
+	update_user_meta( $customer_id, '_foxfire_registration_acknowledgement_version', '2026-09-15' );
+
+	$user = get_userdata( $customer_id );
+	if ( $user instanceof WP_User ) {
+		foreach ( array_unique( array( $user->user_login, $user->user_email ) ) as $identity ) {
+			foxfire_operations_clear_auth_bucket( 'login_identity', foxfire_operations_auth_identity( $identity ) );
+			foxfire_operations_clear_auth_bucket( 'reset_identity', foxfire_operations_auth_identity( $identity ) );
+		}
+	}
+}
+add_action( 'woocommerce_created_customer', 'foxfire_operations_record_registration_acknowledgements', 20, 1 );
+
 /** Resolve a reset request without disclosing whether the account exists. */
 function foxfire_operations_find_reset_user( string $login ) {
 	$login = trim( sanitize_text_field( $login ) );

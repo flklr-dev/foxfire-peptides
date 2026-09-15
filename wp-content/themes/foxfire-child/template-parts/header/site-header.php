@@ -104,6 +104,12 @@ $is_cart     = function_exists( 'is_cart' ) && is_cart();
 			>
 				<ul class="ff-primary-nav__list">
 					<li class="ff-primary-nav__item">
+						<a class="ff-primary-nav__link <?php echo $is_home ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $home_url ); ?>" <?php echo $is_home ? 'aria-current="page"' : ''; ?>>
+							<?php esc_html_e( 'Home', 'foxfire-child' ); ?>
+						</a>
+					</li>
+
+					<li class="ff-primary-nav__item">
 						<a class="ff-primary-nav__link <?php echo $is_testing ? 'is-active ff-primary-nav__link--active' : ''; ?>" href="<?php echo esc_url( $testing_url ); ?>">
 							<?php esc_html_e( 'Testing & COAs', 'foxfire-child' ); ?>
 						</a>

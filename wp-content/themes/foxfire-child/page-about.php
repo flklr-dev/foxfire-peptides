@@ -235,7 +235,34 @@ $about_image = static function ( string $slot, string $alt, int $height, string 
 	</section>
 
 	<!-- ====================================================================
-	     SECTION 4: CALL TO ACTION
+	     SECTION 4: THE VALUE OF THE RIGHT PARTNER
+	     ==================================================================== -->
+	<section class="ff-about-partner-section" aria-labelledby="about-partner-title">
+		<div class="ff-about-partner-container">
+			<div class="ff-about-partner-layout">
+				<h2 id="about-partner-title" class="ff-about-partner__title">
+					<?php echo esc_html( foxfire_get_managed_content( 'about_partner_title', __( 'The Value of the Right Partner', 'foxfire-child' ) ) ); ?>
+				</h2>
+
+				<div class="ff-about-partner__body">
+					<?php
+					$partner_body = foxfire_get_managed_content(
+						'about_partner_body',
+						__( "In this space, finding a vendor is easy. Finding one you trust enough to stay with is different.\n\nPeptides are evolving quickly. New compounds will emerge. Research will advance. Prices will rise and fall, and there will always be another supplier offering the next product or a lower price.\n\nBut if peptides become a long-term part of your research, constantly searching for the next vendor may matter far less than finding the right one.\n\nFind someone reliable. Ask questions. Get to know how they operate. Pay attention to consistency, transparency, testing, and how they respond when you need them. Then build a relationship.\n\nBecause over the years, individual orders will come and go. Products will change. The industry will change.\n\nA relationship built on consistency and trust has a different kind of value.\n\nWe believe the best vendor shouldn't simply be there for your next order. They should be someone you're still glad you chose years down the road.", 'foxfire-child' )
+					);
+					echo wp_kses_post( wpautop( esc_html( $partner_body ) ) );
+					?>
+				</div>
+
+				<p class="ff-about-partner__closing">
+					<?php echo esc_html( foxfire_get_managed_content( 'about_partner_closing', __( 'Foxfire Peptides — Built for the Long Road.', 'foxfire-child' ) ) ); ?>
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- ====================================================================
+	     SECTION 5: CALL TO ACTION
 	     ==================================================================== -->
 	<section class="ff-about-cta-section" aria-labelledby="about-cta-title">
 		<div class="ff-about-cta-container">

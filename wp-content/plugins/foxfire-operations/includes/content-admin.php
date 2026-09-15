@@ -103,6 +103,21 @@ function foxfire_operations_public_content_schema(): array {
 			'default' => __( 'Access available third-party testing and batch-specific documentation for Foxfire research compounds. Search by product, batch, or lot number to find the available COA.', 'foxfire-operations' ),
 			'description' => __( 'Supporting text in the homepage testing callout.', 'foxfire-operations' ),
 		),
+		'home_long_road_title' => array(
+			'section' => 'homepage', 'label' => __( 'Long Road heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 100,
+			'default' => __( 'Built for the Long Road', 'foxfire-operations' ),
+			'description' => __( 'Heading in the homepage brand message before the final call to action.', 'foxfire-operations' ),
+		),
+		'home_long_road_description' => array(
+			'section' => 'homepage', 'label' => __( 'Long Road introduction', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 500,
+			'default' => __( 'Finding a vendor is easy. Finding one you trust enough to stay with is different. Foxfire is built around consistency, transparency, accessible testing, and real communication—because we believe the right relationship should matter beyond the next order.', 'foxfire-operations' ),
+			'description' => __( 'Short homepage introduction to the complete partner message on the About page.', 'foxfire-operations' ),
+		),
+		'home_long_road_cta' => array(
+			'section' => 'homepage', 'label' => __( 'Long Road button label', 'foxfire-operations' ), 'type' => 'text', 'max' => 60,
+			'default' => __( 'LEARN MORE ABOUT FOXFIRE', 'foxfire-operations' ),
+			'description' => __( 'The destination remains the About page.', 'foxfire-operations' ),
+		),
 		'home_closing_title' => array(
 			'section' => 'homepage', 'label' => __( 'Closing call-to-action heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 140,
 			'default' => __( 'Ready to Explore Foxfire?', 'foxfire-operations' ),
@@ -247,6 +262,21 @@ function foxfire_operations_public_content_schema(): array {
 			'section' => 'about', 'label' => __( 'Values introduction', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 320,
 			'default' => __( 'Simple standards that guide how we treat our customers, curate our products, and support the community.', 'foxfire-operations' ),
 			'description' => __( 'Supporting text above the value cards.', 'foxfire-operations' ),
+		),
+		'about_partner_title' => array(
+			'section' => 'about', 'label' => __( 'Partner section heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 120,
+			'default' => __( 'The Value of the Right Partner', 'foxfire-operations' ),
+			'description' => __( 'Heading in the brand-story section between Our Core Values and Explore Foxfire.', 'foxfire-operations' ),
+		),
+		'about_partner_body' => array(
+			'section' => 'about', 'label' => __( 'Partner section text', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 2400,
+			'default' => __( "In this space, finding a vendor is easy. Finding one you trust enough to stay with is different.\n\nPeptides are evolving quickly. New compounds will emerge. Research will advance. Prices will rise and fall, and there will always be another supplier offering the next product or a lower price.\n\nBut if peptides become a long-term part of your research, constantly searching for the next vendor may matter far less than finding the right one.\n\nFind someone reliable. Ask questions. Get to know how they operate. Pay attention to consistency, transparency, testing, and how they respond when you need them. Then build a relationship.\n\nBecause over the years, individual orders will come and go. Products will change. The industry will change.\n\nA relationship built on consistency and trust has a different kind of value.\n\nWe believe the best vendor shouldn't simply be there for your next order. They should be someone you're still glad you chose years down the road.", 'foxfire-operations' ),
+			'description' => __( 'Full client-approved partner message. Blank lines create separate paragraphs.', 'foxfire-operations' ),
+		),
+		'about_partner_closing' => array(
+			'section' => 'about', 'label' => __( 'Partner closing message', 'foxfire-operations' ), 'type' => 'text', 'max' => 140,
+			'default' => __( 'Foxfire Peptides — Built for the Long Road.', 'foxfire-operations' ),
+			'description' => __( 'Highlighted closing brand message in the partner section.', 'foxfire-operations' ),
 		),
 		'about_value_quality_title' => array(
 			'section' => 'about_archive', 'label' => __( 'Quality pillar heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 60,

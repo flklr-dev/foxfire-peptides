@@ -127,21 +127,32 @@ $enable_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_regis
 
 					<?php do_action( 'woocommerce_register_form' ); ?>
 
-					<!-- Terms of Service & Privacy Policy Agreement -->
+					<!-- Terms & Conditions and Privacy Policy Agreement -->
 					<div class="ff-form-group ff-form-group--terms">
 						<label class="ff-checkbox-label">
-							<input class="woocommerce-form__input woocommerce-form__input-checkbox" name="terms_agree" type="checkbox" id="terms_agree" required />
+							<input class="woocommerce-form__input woocommerce-form__input-checkbox" name="terms_agree" type="checkbox" id="terms_agree" value="1" required aria-required="true" />
 							<span>
 								<?php
 								printf(
 									/* translators: 1: terms url, 2: privacy url */
-									esc_html__( 'By creating an account, you agree to the %1$sTerms of Service%2$s and %3$sPrivacy Policy%4$s.', 'foxfire-child' ),
+									esc_html__( 'By creating an account, you agree to the %1$sTerms & Conditions%2$s and %3$sPrivacy Policy%4$s.', 'foxfire-child' ),
 									'<a href="' . esc_url( wc_get_page_permalink( 'terms' ) ?: home_url( '/terms-and-conditions/' ) ) . '" target="_blank" rel="noopener noreferrer" class="ff-terms-link">',
 									'</a>',
-									'<a href="' . esc_url( home_url( '/privacy-policy/' ) ) . '" target="_blank" class="ff-terms-link">',
+									'<a href="' . esc_url( get_privacy_policy_url() ?: home_url( '/privacy-policy/' ) ) . '" target="_blank" rel="noopener noreferrer" class="ff-terms-link">',
 									'</a>'
 								);
 								?>
+								<span class="required" aria-hidden="true">*</span>
+							</span>
+						</label>
+					</div>
+
+					<!-- Age and research-use acknowledgement -->
+					<div class="ff-form-group ff-form-group--terms">
+						<label class="ff-checkbox-label">
+							<input class="woocommerce-form__input woocommerce-form__input-checkbox" name="age_research_agree" type="checkbox" id="age_research_agree" value="1" required aria-required="true" />
+							<span>
+								<?php esc_html_e( 'I confirm that I am 18 years of age or older and understand that products offered by Foxfire Peptides are intended for laboratory research and analytical purposes only and are not intended for human consumption or administration.', 'foxfire-child' ); ?>
 								<span class="required" aria-hidden="true">*</span>
 							</span>
 						</label>

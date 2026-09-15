@@ -110,3 +110,19 @@ $check( 3 === substr_count( $footer_html, '<nav ' ), 'Footer has the three reque
 $check( str_contains( $footer_html, esc_url( wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ) ) ), 'Order History links to the actual WooCommerce orders endpoint' );
 $check( strpos( $footer_html, 'ff-site-footer__research-note' ) < strpos( $footer_html, 'ff-site-footer__copyright' ), 'The research-use notice appears before the copyright' );
 WP_CLI::success( 'FAQ and footer regression checks passed without changing saved data.' );
+
+$content_schema = foxfire_operations_public_content_schema();
+$check( 'Built for the Long Road' === $content_schema['home_long_road_title']['default'], 'The homepage Long Road heading is client-manageable' );
+$check( str_contains( $content_schema['home_long_road_description']['default'], 'the right relationship should matter beyond the next order.' ), 'The approved homepage Long Road introduction is registered' );
+$check( 'LEARN MORE ABOUT FOXFIRE' === $content_schema['home_long_road_cta']['default'], 'The homepage Long Road button label is client-manageable' );
+
+$front_page_source = file_get_contents( get_stylesheet_directory() . '/front-page.php' );
+$faq_position       = strpos( $front_page_source, 'class="ff-home-faq ff-reveal"' );
+$long_road_position = strpos( $front_page_source, 'class="ff-home-long-road ff-reveal"' );
+$closing_position   = strpos( $front_page_source, 'class="ff-site-cta ff-reveal"' );
+$check(
+	false !== $faq_position && $faq_position < $long_road_position && $long_road_position < $closing_position,
+	'The Long Road introduction appears after informational content and before the final call to action'
+);
+$check( str_contains( $front_page_source, "foxfire_get_page_url( 'about', '/about/' )" ), 'The Long Road button resolves through the existing About page route' );
+WP_CLI::success( 'Homepage Long Road content and placement checks passed.' );

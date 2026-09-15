@@ -88,6 +88,70 @@ function foxfire_operations_is_page_slug( array $slugs ): bool {
 }
 
 /**
+ * Permanently redirect superseded product-category URLs to their canonical terms.
+ *
+ * WordPress does not retain old taxonomy slugs, so these mappings must remain
+ * after the term migration to protect bookmarks and previously shared links.
+ */
+function foxfire_operations_redirect_legacy_product_categories(): void {
+	if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		return;
+	}
+
+	$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
+	if ( ! in_array( $request_method, array( 'GET', 'HEAD' ), true ) || empty( $_SERVER['REQUEST_URI'] ) ) {
+		return;
+	}
+
+	$request_path = wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH );
+	if ( ! is_string( $request_path ) ) {
+		return;
+	}
+
+	$permalinks   = function_exists( 'wc_get_permalink_structure' ) ? wc_get_permalink_structure() : array();
+	$category_base = isset( $permalinks['category_base'] ) ? trim( (string) $permalinks['category_base'], '/' ) : 'product-category';
+	$category_base = '' !== $category_base ? $category_base : 'product-category';
+	$redirects     = array(
+		'glp-1-agonists'    => 'metabolic-research',
+		'recovery-healing'  => 'regenerative-research',
+		'support-compounds' => 'specialty-research',
+	);
+
+	foreach ( $redirects as $legacy_slug => $canonical_slug ) {
+		$legacy_url  = home_url( user_trailingslashit( $category_base . '/' . $legacy_slug, 'category' ) );
+		$legacy_path = wp_parse_url( $legacy_url, PHP_URL_PATH );
+		if ( ! is_string( $legacy_path ) || untrailingslashit( $request_path ) !== untrailingslashit( $legacy_path ) ) {
+			continue;
+		}
+
+		$term = get_term_by( 'slug', $canonical_slug, 'product_cat' );
+		if ( ! $term instanceof WP_Term ) {
+			return;
+		}
+
+		$target_url = get_term_link( $term );
+		if ( is_wp_error( $target_url ) ) {
+			return;
+		}
+
+		$query_args = array();
+		foreach ( wp_unslash( $_GET ) as $key => $value ) {
+			$key = sanitize_key( (string) $key );
+			if ( '' !== $key ) {
+				$query_args[ $key ] = map_deep( $value, 'sanitize_text_field' );
+			}
+		}
+		if ( ! empty( $query_args ) ) {
+			$target_url = add_query_arg( $query_args, $target_url );
+		}
+
+		wp_safe_redirect( $target_url, 301, 'Foxfire Operations' );
+		exit;
+	}
+}
+add_action( 'template_redirect', 'foxfire_operations_redirect_legacy_product_categories', 1 );
+
+/**
  * Commerce and utility pages that must never be search landing pages.
  */
 function foxfire_operations_is_noindex_request(): bool {
@@ -116,7 +180,10 @@ function foxfire_operations_get_seo_title(): string {
 		$base = single_post_title( '', false );
 	} elseif ( function_exists( 'is_product_category' ) && is_product_category() ) {
 		$term_name = single_term_title( '', false );
-		$base      = sprintf( __( '%s Research Products', 'foxfire-operations' ), $term_name );
+		$title_format = preg_match( '/\bResearch$/i', trim( $term_name ) )
+			? __( '%s Products', 'foxfire-operations' )
+			: __( '%s Research Products', 'foxfire-operations' );
+		$base = sprintf( $title_format, $term_name );
 	} elseif ( foxfire_operations_is_page_slug( array( 'testing-coa' ) ) ) {
 		$base = foxfire_operations_seo_content( 'seo_testing_title', 'Testing & Certificate of Analysis' );
 	} elseif ( foxfire_operations_is_page_slug( array( 'about', 'about-us' ) ) ) {

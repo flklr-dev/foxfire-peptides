@@ -43,13 +43,24 @@ try {
 	add_filter( 'wp_mail', $observer, 999 );
 	wp_set_current_user( 0 );
 	$check( 'yes' === get_option( 'woocommerce_enable_myaccount_registration' ) && 'no' === get_option( 'woocommerce_registration_generate_password' ), 'Customer self-registration and immediate password choice enabled' );
-	$_POST = array( 'register' => 'Create Account', 'email' => $email, 'password' => $password, 'terms_agree' => 'on', 'woocommerce-register-nonce' => wp_create_nonce( 'woocommerce-register' ) );
+	$registration_form = $render( static fn() => wc_get_template( 'myaccount/form-login.php' ) );
+	$check( str_contains( $registration_form, 'Terms &amp; Conditions' ) && str_contains( $registration_form, 'Privacy Policy' ) && str_contains( $registration_form, 'name="terms_agree"' ) && str_contains( $registration_form, 'name="age_research_agree"' ), 'Registration form renders linked policy and age/research acknowledgements' );
+	$_POST = array( 'register' => 'Create Account', 'email' => $email, 'password' => $password, 'woocommerce-register-nonce' => wp_create_nonce( 'woocommerce-register' ) );
+	$missing_acknowledgements = apply_filters( 'woocommerce_registration_errors', new WP_Error(), '', $email );
+	$check( in_array( 'foxfire_registration_terms_required', $missing_acknowledgements->get_error_codes(), true ) && in_array( 'foxfire_registration_research_required', $missing_acknowledgements->get_error_codes(), true ), 'Server rejects registration when both acknowledgements are missing' );
+	$_POST['terms_agree'] = '1';
+	$missing_age = apply_filters( 'woocommerce_registration_errors', new WP_Error(), '', $email );
+	$check( ! in_array( 'foxfire_registration_terms_required', $missing_age->get_error_codes(), true ) && in_array( 'foxfire_registration_research_required', $missing_age->get_error_codes(), true ), 'Server independently requires the age and research-use acknowledgement' );
+	$_POST['age_research_agree'] = '1';
 	$invoke( array( 'WC_Form_Handler', 'process_registration' ) );
 	$user = get_user_by( 'email', $email );
 	if ( $user ) { $users[] = $user->ID; }
 	$check( $user instanceof WP_User && in_array( 'customer', $user->roles, true ), 'Native registration form creates customer, not an operator' );
+	$check( $user instanceof WP_User && get_user_meta( $user->ID, '_foxfire_registration_terms_accepted_gmt', true ) && get_user_meta( $user->ID, '_foxfire_registration_research_acknowledged_gmt', true ) && '2026-09-15' === get_user_meta( $user->ID, '_foxfire_registration_acknowledgement_version', true ), 'Successful registration records both acknowledgement timestamps and version' );
 	$check( get_current_user_id() === $user->ID, 'Registration signs the customer in' );
 	$check( count( array_filter( $mail, static fn( $m ) => in_array( $email, (array) $m['to'], true ) ) ) > 0, 'New-account email accepted by local transport for the new customer' );
+	$duplicate = wc_create_new_customer( $email, '', wp_generate_password( 24 ) );
+	$check( is_wp_error( $duplicate ) && (int) email_exists( $email ) === $user->ID, 'A second registration with an existing email is rejected without changing the original account' );
 	wp_logout();
 	$check( ! is_user_logged_in(), 'Customer sign-out clears the logged-in user' );
 	// The form handler caches its nonce at bootstrap; exercise its core authenticator here.
@@ -127,6 +138,7 @@ try {
 	$check( str_contains( $tracking, 'LOCAL-TRACK-ONLY' ) && str_contains( $tracking, 'https://example.test/local-tracking' ), 'Order detail shows available shipment number and tracking link' );
 	$docs = $render( 'foxfire_operations_render_customer_documents' );
 	$check( str_contains( $docs, 'LOCAL-BATCH-A' ) && str_contains( $docs, esc_url( $document['url'] ) ), 'Account COA endpoint renders the customer order and report link' );
+	$check( str_contains( $docs, 'Batch-specific documents are displayed when available.' ) && str_contains( $docs, 'Always match the batch number shown on your product label' ), 'Account COA endpoint renders the approved batch-matching guidance' );
 	update_post_meta( $product->get_id(), 'foxfire_batch_lot', 'LOCAL-BATCH-B' );
 	update_field( 'field_foxfire_coa_file', false, $product->get_id() );
 	update_post_meta( $product->get_id(), 'foxfire_coa_url', home_url( '/local-test-only-report-b.pdf' ) );

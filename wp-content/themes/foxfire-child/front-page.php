@@ -14,6 +14,7 @@ get_header();
 
 $shop_url    = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() : home_url( '/shop/' );
 $testing_url = function_exists( 'foxfire_get_page_url' ) ? foxfire_get_page_url( 'testing-coa', '/testing-coa/' ) : home_url( '/testing-coa/' );
+$about_url   = function_exists( 'foxfire_get_page_url' ) ? foxfire_get_page_url( 'about', '/about/' ) : home_url( '/about/' );
 $hero_img    = FOXFIRE_CHILD_URI . '/assets/images/hero-peptides.webp';
 $hero_img_sm = FOXFIRE_CHILD_URI . '/assets/images/hero-peptides-480.webp';
 $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_homepage_products( 4 ) : null;
@@ -275,7 +276,26 @@ $managed_faqs = foxfire_get_homepage_faqs();
 		</div>
 	</section>
 
-	<!-- 7. Pre-footer CTA -->
+	<!-- 7. Long-term brand message -->
+	<section class="ff-home-long-road ff-reveal" aria-labelledby="ff-home-long-road-heading">
+		<div class="ff-home-long-road__inner">
+			<h2 id="ff-home-long-road-heading" class="ff-home-long-road__title">
+				<?php echo esc_html( foxfire_get_managed_content( 'home_long_road_title', __( 'Built for the Long Road', 'foxfire-child' ) ) ); ?>
+			</h2>
+
+			<div class="ff-home-long-road__content">
+				<p class="ff-home-long-road__description">
+					<?php echo esc_html( foxfire_get_managed_content( 'home_long_road_description', __( 'Finding a vendor is easy. Finding one you trust enough to stay with is different. Foxfire is built around consistency, transparency, accessible testing, and real communication—because we believe the right relationship should matter beyond the next order.', 'foxfire-child' ) ) ); ?>
+				</p>
+				<a href="<?php echo esc_url( $about_url ); ?>" class="ff-home-long-road__button">
+					<span><?php echo esc_html( foxfire_get_managed_content( 'home_long_road_cta', __( 'LEARN MORE ABOUT FOXFIRE', 'foxfire-child' ) ) ); ?></span>
+					<span aria-hidden="true">→</span>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- 8. Pre-footer CTA -->
 	<section class="ff-site-cta ff-reveal" aria-labelledby="ff-home-closing-cta-heading">
 		<div class="ff-site-cta__content">
 			<p class="ff-site-cta__eyebrow"><?php esc_html_e( 'Order Online', 'foxfire-child' ); ?></p>
