@@ -14,12 +14,26 @@ const button = {
   removeClass(name) { this.classes.delete(name); return this; },
 };
 const terms = { length: 1, checked: true, is() { return this.checked; } };
+const age = { length: 1, checked: true, is() { return this.checked; } };
+const acknowledgements = {
+  length: 2,
+  filter(selector) {
+    assert.equal(selector, ':checked');
+    return { length: [terms, age].filter(item => item.checked).length };
+  },
+};
 const generic = {
   on(event, selector, callback) { handlers.set(event, callback || selector); return this; },
   ajaxError(callback) { handlers.set('ajaxError', callback); return this; },
   ready(callback) { callback(); },
 };
-const $ = selector => selector === '#place_order' ? button : selector === '#terms' ? terms : generic;
+const $ = selector => selector === '#place_order'
+  ? button
+  : selector === '#terms, #foxfire_age_research_acknowledgement'
+    ? acknowledgements
+    : selector === '#terms'
+      ? terms
+      : generic;
 const context = { jQuery: $, document, window: { navigator: { onLine: true } } };
 vm.createContext(context);
 vm.runInContext(source.replace('FoxfireCheckout.init();', 'globalThis.subject = FoxfireCheckout;'), context);
@@ -41,4 +55,11 @@ assert.equal(button.disabled, false);
 terms.checked = false;
 context.subject.updatePlaceOrderStatus();
 assert.equal(button.disabled, true);
-console.log('PASS: Outside review, native terms checked/unchecked button behavior remains intact');
+terms.checked = true;
+age.checked = false;
+context.subject.updatePlaceOrderStatus();
+assert.equal(button.disabled, true);
+age.checked = true;
+context.subject.updatePlaceOrderStatus();
+assert.equal(button.disabled, false);
+console.log('PASS: Outside review, both required acknowledgements control the button');

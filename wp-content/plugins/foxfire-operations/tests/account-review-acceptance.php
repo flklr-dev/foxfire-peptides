@@ -44,7 +44,7 @@ try {
 	wp_set_current_user( 0 );
 	$check( 'yes' === get_option( 'woocommerce_enable_myaccount_registration' ) && 'no' === get_option( 'woocommerce_registration_generate_password' ), 'Customer self-registration and immediate password choice enabled' );
 	$registration_form = $render( static fn() => wc_get_template( 'myaccount/form-login.php' ) );
-	$check( str_contains( $registration_form, 'Terms &amp; Conditions' ) && str_contains( $registration_form, 'Privacy Policy' ) && str_contains( $registration_form, 'name="terms_agree"' ) && str_contains( $registration_form, 'name="age_research_agree"' ), 'Registration form renders linked policy and age/research acknowledgements' );
+	$check( str_contains( $registration_form, 'Terms &amp; Conditions' ) && str_contains( $registration_form, 'Privacy Policy' ) && str_contains( $registration_form, 'name="terms_agree"' ) && str_contains( $registration_form, 'name="age_research_agree"' ) && str_contains( $registration_form, 'I confirm that I am 21 years of age or older' ), 'Registration form renders linked policy and 21+ research-use acknowledgements' );
 	$_POST = array( 'register' => 'Create Account', 'email' => $email, 'password' => $password, 'woocommerce-register-nonce' => wp_create_nonce( 'woocommerce-register' ) );
 	$missing_acknowledgements = apply_filters( 'woocommerce_registration_errors', new WP_Error(), '', $email );
 	$check( in_array( 'foxfire_registration_terms_required', $missing_acknowledgements->get_error_codes(), true ) && in_array( 'foxfire_registration_research_required', $missing_acknowledgements->get_error_codes(), true ), 'Server rejects registration when both acknowledgements are missing' );
@@ -56,7 +56,7 @@ try {
 	$user = get_user_by( 'email', $email );
 	if ( $user ) { $users[] = $user->ID; }
 	$check( $user instanceof WP_User && in_array( 'customer', $user->roles, true ), 'Native registration form creates customer, not an operator' );
-	$check( $user instanceof WP_User && get_user_meta( $user->ID, '_foxfire_registration_terms_accepted_gmt', true ) && get_user_meta( $user->ID, '_foxfire_registration_research_acknowledged_gmt', true ) && '2026-09-15' === get_user_meta( $user->ID, '_foxfire_registration_acknowledgement_version', true ), 'Successful registration records both acknowledgement timestamps and version' );
+	$check( $user instanceof WP_User && get_user_meta( $user->ID, '_foxfire_registration_terms_accepted_gmt', true ) && get_user_meta( $user->ID, '_foxfire_registration_research_acknowledged_gmt', true ) && '2026-09-16-21-plus' === get_user_meta( $user->ID, '_foxfire_registration_acknowledgement_version', true ), 'Successful registration records both acknowledgement timestamps and 21+ version' );
 	$check( get_current_user_id() === $user->ID, 'Registration signs the customer in' );
 	$check( count( array_filter( $mail, static fn( $m ) => in_array( $email, (array) $m['to'], true ) ) ) > 0, 'New-account email accepted by local transport for the new customer' );
 	$duplicate = wc_create_new_customer( $email, '', wp_generate_password( 24 ) );

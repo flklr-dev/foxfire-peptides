@@ -2,7 +2,7 @@
   "terms": {
     "title": "Terms & Conditions",
     "effective": "September 14, 2026",
-    "updated": "September 14, 2026",
+    "updated": "September 16, 2026",
     "email": "info@foxfirepeptides.com",
     "sections": [
       {
@@ -29,7 +29,7 @@
         "blocks": [
           {
             "type": "p",
-            "text": "You must be at least 18 years of age and have the legal capacity to enter into a binding agreement to use this Site or place an order."
+            "text": "You must be at least 21 years of age and have the legal capacity to enter into a binding agreement to use this Site or place an order."
           },
           {
             "type": "p",
@@ -330,7 +330,7 @@
   "privacy": {
     "title": "Privacy Policy",
     "effective": "September 2026",
-    "updated": "September 2026",
+    "updated": "September 16, 2026",
     "email": "info@foxfirepeptides.com",
     "sections": [
       {
@@ -511,11 +511,11 @@
         "blocks": [
           {
             "type": "p",
-            "text": "The Site is intended for individuals 18 years of age or older. We do not knowingly collect personal information from individuals under 18."
+            "text": "The Site is intended for individuals 21 years of age or older. We do not knowingly collect personal information from individuals under 21."
           },
           {
             "type": "p",
-            "text": "If we become aware that we have collected personal information from an individual under 18, we will take reasonable steps to delete it."
+            "text": "If we become aware that we have collected personal information from an individual under 21, we will take reasonable steps to delete it."
           }
         ]
       },

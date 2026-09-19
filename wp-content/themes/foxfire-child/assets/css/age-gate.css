@@ -1,0 +1,204 @@
+/**
+ * Foxfire 21+ site gate.
+ * A focused interruption in the existing near-black, white, and orange system.
+ */
+
+.ff-age-gate {
+	position: fixed;
+	inset: 0;
+	z-index: 2147483646;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	min-height: 100dvh;
+	padding: clamp(1rem, 4vw, 3rem);
+	overflow-y: auto;
+	background: rgba(21, 23, 26, 0.4);
+	color: #151719;
+}
+
+html.ff-age-verified .ff-age-gate {
+	display: none;
+}
+
+html.ff-age-unverified,
+html.ff-age-unverified body {
+	overflow: hidden !important;
+	overscroll-behavior: none;
+}
+
+.ff-age-gate__panel {
+	position: relative;
+	width: min(100%, 42rem);
+	margin: auto;
+	padding: clamp(1.5rem, 5vw, 3.5rem);
+	overflow: hidden;
+	background: #ffffff;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	border-radius: 18px;
+	box-shadow: 0 28px 80px rgba(21, 23, 26, 0.42);
+}
+
+.ff-age-gate__panel::before {
+	position: absolute;
+	inset: 0 0 auto;
+	height: 5px;
+	background: #ff5800;
+	content: "";
+}
+
+.ff-age-gate__brand {
+	margin: 0 0 1.75rem;
+	color: #151719;
+	font-family: var(--font-heading, "DM Sans", sans-serif);
+	font-size: clamp(1.5rem, 4vw, 2rem);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	line-height: 1.15;
+}
+
+.ff-age-gate__classification {
+	display: inline-flex;
+	margin: 0 0 1.25rem;
+	padding: 0.4rem 0.7rem;
+	background: rgba(255, 88, 0, 0.1);
+	border-radius: 999px;
+	color: #b23d00;
+	font-family: var(--font-heading, "DM Sans", sans-serif);
+	font-size: 0.875rem;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	line-height: 1.3;
+	text-transform: uppercase;
+}
+
+.ff-age-gate__title {
+	max-width: 18ch;
+	margin: 0 0 0.875rem;
+	color: #151719;
+	font-family: var(--font-heading, "DM Sans", sans-serif);
+	font-size: clamp(1.75rem, 5vw, 2.75rem);
+	font-weight: 750;
+	letter-spacing: -0.035em;
+	line-height: 1.08;
+}
+
+.ff-age-gate__description {
+	max-width: 64ch;
+	margin: 0;
+	color: #4d5055;
+	font-family: var(--font-body, "Source Sans 3", sans-serif);
+	font-size: 1rem;
+	line-height: 1.65;
+}
+
+.ff-age-gate__actions {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 0.75rem;
+	margin-top: 2rem;
+}
+
+.ff-age-gate__form {
+	margin: 0;
+}
+
+.ff-age-gate__enter,
+.ff-age-gate__exit {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 52px;
+	padding: 0.75rem 1rem;
+	border-radius: 6px;
+	font-family: var(--font-heading, "DM Sans", sans-serif);
+	font-size: 0.875rem;
+	font-weight: 800;
+	letter-spacing: 0.015em;
+	line-height: 1.3;
+	text-align: center;
+	text-decoration: none;
+	transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.ff-age-gate__enter {
+	background: #ff5800;
+	border: 1px solid #ff5800;
+	color: #ffffff;
+	cursor: pointer;
+}
+
+.ff-age-gate__exit {
+	background: #ffffff;
+	border: 1px solid #151719;
+	color: #151719;
+}
+
+.ff-age-gate__enter:hover,
+.ff-age-gate__enter:active {
+	background: #151719;
+	border-color: #151719;
+	color: #ffffff;
+	transform: translateY(-1px);
+}
+
+.ff-age-gate__exit:hover,
+.ff-age-gate__exit:active {
+	background: #151719;
+	border-color: #151719;
+	color: #ffffff;
+	transform: translateY(-1px);
+}
+
+.ff-age-gate__enter:focus-visible,
+.ff-age-gate__exit:focus-visible {
+	outline: 3px solid #ff5800;
+	outline-offset: 3px;
+}
+
+.ff-age-gate__enter:disabled {
+	background: #707278;
+	border-color: #707278;
+	cursor: wait;
+	transform: none;
+}
+
+.ff-age-gate__memory {
+	margin: 1rem 0 0;
+	color: #666a70;
+	font-family: var(--font-body, "Source Sans 3", sans-serif);
+	font-size: 0.875rem;
+	line-height: 1.45;
+	text-align: center;
+}
+
+@media (max-width: 37.5rem) {
+	.ff-age-gate {
+		align-items: flex-start;
+		padding: 0.75rem;
+	}
+
+	.ff-age-gate__panel {
+		margin-block: auto;
+		border-radius: 14px;
+	}
+
+	.ff-age-gate__actions {
+		grid-template-columns: 1fr;
+		margin-top: 1.5rem;
+	}
+
+	.ff-age-gate__enter,
+	.ff-age-gate__exit {
+		min-height: 50px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ff-age-gate__enter,
+	.ff-age-gate__exit {
+		transition: none;
+	}
+}

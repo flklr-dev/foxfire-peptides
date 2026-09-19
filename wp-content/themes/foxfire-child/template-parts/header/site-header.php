@@ -36,16 +36,7 @@ $is_cart     = function_exists( 'is_cart' ) && is_cart();
 	<div class="ff-site-header__inner">
 		<!-- Brand Logo -->
 		<div class="ff-site-header__brand">
-			<?php if ( has_custom_logo() ) : ?>
-				<div class="ff-site-header__logo">
-					<?php the_custom_logo(); ?>
-				</div>
-			<?php else : ?>
-				<a class="ff-site-header__logo-text" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-					<span class="ff-site-header__logo-mark" aria-hidden="true">FF</span>
-					<span class="ff-site-header__logo-name"><?php bloginfo( 'name' ); ?></span>
-				</a>
-			<?php endif; ?>
+			<?php foxfire_render_site_logo(); ?>
 		</div>
 
 		<!-- Mobile Controls (Orange Cart + Borderless Burger) -->
@@ -81,7 +72,23 @@ $is_cart     = function_exists( 'is_cart' ) && is_cart();
 		<div class="ff-site-header__nav-wrap" data-ff-nav-panel>
 			<div class="ff-mobile-nav__header">
 				<div class="ff-mobile-nav__brand">
-					<span class="ff-site-header__logo-mark" aria-hidden="true">FF</span>
+					<?php
+					$mobile_icon_url = has_site_icon()
+						? (string) get_site_icon_url( 64 )
+						: foxfire_get_brand_asset_url( 'favicon-32x32.png' );
+					if ( '' !== $mobile_icon_url ) :
+						?>
+						<img
+							class="ff-mobile-nav__icon"
+							src="<?php echo esc_url( $mobile_icon_url ); ?>"
+							alt=""
+							width="32"
+							height="32"
+							decoding="async"
+						/>
+					<?php else : ?>
+						<span class="ff-site-header__logo-mark" aria-hidden="true">FF</span>
+					<?php endif; ?>
 					<span class="ff-mobile-nav__title"><?php bloginfo( 'name' ); ?></span>
 				</div>
 				<button

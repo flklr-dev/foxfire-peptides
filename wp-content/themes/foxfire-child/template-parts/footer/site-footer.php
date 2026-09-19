@@ -26,12 +26,24 @@ $year        = (string) gmdate( 'Y' );
 $footer_tagline = foxfire_get_managed_content( 'footer_tagline', __( 'Research compounds with transparent testing, clear documentation, and straightforward ordering.', 'foxfire-child' ) );
 $research_notice = foxfire_get_managed_content( 'footer_research_notice', __( 'For laboratory research use only. Not for human consumption.', 'foxfire-child' ) );
 $contact_email = foxfire_get_managed_content( 'support_email', 'info@foxfirepeptides.com' );
+$footer_logo_url = foxfire_get_brand_asset_url( 'foxfire-logo-400.webp' );
+if ( '' === $footer_logo_url ) {
+	$footer_logo_url = foxfire_get_brand_asset_url( 'foxfire-logo.png' );
+}
 ?>
 
 <div class="ff-site-footer">
 	<div class="ff-site-footer__inner">
 		<div class="ff-site-footer__brand">
-			<p class="ff-site-footer__name"><?php bloginfo( 'name' ); ?></p>
+			<?php if ( has_custom_logo() ) : ?>
+				<div class="ff-site-footer__logo"><?php echo get_custom_logo(); // WordPress-generated logo link. ?></div>
+			<?php elseif ( '' !== $footer_logo_url ) : ?>
+				<a class="ff-site-footer__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php esc_attr_e( 'Foxfire Peptides home', 'foxfire-child' ); ?>">
+					<img src="<?php echo esc_url( $footer_logo_url ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="140" height="140" loading="lazy" decoding="async" />
+				</a>
+			<?php else : ?>
+				<p class="ff-site-footer__name"><?php bloginfo( 'name' ); ?></p>
+			<?php endif; ?>
 			<p class="ff-site-footer__tagline">
 				<?php echo esc_html( $footer_tagline ); ?>
 			</p>

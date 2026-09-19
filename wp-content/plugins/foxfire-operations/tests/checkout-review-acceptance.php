@@ -85,7 +85,7 @@ try {
 		$_POST[ $type . '_' . $field ] = $value;
 		if ( is_callable( array( WC()->customer, 'set_' . $type . '_' . $field ) ) ) WC()->customer->{'set_' . $type . '_' . $field}( $value );
 	}
-	$_POST['terms'] = '1'; $_POST['terms-field'] = '1';
+	$_POST['terms'] = '1'; $_POST['terms-field'] = '1'; $_POST['foxfire_age_research_acknowledgement'] = '1';
 	$_POST['woocommerce-process-checkout-nonce'] = wp_create_nonce( 'woocommerce-process_checkout' );
 	$packages = WC()->shipping()->calculate_shipping( WC()->cart->get_shipping_packages() );
 	$check( ! empty( $packages[0]['rates'] ), 'Saved native shipping settings provide rates for the valid US fixture destination' );
@@ -100,9 +100,10 @@ try {
 	$check( str_contains( $form, 'id="createaccount"' ) && str_contains( $form, 'Have an account?' ) && str_contains( $form, 'name="login"' ), 'Anonymous checkout retains optional account checkbox and existing-customer sign-in form' );
 	$terms_url = wc_get_page_permalink( 'terms' );
 	$check( 15 === wc_get_page_id( 'terms' ) && 'publish' === get_post_status( wc_get_page_id( 'terms' ) ) && str_contains( $form, esc_url( $terms_url ) ) && str_contains( $form, 'id="terms"' ), 'Required terms checkbox links to the published current Terms & Conditions page' );
-	$check( 1 === substr_count( $form, 'id="terms"' ) && str_contains( $form, 'I confirm that I am at least 18 years old' ) && str_contains( $form, 'not intended for human consumption.' ), 'Exactly one combined age, terms and research-use acknowledgement is displayed' );
-	preg_match( '/<input[^>]+id="terms"[^>]*>/i', $form, $ack_input );
-	$check( isset( $ack_input[0] ) && str_contains( $ack_input[0], 'required' ) && ! preg_match( '/\bchecked\b/i', $ack_input[0] ), 'Acknowledgement is required and never pre-checked on initial rendering' );
+	$check( 1 === substr_count( $form, 'id="terms"' ) && 1 === substr_count( $form, 'id="foxfire_age_research_acknowledgement"' ) && str_contains( $form, 'I confirm that I am 21 years of age or older' ) && str_contains( $form, 'not intended for human consumption or medical use.' ), 'Separate required Terms and exact 21+ research-use acknowledgements are displayed' );
+	preg_match( '/<input[^>]+id="terms"[^>]*>/i', $form, $terms_input );
+	preg_match( '/<input[^>]+id="foxfire_age_research_acknowledgement"[^>]*>/i', $form, $age_input );
+	$check( isset( $terms_input[0], $age_input[0] ) && str_contains( $terms_input[0], 'required' ) && str_contains( $age_input[0], 'required' ) && ! preg_match( '/\bchecked\b/i', $terms_input[0] . $age_input[0] ), 'Both acknowledgements are required and never pre-checked on initial rendering' );
 	$check( strpos( $form, 'id="terms"' ) < strpos( $form, 'id="place_order"' ) && ! str_contains( $form, 'class="woocommerce-terms-and-conditions-link"' ), 'Acknowledgement precedes Place Order and its Terms link opens the actual policy rather than an inline disclosure' );
 	$check( str_contains( $form, 'data-review-mode="1" disabled' ) && str_contains( $form, foxfire_operations_checkout_review_message() ), 'Checkout displays review notice and a server-rendered disabled Place Order button' );
 	$check( str_contains( $form, 'class="ff-payment-notice" role="status"' ) && ! str_contains( $form, 'woocommerce-notice--info' ), 'Payment availability uses the custom accessible status, not a default notice banner' );
@@ -119,6 +120,11 @@ try {
 	$missing_terms['terms-field'] = 0; $errors = new WP_Error();
 	$validate->invokeArgs( $checkout, array( &$missing_terms, &$errors ) );
 	$check( in_array( 'terms', $errors->get_error_codes(), true ), 'Removing the native hidden terms field cannot bypass required acknowledgement' );
+	unset( $_POST['foxfire_age_research_acknowledgement'] );
+	$errors = new WP_Error();
+	$validate->invokeArgs( $checkout, array( &$data, &$errors ) );
+	$check( in_array( 'foxfire_age_research_acknowledgement', $errors->get_error_codes(), true ), 'Server independently rejects a missing 21+ research-use acknowledgement' );
+	$_POST['foxfire_age_research_acknowledgement'] = '1';
 	$missing_address = $data; $missing_address['billing_address_1'] = ''; $missing_address['billing_email'] = ''; $errors = new WP_Error();
 	$validate->invokeArgs( $checkout, array( &$missing_address, &$errors ) );
 	$check( in_array( 'billing_address_1_required', $errors->get_error_codes(), true ) && in_array( 'billing_email_required', $errors->get_error_codes(), true ), 'Server still requires guest address and contact email' );
@@ -150,6 +156,7 @@ try {
 	$items = $order->get_items(); $item = reset( $items );
 	$check( 0 === $order->get_customer_id() && $email === $order->get_billing_email() && 'Local' === $order->get_billing_first_name(), 'Saved guest order records customer contact information without an account' );
 	$check( $product_id === $item->get_product_id() && 3 === $item->get_quantity() && 30.0 === (float) $item->get_total(), 'Saved order records the correct product, individual-unit quantity and line total' );
+	$check( 'yes' === $order->get_meta( '_foxfire_age_research_acknowledgement' ) && '2026-09-16-21-plus' === $order->get_meta( '_foxfire_age_research_acknowledgement_version' ) && $order->get_meta( '_foxfire_age_research_acknowledged_gmt' ), 'Saved order records the accepted 21+ research-use statement and version' );
 	$shipping = (float) WC()->cart->get_shipping_total();
 	$check( $shipping > 0 && $shipping === (float) $order->get_shipping_total() && 30.0 + $shipping === (float) $order->get_total() && 1 === count( $order->get_items( 'shipping' ) ), 'Saved order contains shipping method, configured shipping charge and matching total' );
 	$check( '123 Fixture Street' === $order->get_shipping_address_1() && 'US' === $order->get_shipping_country() && 'pending' === $order->get_status() && '' === $order->get_payment_method() && ! $order->get_date_paid(), 'Shipping address and unpaid pending state are recorded without inventing a card payment' );

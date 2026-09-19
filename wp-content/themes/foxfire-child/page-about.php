@@ -23,7 +23,18 @@ $testing_url   = foxfire_get_page_url( 'testing-coa', '/testing-coa/' );
 $about_image = static function ( string $slot, string $alt, int $height, string $loading ): string {
 	$attachment_id = absint( foxfire_get_managed_content( 'about_image_' . $slot, '0' ) );
 	$alt = foxfire_get_managed_content( 'about_image_' . $slot . '_alt', $alt );
-	$attributes = array( 'class' => 'ff-bento-img', 'alt' => $alt, 'loading' => $loading, 'decoding' => 'async', 'sizes' => '(max-width: 767px) calc(100vw - 40px), 33vw' );
+	$presentations = array(
+		'portrait' => 'founder',
+		'product'  => 'product',
+		'team'     => 'packaging',
+	);
+	$assets = array(
+		'portrait' => array( 'full' => 'about-founder.webp', 'full_width' => 800, 'small' => 'about-founder-480.webp', 'small_width' => 480 ),
+		'product'  => array( 'full' => 'home-hero-mobile-720.webp', 'full_width' => 720, 'small' => 'home-hero-mobile-480.webp', 'small_width' => 480 ),
+		'team'     => array( 'full' => 'about-packaging.webp', 'full_width' => 800, 'small' => 'about-packaging-480.webp', 'small_width' => 480 ),
+	);
+	$presentation = $presentations[ $slot ] ?? $slot;
+	$attributes = array( 'class' => 'ff-bento-img ff-bento-img--' . $presentation, 'alt' => $alt, 'loading' => $loading, 'decoding' => 'async', 'sizes' => '(max-width: 767px) calc(100vw - 40px), 33vw' );
 	if ( 'portrait' === $slot ) {
 		$attributes['fetchpriority'] = 'high';
 	}
@@ -33,11 +44,12 @@ $about_image = static function ( string $slot, string $alt, int $height, string 
 			return $image;
 		}
 	}
-	$base = get_stylesheet_directory_uri() . '/assets/images/about-hero-' . $slot;
+	$asset = $assets[ $slot ] ?? array( 'full' => 'about-hero-' . $slot . '.webp', 'full_width' => 800, 'small' => 'about-hero-' . $slot . '-480.webp', 'small_width' => 480 );
+	$base = get_stylesheet_directory_uri() . '/assets/images/';
 	return sprintf(
-		'<img src="%1$s" srcset="%2$s 480w, %1$s 800w" sizes="%3$s" alt="%4$s" class="ff-bento-img" width="800" height="%5$d" loading="%6$s" decoding="async"%7$s />',
-		esc_url( $base . '.webp' ), esc_url( $base . '-480.webp' ), esc_attr( $attributes['sizes'] ),
-		esc_attr( $alt ), $height, esc_attr( $loading ), 'portrait' === $slot ? ' fetchpriority="high"' : ''
+		'<img src="%1$s" srcset="%2$s %3$dw, %1$s %4$dw" sizes="%5$s" alt="%6$s" class="ff-bento-img ff-bento-img--%10$s" width="%4$d" height="%7$d" loading="%8$s" decoding="async"%9$s />',
+		esc_url( $base . $asset['full'] ), esc_url( $base . $asset['small'] ), absint( $asset['small_width'] ), absint( $asset['full_width'] ),
+		esc_attr( $attributes['sizes'] ), esc_attr( $alt ), $height, esc_attr( $loading ), 'portrait' === $slot ? ' fetchpriority="high"' : '', esc_attr( $presentation )
 	);
 };
 ?>
@@ -60,10 +72,10 @@ $about_image = static function ( string $slot, string $alt, int $height, string 
 			<!-- 3-Column Bento Grid -->
 			<div class="ff-about-bento-grid">
 
-				<!-- Column 1 (Left): Tall Portrait Image -->
+				<!-- Column 1 (Left): Founder working with Foxfire products -->
 				<div class="ff-bento-col ff-bento-col--tall">
 					<div class="ff-bento-card ff-bento-card--image-tall">
-						<?php echo $about_image( 'portrait', 'Development placeholder portrait in a bright studio workspace', 1067, 'eager' ); // Escaped image markup from WordPress or the local placeholder. ?>
+						<?php echo $about_image( 'portrait', 'Foxfire founder preparing a branded vial and package', 731, 'eager' ); // Escaped image markup from WordPress or the local fallback. ?>
 					</div>
 				</div>
 
@@ -80,15 +92,15 @@ $about_image = static function ( string $slot, string $alt, int $height, string 
 
 					<!-- Product Image Card -->
 					<div class="ff-bento-card ff-bento-card--image-landscape">
-						<?php echo $about_image( 'product', 'Development placeholder research vial photography', 600, 'eager' ); // Escaped image markup from WordPress or the local placeholder. ?>
+						<?php echo $about_image( 'product', 'Three Foxfire research vials beside branded packaging', 698, 'lazy' ); // Escaped image markup from WordPress or the homepage hero crop. ?>
 					</div>
 				</div>
 
-				<!-- Column 3 (Right): Team Image + Charcoal Brand Card -->
+				<!-- Column 3 (Right): Packaging detail + Charcoal Brand Card -->
 				<div class="ff-bento-col ff-bento-col--right">
-					<!-- Team Collaboration Image Card -->
+					<!-- Behind-the-scenes packaging detail -->
 					<div class="ff-bento-card ff-bento-card--image-landscape">
-						<?php echo $about_image( 'team', 'Development placeholder team collaboration photography', 600, 'eager' ); // Escaped image markup from WordPress or the local placeholder. ?>
+						<?php echo $about_image( 'team', 'Hands packing Foxfire vials into branded packaging', 600, 'lazy' ); // Escaped image markup from WordPress or the local fallback. ?>
 					</div>
 
 					<!-- Charcoal Brand Callout Card -->

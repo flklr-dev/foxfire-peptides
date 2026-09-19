@@ -1,7 +1,7 @@
 /**
  * Foxfire Peptides — Homepage Stylesheet (Chunk 1H)
  *
- * Follows DESIGN.md: white-forward layout, readable typography,
+ * Follows DESIGN.md: warm-white-led layout, readable typography,
  * high contrast, subtle trust accents, and >=44px touch targets.
  */
 
@@ -44,12 +44,12 @@
 }
 
 .ff-homepage .ff-home-coa-banner__cta {
-	background: var(--color-brand-green);
-	color: var(--color-on-brand) !important;
+	background: var(--color-brand-orange);
+	color: #ffffff !important;
 }
 
 .ff-homepage .ff-home-coa-banner__cta:hover {
-	background: #9be354;
+	background: var(--color-accent-primary-hover);
 }
 
 .ff-homepage .ff-home-coa-banner__badge {
@@ -67,6 +67,20 @@
 .ff-homepage > .ff-site-cta .ff-site-cta__button {
 	white-space: normal;
 	text-align: center;
+}
+
+.ff-homepage > .ff-site-cta {
+	border-color: var(--color-border);
+	background: var(--color-brand-neutral);
+	color: var(--color-brand-black);
+}
+
+.ff-homepage > .ff-site-cta .ff-site-cta__title {
+	color: var(--color-brand-black);
+}
+
+.ff-homepage > .ff-site-cta .ff-site-cta__description {
+	color: var(--color-text-muted);
 }
 
 /* Bright brand orange is an accent, not small text on a white surface. */
@@ -135,6 +149,7 @@
    ========================================================================== */
 
 .ff-home-hero {
+	background: #ffffff;
 	padding: var(--space-4) 0 var(--space-6);
 	margin-bottom: var(--space-6);
 }
@@ -148,14 +163,59 @@
 
 @media (min-width: 960px) {
 	.ff-home-hero {
-		padding: var(--space-6) 0 var(--space-7);
+		position: relative;
+		width: 100vw;
+		min-height: clamp(590px, 42vw, 640px);
+		padding: 0;
+		/* Cancel the desktop content wrapper's top padding so the hero sits
+		   directly beneath the header with no white seam. */
+		margin-top: calc(-1 * var(--space-6));
+		margin-left: calc(50% - 50vw);
+		overflow: hidden;
 	}
 
 	.ff-home-hero__inner {
-		display: grid;
-		grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-		gap: var(--space-6);
+		position: relative;
+		display: flex;
+		flex-direction: row;
 		align-items: center;
+		width: 100%;
+		min-height: inherit;
+		box-sizing: border-box;
+		padding: var(--space-5) 0 var(--space-5) max(
+			var(--space-4),
+			calc((100vw - var(--content-max-width)) / 2 + var(--space-4))
+		);
+	}
+
+	.ff-home-hero__content {
+		position: relative;
+		z-index: 2;
+		width: min(50vw, 40rem);
+		max-width: 40rem;
+	}
+
+	.ff-home-hero__title {
+		font-size: clamp(2.5rem, 3.25vw, 3.25rem);
+		line-height: 1.08;
+	}
+
+	.ff-home-hero__lead {
+		max-width: 32rem;
+		font-size: 1.125rem;
+	}
+
+	.ff-home-hero__actions {
+		flex-wrap: nowrap;
+		gap: 0.75rem;
+	}
+
+	.ff-home-hero__cta-primary,
+	.ff-home-hero__cta-secondary {
+		padding-right: 1.1rem;
+		padding-left: 1.1rem;
+		font-size: 1rem;
+		white-space: nowrap;
 	}
 }
 
@@ -193,6 +253,7 @@
 	color: var(--color-text-muted);
 	margin: 0 0 var(--space-5);
 	max-width: 38rem;
+	text-wrap: balance;
 }
 
 .ff-home-hero__actions {
@@ -228,7 +289,7 @@
 .ff-home-hero__cta-primary:hover {
 	background-color: var(--color-accent-primary-hover);
 	transform: translateY(-1px);
-	box-shadow: 0 6px 16px rgba(232, 90, 12, 0.25);
+	box-shadow: 0 6px 16px rgba(255, 88, 0, 0.25);
 }
 
 .ff-home-hero__cta-secondary {
@@ -296,25 +357,63 @@
 }
 
 .ff-home-hero__image-card {
+	position: relative;
 	background: transparent;
 	border: none;
 	border-radius: 0;
-	overflow: visible;
+	overflow: hidden;
 	box-shadow: none;
 	width: 100%;
-	max-width: 540px;
+	max-width: 720px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
+.ff-home-hero__image-card picture {
+	display: block;
+	width: 100%;
+}
+
 .ff-home-hero__image-card img {
 	width: 100%;
 	height: auto;
-	max-height: 480px;
-	object-fit: contain;
 	display: block;
-	filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.08));
+}
+
+@media (min-width: 960px) {
+	.ff-home-hero__media {
+		position: absolute;
+		z-index: 1;
+		inset: 0 0 0 auto;
+		width: 65%;
+		height: 100%;
+	}
+
+	.ff-home-hero__image-card {
+		height: 100%;
+		max-width: none;
+	}
+
+	.ff-home-hero__image-card::before {
+		position: absolute;
+		z-index: 2;
+		inset: 0 auto 0 0;
+		width: 34%;
+		background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.94) 30%, rgba(255, 255, 255, 0.58) 62%, rgba(255, 255, 255, 0) 100%);
+		content: "";
+		pointer-events: none;
+	}
+
+	.ff-home-hero__image-card picture {
+		height: 100%;
+	}
+
+	.ff-home-hero__image-card img {
+		height: 100%;
+		object-fit: cover;
+		object-position: right center;
+	}
 }
 
 /* ==========================================================================
@@ -322,7 +421,7 @@
    ========================================================================== */
 
 .ff-trust-band {
-	background-color: #ffffff;
+	background-color: var(--color-brand-warm-white);
 	border-top: 1px solid var(--color-border);
 	border-bottom: 1px solid var(--color-border);
 	border-left: none;
@@ -375,13 +474,18 @@
 }
 
 .ff-trust-band__icon {
-	color: var(--color-accent-primary);
-	flex-shrink: 0;
+	color: #28540e;
+	background: var(--color-brand-green-tint);
+	border: 1px solid color-mix(in srgb, var(--color-brand-green) 55%, transparent);
+	border-radius: 50%;
+	width: 2.75rem;
+	height: 2.75rem;
+	flex: 0 0 2.75rem;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	line-height: 0;
-	padding-top: 2px;
+	padding: 0;
 }
 
 .ff-trust-band__content {
@@ -482,8 +586,21 @@
    ========================================================================== */
 
 .ff-featured-section {
-	margin-bottom: var(--space-7);
+	position: relative;
+	isolation: isolate;
+	padding: var(--space-7) 0;
+	margin-bottom: 0;
 	width: 100%;
+}
+
+.ff-featured-section::before {
+	position: absolute;
+	z-index: -1;
+	inset: 0 auto 0 50%;
+	width: 100vw;
+	background: #ffffff;
+	transform: translateX(-50%);
+	content: "";
 }
 
 .ff-featured-section .woocommerce ul.products,
@@ -616,17 +733,27 @@ ul.products.ff-featured-grid li.product,
    ========================================================================== */
 
 .ff-home-coa-banner {
-	background: linear-gradient(135deg, #ffffff 0%, color-mix(in srgb, var(--color-brand-green) 6%, #ffffff) 100%);
-	border: 2px solid color-mix(in srgb, var(--color-brand-green) 35%, transparent);
-	border-radius: var(--radius-lg);
-	padding: var(--space-5);
-	margin-bottom: var(--space-7);
-	box-shadow: 0 6px 20px color-mix(in srgb, var(--color-brand-green) 8%, transparent);
+	width: 100vw;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+	background: var(--color-brand-green-tint);
+	border-block: 1px solid color-mix(in srgb, var(--color-brand-green) 55%, #dfe2dc);
+	padding: clamp(2.25rem, 4vw, 3.25rem) 0;
+	margin-bottom: 0;
+	box-sizing: border-box;
+}
+
+.ff-home-coa-banner__inner {
+	width: 100%;
+	max-width: var(--content-max-width);
+	margin: 0 auto;
+	padding: 0 var(--space-3);
+	box-sizing: border-box;
 }
 
 @media (min-width: 840px) {
-	.ff-home-coa-banner {
-		padding: var(--space-6);
+	.ff-home-coa-banner__inner {
+		padding: 0 var(--space-4);
 		display: grid;
 		grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
 		gap: var(--space-5);
@@ -642,7 +769,15 @@ ul.products.ff-featured-grid li.product,
 }
 
 .ff-home-coa-banner__icon {
-	color: var(--color-accent-secondary);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border: 1px solid var(--color-brand-green);
+	border-radius: 50%;
+	background: var(--color-brand-green);
+	color: var(--color-brand-black);
 }
 
 .ff-home-coa-banner__badge {
@@ -679,7 +814,7 @@ ul.products.ff-featured-grid li.product,
 	min-height: 48px;
 	padding: 0.75rem 1.5rem;
 	border-radius: var(--radius-md);
-	background-color: var(--color-accent-secondary);
+	background-color: var(--color-brand-orange);
 	color: #ffffff !important;
 	font-family: var(--font-heading);
 	font-size: var(--font-size-base);
@@ -689,7 +824,7 @@ ul.products.ff-featured-grid li.product,
 }
 
 .ff-home-coa-banner__cta:hover {
-	background-color: #156d3b;
+	background-color: var(--color-accent-primary-hover);
 	transform: translateY(-1px);
 }
 
@@ -749,6 +884,16 @@ ul.products.ff-featured-grid li.product,
 	letter-spacing: 0.1em;
 	margin-bottom: 0.625rem;
 	display: block;
+}
+
+.ff-home-standards__eyebrow::before {
+	display: inline-block;
+	width: 1.5rem;
+	height: 2px;
+	margin-right: 0.65rem;
+	background: var(--color-brand-green);
+	vertical-align: middle;
+	content: "";
 }
 
 .ff-home-standards__title {
@@ -844,6 +989,8 @@ ul.products.ff-featured-grid li.product,
    ========================================================================== */
 
 .ff-home-faq {
+	background: var(--color-brand-warm-white);
+	padding-top: clamp(2rem, 4vw, 3rem);
 	margin-bottom: var(--space-8);
 }
 
@@ -918,8 +1065,8 @@ ul.products.ff-featured-grid li.product,
 }
 
 .ff-home-faq__item[open] {
-	border-color: rgba(232, 90, 12, 0.4);
-	box-shadow: 0 4px 20px rgba(232, 90, 12, 0.06);
+	border-color: rgba(255, 88, 0, 0.4);
+	box-shadow: 0 4px 20px rgba(255, 88, 0, 0.06);
 }
 
 .ff-home-faq__question {
@@ -1005,8 +1152,8 @@ ul.products.ff-featured-grid li.product,
 	margin-left: calc(-50vw + 50%);
 	padding: clamp(3.5rem, 7vw, 5.5rem) var(--space-4);
 	box-sizing: border-box;
-	border-block: 1px solid var(--color-border);
-	background-color: #FFFFFF;
+	border-block: 1px solid color-mix(in srgb, var(--color-brand-green) 20%, var(--color-brand-black));
+	background-color: var(--color-brand-black);
 }
 
 .ff-home-long-road__inner {
@@ -1022,7 +1169,7 @@ ul.products.ff-featured-grid li.product,
 .ff-home-long-road__title {
 	max-width: 11ch;
 	margin: 0;
-	color: var(--color-brand-black);
+	color: #ffffff;
 	font-family: var(--font-heading);
 	font-size: clamp(2.4rem, 4.8vw, 4.5rem);
 	font-weight: 700;
@@ -1047,7 +1194,7 @@ ul.products.ff-featured-grid li.product,
 
 .ff-home-long-road__description {
 	margin: 0 0 1.75rem;
-	color: var(--color-text-muted);
+	color: rgba(255, 255, 255, 0.86);
 	font-size: clamp(1.0625rem, 1.7vw, 1.2rem);
 	line-height: 1.75;
 	text-wrap: pretty;
@@ -1074,15 +1221,15 @@ ul.products.ff-featured-grid li.product,
 }
 
 .ff-home-long-road__button:hover {
-	border-color: var(--color-brand-black);
-	background-color: var(--color-brand-black);
+	border-color: var(--color-accent-primary-hover);
+	background-color: var(--color-accent-primary-hover);
 	color: #FFFFFF !important;
 	text-decoration: none;
 	transform: translateY(-1px);
 }
 
 .ff-home-long-road__button:focus-visible {
-	outline: 2px solid var(--color-brand-black);
+	outline: 2px solid var(--color-brand-green);
 	outline-offset: 3px;
 	box-shadow: var(--focus-ring);
 }

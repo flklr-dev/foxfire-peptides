@@ -1,8 +1,7 @@
 /**
  * Foxfire Peptides — Design Tokens
  *
- * PLACEHOLDER VALUES: Hex colors below are interim approximations per DESIGN.md §3.
- * Replace with final brand assets when the client delivers logo/brand files.
+ * Client-approved Foxfire palette and accessible semantic roles.
  *
  * Font choice per DESIGN.md §4:
  * - Headings: DM Sans (geometric grotesque, modern/professional)
@@ -10,34 +9,37 @@
  */
 
 :root {
-	/* Client-approved September 13 palette. Page-by-page rollout. */
+	/* Foxfire brand palette. */
 	--color-brand-orange: #ff5800;
 	--color-brand-green: #aff769;
-	--color-brand-black: #15171a;
-	--color-on-brand: #15171a;
+	--color-brand-black: #151719;
+	--color-on-brand: #151719;
+	--color-brand-warm-white: #fafaf7;
+	--color-brand-green-tint: #f4fbea;
+	--color-brand-neutral: #f3f4f2;
 	/* --- Color: backgrounds & text --- */
-	--color-bg: #ffffff;
-	--color-bg-subtle: #f7f7f7;
-	--color-text: #1f1f1f;           /* charcoal-black — WCAG AA on white */
+	--color-bg: var(--color-brand-warm-white);
+	--color-bg-subtle: var(--color-brand-neutral);
+	--color-text: var(--color-brand-black);
 	--color-text-muted: #4a4a4a;
 	--color-text-inverse: #ffffff;
 
-	/* PLACEHOLDER: Fox Orange — darkened enough for WCAG AA white-on-orange text. */
-	--color-accent-primary: #c2410c;
-	--color-accent-primary-hover: #a83b08;
-	--color-accent-primary-active: #7f2d06;
+	/* Orange remains the primary action color. */
+	--color-accent-primary: var(--color-brand-orange);
+	--color-accent-primary-hover: #e94f00;
+	--color-accent-primary-active: #d74800;
 
-	/* PLACEHOLDER: Neon Green — trust badges / success (text-safe shade) */
-	--color-accent-secondary: #157a42;
-	--color-accent-secondary-bg: #e8f6ee;
+	/* Use dark green text on the lime trust surface for readability. */
+	--color-accent-secondary: #28540e;
+	--color-accent-secondary-bg: var(--color-brand-green);
 
 	/* Charcoal — structure, footer, strong sections */
-	--color-structure: #2b2b2b;
-	--color-structure-muted: #3d3d3d;
+	--color-structure: var(--color-brand-black);
+	--color-structure-muted: #424541;
 
-	--color-border: #e0e0e0;
-	--color-border-subtle: #eaeaea;
-	--color-border-strong: #c8c8c8;
+	--color-border: #dfe2dc;
+	--color-border-subtle: #e9ece6;
+	--color-border-strong: #bdc2b8;
 
 	/* Semantic */
 	--color-success: var(--color-accent-secondary);
@@ -92,7 +94,7 @@
 	--shadow-none: none;
 	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
 
-	--focus-ring: 0 0 0 3px rgba(194, 65, 12, 0.35);
+	--focus-ring: 0 0 0 3px rgba(255, 88, 0, 0.28);
 
 	--transition-fast: 150ms ease;
 }

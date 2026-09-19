@@ -216,7 +216,7 @@ function foxfire_operations_validate_registration_acknowledgements( WP_Error $er
 	if ( ! foxfire_operations_registration_acknowledgement_checked( 'age_research_agree' ) ) {
 		$errors->add(
 			'foxfire_registration_research_required',
-			__( 'Please confirm that you are at least 18 and acknowledge the laboratory research-use restriction.', 'foxfire-operations' )
+			__( 'Please confirm that you are at least 21 and acknowledge the laboratory research-use restriction.', 'foxfire-operations' )
 		);
 	}
 
@@ -236,7 +236,7 @@ function foxfire_operations_record_registration_acknowledgements( int $customer_
 	$accepted_gmt = gmdate( 'Y-m-d H:i:s' );
 	update_user_meta( $customer_id, '_foxfire_registration_terms_accepted_gmt', $accepted_gmt );
 	update_user_meta( $customer_id, '_foxfire_registration_research_acknowledged_gmt', $accepted_gmt );
-	update_user_meta( $customer_id, '_foxfire_registration_acknowledgement_version', '2026-09-15' );
+	update_user_meta( $customer_id, '_foxfire_registration_acknowledgement_version', '2026-09-16-21-plus' );
 
 	$user = get_userdata( $customer_id );
 	if ( $user instanceof WP_User ) {

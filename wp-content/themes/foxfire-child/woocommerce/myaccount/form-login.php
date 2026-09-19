@@ -152,7 +152,7 @@ $enable_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_regis
 						<label class="ff-checkbox-label">
 							<input class="woocommerce-form__input woocommerce-form__input-checkbox" name="age_research_agree" type="checkbox" id="age_research_agree" value="1" required aria-required="true" />
 							<span>
-								<?php esc_html_e( 'I confirm that I am 18 years of age or older and understand that products offered by Foxfire Peptides are intended for laboratory research and analytical purposes only and are not intended for human consumption or administration.', 'foxfire-child' ); ?>
+								<?php esc_html_e( 'I confirm that I am 21 years of age or older and understand that products offered by Foxfire Peptides are intended strictly for laboratory research and analytical purposes only and are not intended for human consumption or medical use.', 'foxfire-child' ); ?>
 								<span class="required" aria-hidden="true">*</span>
 							</span>
 						</label>

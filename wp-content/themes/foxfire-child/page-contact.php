@@ -30,6 +30,33 @@ $contact_hours             = foxfire_get_managed_content( 'contact_hours', __( '
 $contact_trust_note        = foxfire_get_managed_content( 'contact_trust_note', __( 'Every inquiry is received and handled directly by the Foxfire team.', 'foxfire-child' ) );
 $contact_form_title        = foxfire_get_managed_content( 'contact_form_title', __( 'Send Us a Message', 'foxfire-child' ) );
 $contact_form_description  = foxfire_get_managed_content( 'contact_form_description', __( 'Fill in the details below and we will get back to you as soon as possible.', 'foxfire-child' ) );
+$contact_founder_id        = absint( foxfire_get_managed_content( 'contact_founder_image', '0' ) );
+$contact_founder_alt       = foxfire_get_managed_content( 'contact_founder_image_alt', __( 'Foxfire founder beside the Foxfire Peptides logo', 'foxfire-child' ) );
+$contact_founder_markup    = '';
+
+if ( $contact_founder_id && wp_attachment_is_image( $contact_founder_id ) ) {
+	$contact_founder_markup = wp_get_attachment_image(
+		$contact_founder_id,
+		'large',
+		false,
+		array(
+			'class'    => 'ff-contact-founder-card__image',
+			'alt'      => $contact_founder_alt,
+			'loading'  => 'eager',
+			'decoding' => 'async',
+			'sizes'    => '(max-width: 992px) min(calc(100vw - 40px), 520px), 360px',
+		)
+	);
+}
+
+if ( '' === $contact_founder_markup ) {
+	$contact_founder_markup = sprintf(
+		'<img src="%1$s" srcset="%2$s 480w, %1$s 800w" sizes="(max-width: 992px) min(calc(100vw - 40px), 520px), 360px" width="800" height="667" class="ff-contact-founder-card__image" alt="%3$s" loading="eager" decoding="async" />',
+		esc_url( get_stylesheet_directory_uri() . '/assets/images/contact-founder.webp' ),
+		esc_url( get_stylesheet_directory_uri() . '/assets/images/contact-founder-480.webp' ),
+		esc_attr( $contact_founder_alt )
+	);
+}
 
 // ── Form State ───────────────────────────────────────────────────────────────
 $form_status  = '';
@@ -112,10 +139,12 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['foxfire_contact_sub
 			} else {
 
 				// 6. Build notification email.
-				$admin_email  = get_option( 'admin_email' );
+				// Deliver to the managed Contact email. Use the same mailbox as From so
+				// Hostinger SMTP authentication matches Easy WP SMTP Force From Email.
+				// Reply-To must remain the customer address so staff replies go there.
 				$recipient_email = is_email( $support_email ) ? $support_email : 'info@foxfirepeptides.com';
-				$site_name    = get_bloginfo( 'name' );
-				$subject_text = $allowed_subjects[ $subject_key ];
+				$site_name       = get_bloginfo( 'name' );
+				$subject_text    = $allowed_subjects[ $subject_key ];
 
 				// Prevent email header injection: strip CR/LF from name & email.
 				$safe_name  = str_replace( array( "\r", "\n" ), '', $name );
@@ -126,6 +155,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['foxfire_contact_sub
 				$email_body  = sprintf( "New message via Foxfire Peptides contact form\n\n" );
 				$email_body .= sprintf( "Name:    %s\n", $safe_name );
 				$email_body .= sprintf( "Email:   %s\n", $safe_email );
+				$email_body .= sprintf( "Reply to this email to respond to the customer.\n" );
 				if ( ! empty( $order_number ) ) {
 					$email_body .= sprintf( "Order #: %s\n", $order_number );
 				}
@@ -135,12 +165,26 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['foxfire_contact_sub
 				$email_body .= "---\nSent from the Foxfire Peptides contact form.";
 
 				$headers = array(
-					'From: ' . $site_name . ' <' . ( $admin_email ?: 'noreply@foxfirepeptides.com' ) . '>',
+					'From: ' . $site_name . ' <' . $recipient_email . '>',
 					'Reply-To: ' . $safe_name . ' <' . $safe_email . '>',
 					'Content-Type: text/plain; charset=UTF-8',
 				);
 
+				$contact_phpmailer = static function ( $phpmailer ) use ( $recipient_email, $site_name, $safe_email, $safe_name ): void {
+					if ( ! $phpmailer instanceof PHPMailer\PHPMailer\PHPMailer ) {
+						return;
+					}
+					try {
+						$phpmailer->setFrom( $recipient_email, $site_name, false );
+						$phpmailer->clearReplyTos();
+						$phpmailer->addReplyTo( $safe_email, $safe_name );
+					} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+						// Leave headers already passed to wp_mail if PHPMailer rejects values.
+					}
+				};
+				add_action( 'phpmailer_init', $contact_phpmailer, 9999 );
 				$mail_sent = wp_mail( $recipient_email, $email_subject, $email_body, $headers );
+				remove_action( 'phpmailer_init', $contact_phpmailer, 9999 );
 
 				// 7. Increment rate-limit counter (1-hour TTL).
 				set_transient( $ip_key, $submit_count + 1, HOUR_IN_SECONDS );
@@ -174,11 +218,17 @@ get_header();
 
 		<!-- Page Header -->
 		<header class="ff-contact-header">
-			<span class="ff-contact-header__label"><?php echo esc_html( $contact_eyebrow ); ?></span>
-			<h1 class="ff-contact-header__title"><?php echo esc_html( $contact_title ); ?></h1>
-			<p class="ff-contact-header__lead">
-				<?php echo esc_html( $contact_intro ); ?>
-			</p>
+			<div class="ff-contact-header__copy">
+				<span class="ff-contact-header__label"><?php echo esc_html( $contact_eyebrow ); ?></span>
+				<h1 class="ff-contact-header__title"><?php echo esc_html( $contact_title ); ?></h1>
+				<p class="ff-contact-header__lead">
+					<?php echo wp_kses( str_replace( ' We are here to help.', '<br>We are here to help.', esc_html( $contact_intro ) ), array( 'br' => array() ) ); ?>
+				</p>
+			</div>
+
+			<figure class="ff-contact-founder-card">
+				<?php echo $contact_founder_markup; // Escaped image markup from WordPress or the local fallback. ?>
+			</figure>
 		</header>
 
 		<!-- Main 2-Column Layout: Left Info Container + Right Form Card -->

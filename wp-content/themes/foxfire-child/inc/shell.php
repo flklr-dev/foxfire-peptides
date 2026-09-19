@@ -24,6 +24,145 @@ function foxfire_shell_setup(): void {
 add_action( 'after_setup_theme', 'foxfire_shell_setup', 30 );
 
 /**
+ * Theme path for a bundled brand asset when the file exists.
+ */
+function foxfire_get_brand_asset_path( string $filename ): string {
+	return FOXFIRE_CHILD_DIR . '/assets/images/brand/' . ltrim( $filename, '/' );
+}
+
+/**
+ * Public URL for a bundled brand asset when the file exists.
+ */
+function foxfire_get_brand_asset_url( string $filename ): string {
+	$path = foxfire_get_brand_asset_path( $filename );
+
+	if ( ! file_exists( $path ) ) {
+		return '';
+	}
+
+	return FOXFIRE_CHILD_URI . '/assets/images/brand/' . ltrim( $filename, '/' );
+}
+
+/**
+ * Whether a site logo is available from WordPress or bundled theme assets.
+ */
+function foxfire_has_site_logo(): bool {
+	if ( has_custom_logo() ) {
+		return true;
+	}
+
+	return '' !== foxfire_get_brand_asset_url( 'foxfire-header-logo.webp' )
+		|| '' !== foxfire_get_brand_asset_url( 'foxfire-header-logo-transparent.png' )
+		|| '' !== foxfire_get_brand_asset_url( 'foxfire-logo-400.webp' )
+		|| '' !== foxfire_get_brand_asset_url( 'foxfire-logo.png' );
+}
+
+/**
+ * Render the site logo.
+ */
+function foxfire_render_site_logo(): void {
+	$logo_url    = foxfire_get_brand_asset_url( 'foxfire-header-logo.webp' );
+	$logo_width  = 1200;
+	$logo_height = 386;
+
+	if ( '' === $logo_url ) {
+		$logo_url    = foxfire_get_brand_asset_url( 'foxfire-header-logo-transparent.png' );
+		$logo_width  = 2043;
+		$logo_height = 658;
+	}
+
+	if ( '' !== $logo_url ) {
+		?>
+		<a class="ff-site-header__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+			<img
+				src="<?php echo esc_url( $logo_url ); ?>"
+				alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
+				width="<?php echo esc_attr( (string) $logo_width ); ?>"
+				height="<?php echo esc_attr( (string) $logo_height ); ?>"
+				decoding="async"
+			/>
+		</a>
+		<?php
+		return;
+	}
+
+	if ( has_custom_logo() ) {
+		?>
+		<div class="ff-site-header__logo">
+			<?php the_custom_logo(); ?>
+		</div>
+		<?php
+		return;
+	}
+
+	$logo_url = foxfire_get_brand_asset_url( 'foxfire-logo-400.webp' );
+	if ( '' === $logo_url ) {
+		$logo_url = foxfire_get_brand_asset_url( 'foxfire-logo.png' );
+	}
+
+	if ( '' === $logo_url ) {
+		?>
+		<a class="ff-site-header__logo-text" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+			<span class="ff-site-header__logo-mark" aria-hidden="true">FF</span>
+			<span class="ff-site-header__logo-name"><?php bloginfo( 'name' ); ?></span>
+		</a>
+		<?php
+		return;
+	}
+
+	?>
+	<a class="ff-site-header__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+		<img
+			src="<?php echo esc_url( $logo_url ); ?>"
+			alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
+			width="400"
+			height="400"
+			decoding="async"
+		/>
+	</a>
+	<?php
+}
+
+/**
+ * Output favicon links from bundled assets when WordPress has no site icon yet.
+ */
+function foxfire_shell_brand_favicons(): void {
+	if ( has_site_icon() ) {
+		return;
+	}
+
+	$favicon_url = foxfire_get_brand_asset_url( 'favicon.ico' );
+	$icon_32_url = foxfire_get_brand_asset_url( 'favicon-32x32.png' );
+	$apple_url   = foxfire_get_brand_asset_url( 'apple-touch-icon.png' );
+
+	if ( '' === $favicon_url && '' === $icon_32_url && '' === $apple_url ) {
+		return;
+	}
+
+	if ( '' !== $favicon_url ) {
+		printf(
+			'<link rel="icon" href="%s" sizes="any" />' . "\n",
+			esc_url( $favicon_url )
+		);
+	}
+
+	if ( '' !== $icon_32_url ) {
+		printf(
+			'<link rel="icon" href="%s" type="image/png" sizes="32x32" />' . "\n",
+			esc_url( $icon_32_url )
+		);
+	}
+
+	if ( '' !== $apple_url ) {
+		printf(
+			'<link rel="apple-touch-icon" href="%s" />' . "\n",
+			esc_url( $apple_url )
+		);
+	}
+}
+add_action( 'wp_head', 'foxfire_shell_brand_favicons', 99 );
+
+/**
  * Replace Storefront default header/footer with Foxfire shell.
  */
 function foxfire_shell_replace_storefront_masthead(): void {

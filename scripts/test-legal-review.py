@@ -59,6 +59,21 @@ for key, (attachment, slug, count, email) in POLICIES.items():
     if key == 'shipping': source = source.replace('support@foxfirepeptides.com', 'info@foxfirepeptides.com')
     if key == 'privacy': source = source.split('Developer Note — Not for Publication')[0]
     if key == 'terms': source = source.split('CHECKOUT ACKNOWLEDGEMENT')[0]
+    # The client's September 16 age revision supersedes only the previous 18+
+    # sentences in the supplied Terms and Privacy source files.
+    if key == 'terms':
+        source = source.replace(
+            'You must be at least 18 years of age',
+            'You must be at least 21 years of age',
+        )
+    if key == 'privacy':
+        source = source.replace(
+            'individuals 18 years of age or older',
+            'individuals 21 years of age or older',
+        ).replace('individuals under 18', 'individuals under 21').replace(
+            'individual under 18',
+            'individual under 21',
+        )
     headings = list(re.finditer(r'^([0-9]+)\. (.+)$', source, flags=re.M))
     parser = PolicyHTML()
     with urlopen('http://localhost:8080/' + slug + '/', timeout=30) as response:
@@ -75,7 +90,12 @@ for key, (attachment, slug, count, email) in POLICIES.items():
                 expected = expected.split('Replace with:', 1)[1]
                 expected = expected.split('Please ')[0].split('For now, please ')[0]
         check(normalized(' '.join(actual['heading'])) == normalized(heading.group(0)), key + ' section ' + str(i + 1) + ' heading')
-        check(normalized(''.join(actual['body'])) == normalized(expected), key + ' section ' + str(i + 1) + ' exact client wording')
+        actual_body = normalized(''.join(actual['body']))
+        expected_body = normalized(expected)
+        if actual_body != expected_body:
+            print('EXPECTED:', expected_body)
+            print('ACTUAL:  ', actual_body)
+        check(actual_body == expected_body, key + ' section ' + str(i + 1) + ' exact client wording')
     check(parser.toc == ['#' + section['id'] for section in parser.sections], key + ' table of contents matches every section')
     check(len(set(section['id'] for section in parser.sections)) == count, key + ' anchors are unique')
     check(set(parser.emails) == {'mailto:' + email + '@foxfirepeptides.com'}, key + ' correct client email and clickable mailto')

@@ -15,8 +15,12 @@ get_header();
 $shop_url    = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() : home_url( '/shop/' );
 $testing_url = function_exists( 'foxfire_get_page_url' ) ? foxfire_get_page_url( 'testing-coa', '/testing-coa/' ) : home_url( '/testing-coa/' );
 $about_url   = function_exists( 'foxfire_get_page_url' ) ? foxfire_get_page_url( 'about', '/about/' ) : home_url( '/about/' );
-$hero_img    = FOXFIRE_CHILD_URI . '/assets/images/hero-peptides.webp';
-$hero_img_sm = FOXFIRE_CHILD_URI . '/assets/images/hero-peptides-480.webp';
+$hero_file   = FOXFIRE_CHILD_DIR . '/assets/images/home-hero.webp';
+$hero_ver    = '?v=' . ( file_exists( $hero_file ) ? filemtime( $hero_file ) : 1 );
+$hero_img    = FOXFIRE_CHILD_URI . '/assets/images/home-hero.webp' . $hero_ver;
+$hero_img_md = FOXFIRE_CHILD_URI . '/assets/images/home-hero-1200.webp' . $hero_ver;
+$hero_img_sm = FOXFIRE_CHILD_URI . '/assets/images/home-hero-mobile-480.webp' . $hero_ver;
+$hero_img_mo = FOXFIRE_CHILD_URI . '/assets/images/home-hero-mobile-720.webp' . $hero_ver;
 $featured_q  = function_exists( 'foxfire_get_homepage_products' ) ? foxfire_get_homepage_products( 4 ) : null;
 $managed_faqs = foxfire_get_homepage_faqs();
 ?>
@@ -64,19 +68,26 @@ $managed_faqs = foxfire_get_homepage_faqs();
 				<p class="ff-home-hero__research-note"><?php esc_html_e( 'For laboratory research use only. Not for human consumption.', 'foxfire-child' ); ?></p>
 			</div>
 
-			<div class="ff-home-hero__media ff-reveal ff-reveal--delay-1">
+			<div class="ff-home-hero__media">
 				<div class="ff-home-hero__image-card">
-					<img
-						src="<?php echo esc_url( $hero_img ); ?>"
-						srcset="<?php echo esc_attr( $hero_img_sm . ' 480w, ' . $hero_img . ' 851w' ); ?>"
-						sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1200px) 45vw, 520px"
-						alt="<?php esc_attr_e( 'Foxfire Peptides laboratory research vials with Certificate of Analysis testing', 'foxfire-child' ); ?>"
-						width="851"
-						height="733"
-						loading="eager"
-						fetchpriority="high"
-						decoding="async"
-					/>
+					<picture>
+						<source
+							media="(max-width: 959px)"
+							srcset="<?php echo esc_attr( $hero_img_sm . ' 480w, ' . $hero_img_mo . ' 720w' ); ?>"
+							sizes="calc(100vw - 48px)"
+						/>
+						<img
+							src="<?php echo esc_url( $hero_img ); ?>"
+							srcset="<?php echo esc_attr( $hero_img_md . ' 1200w, ' . $hero_img . ' 1672w' ); ?>"
+							sizes="(max-width: 1200px) 48vw, 600px"
+							alt="<?php esc_attr_e( 'Foxfire Peptides branded research vials and product box', 'foxfire-child' ); ?>"
+							width="1672"
+							height="941"
+							loading="eager"
+							fetchpriority="high"
+							decoding="async"
+						/>
+					</picture>
 				</div>
 			</div>
 		</div>
@@ -222,29 +233,31 @@ $managed_faqs = foxfire_get_homepage_faqs();
 
 	<!-- 5. Testing & COA Callout Banner -->
 	<section class="ff-home-coa-banner ff-reveal" aria-labelledby="ff-coa-banner-heading">
-		<div>
-			<div class="ff-home-coa-banner__header">
-				<span class="ff-home-coa-banner__icon" aria-hidden="true">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-						<path d="m9 12 2 2 4-4"/>
-					</svg>
-				</span>
-				<span class="ff-home-coa-banner__badge"><?php esc_html_e( 'Testing & COAs', 'foxfire-child' ); ?></span>
+		<div class="ff-home-coa-banner__inner">
+			<div>
+				<div class="ff-home-coa-banner__header">
+					<span class="ff-home-coa-banner__icon" aria-hidden="true">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+							<path d="m9 12 2 2 4-4"/>
+						</svg>
+					</span>
+					<span class="ff-home-coa-banner__badge"><?php esc_html_e( 'Testing & COAs', 'foxfire-child' ); ?></span>
+				</div>
+				<h2 id="ff-coa-banner-heading" class="ff-home-coa-banner__title">
+					<?php echo esc_html( foxfire_get_managed_content( 'home_coa_title', __( "Know What's Behind Every Vial.", 'foxfire-child' ) ) ); ?>
+				</h2>
+				<p class="ff-home-coa-banner__desc">
+					<?php echo esc_html( foxfire_get_managed_content( 'home_coa_description', __( 'Access available third-party testing and batch-specific documentation for Foxfire research compounds. Search by product, batch, or lot number to find the available COA.', 'foxfire-child' ) ) ); ?>
+				</p>
 			</div>
-			<h2 id="ff-coa-banner-heading" class="ff-home-coa-banner__title">
-				<?php echo esc_html( foxfire_get_managed_content( 'home_coa_title', __( "Know What's Behind Every Vial.", 'foxfire-child' ) ) ); ?>
-			</h2>
-			<p class="ff-home-coa-banner__desc">
-				<?php echo esc_html( foxfire_get_managed_content( 'home_coa_description', __( 'Access available third-party testing and batch-specific documentation for Foxfire research compounds. Search by product, batch, or lot number to find the available COA.', 'foxfire-child' ) ) ); ?>
-			</p>
-		</div>
 
-		<div class="ff-home-coa-banner__actions">
-			<a href="<?php echo esc_url( $testing_url ); ?>" class="ff-home-coa-banner__cta">
-				<span><?php esc_html_e( 'VIEW TESTING & COAs', 'foxfire-child' ); ?></span>
-				<span aria-hidden="true">→</span>
-			</a>
+			<div class="ff-home-coa-banner__actions">
+				<a href="<?php echo esc_url( $testing_url ); ?>" class="ff-home-coa-banner__cta">
+					<span><?php esc_html_e( 'VIEW TESTING & COAs', 'foxfire-child' ); ?></span>
+					<span aria-hidden="true">→</span>
+				</a>
+			</div>
 		</div>
 	</section>
 

@@ -45,8 +45,8 @@
 				}
 			});
 
-			// Terms & Conditions checkbox state enables / disables Place Order button
-			$(document).on('change', '#terms, input[name="terms"]', function () {
+			// Terms and 21+ research acknowledgement state controls Place Order
+			$(document).on('change', '#terms, #foxfire_age_research_acknowledgement', function () {
 				$('.woocommerce-terms-and-conditions-wrapper').removeClass('has-error');
 				self.updatePlaceOrderStatus();
 			});
@@ -55,18 +55,10 @@
 			$(document).on('click', '#place_order.is-disabled, .ff-place-order-btn.is-disabled', function (e) {
 				e.preventDefault();
 				e.stopPropagation();
-				var $terms = $('#terms');
 				if ($(this).attr('data-review-mode') === '1') {
 					return false;
 				}
-				if ($terms.length && !$terms.is(':checked')) {
-					$terms.focus();
-					var $wrap = $terms.closest('.woocommerce-terms-and-conditions-wrapper');
-					$wrap.removeClass('has-error');
-					setTimeout(function () {
-						$wrap.addClass('has-error');
-					}, 10);
-				}
+				self.focusMissingAcknowledgement();
 				return false;
 			});
 
@@ -86,14 +78,7 @@
 					return false;
 				}
 
-				var $terms = $('#terms');
-				if ($terms.length && !$terms.is(':checked')) {
-					$terms.focus();
-					var $wrap = $terms.closest('.woocommerce-terms-and-conditions-wrapper');
-					$wrap.removeClass('has-error');
-					setTimeout(function () {
-						$wrap.addClass('has-error');
-					}, 10);
+				if (self.focusMissingAcknowledgement()) {
 					return false;
 				}
 
@@ -238,7 +223,7 @@
 		},
 
 		updatePlaceOrderStatus: function () {
-			var $terms = $('#terms');
+			var $acknowledgements = $('#terms, #foxfire_age_research_acknowledgement');
 			var $btn = $('#place_order');
 
 			if (!$btn.length) {
@@ -249,14 +234,30 @@
 				return;
 			}
 
-			// If terms checkbox is present on page
-			if ($terms.length) {
-				if ($terms.is(':checked')) {
+			// If acknowledgements are present, every one must be checked.
+			if ($acknowledgements.length) {
+				if ($acknowledgements.filter(':checked').length === $acknowledgements.length) {
 					$btn.prop('disabled', false).removeClass('is-disabled');
 				} else {
 					$btn.prop('disabled', true).addClass('is-disabled');
 				}
 			}
+		},
+
+		focusMissingAcknowledgement: function () {
+			var $missing = $('#terms, #foxfire_age_research_acknowledgement').filter(':not(:checked)').first();
+
+			if (!$missing.length) {
+				return false;
+			}
+
+			$missing.focus();
+			var $wrap = $missing.closest('.woocommerce-terms-and-conditions-wrapper');
+			$wrap.removeClass('has-error');
+			setTimeout(function () {
+				$wrap.addClass('has-error');
+			}, 10);
+			return true;
 		},
 
 		openAddressModal: function () {

@@ -120,12 +120,82 @@ function foxfire_render_shop_header(): void {
 
 	$catalog_description = __( 'Browse Foxfire research compounds with available batch, stock, and testing documentation. Review individual product details and available documentation before ordering.', 'foxfire-child' );
 	$subtitle = is_product_category() ? term_description() : $catalog_description;
+	$catalog_image_markup = '';
+	if ( is_product_category() ) {
+		$category = get_queried_object();
+		if ( $category instanceof WP_Term ) {
+			$image_id = absint( get_term_meta( $category->term_id, 'thumbnail_id', true ) );
+			$image_alt = sprintf( __( 'Foxfire %s research compounds and branded packaging', 'foxfire-child' ), $title );
+			if ( $image_id && wp_attachment_is_image( $image_id ) ) {
+				$catalog_image_markup = wp_get_attachment_image(
+					$image_id,
+					'large',
+					false,
+					array(
+						'class'    => 'ff-shop-header__image',
+						'alt'      => $image_alt,
+						'loading'  => 'eager',
+						'decoding' => 'async',
+						'sizes'    => '(max-width: 767px) calc(100vw - 32px), (max-width: 1200px) calc(100vw - 80px), 1104px',
+					)
+				);
+			}
+
+			$category_banners = array(
+				'blends'                => 'category-blends',
+				'metabolic-research'    => 'category-metabolic-research',
+				'regenerative-research' => 'category-regenerative-research',
+				'specialty-research'    => 'category-specialty-research',
+			);
+			if ( '' === $catalog_image_markup && isset( $category_banners[ $category->slug ] ) ) {
+				$asset_base = get_stylesheet_directory_uri() . '/assets/images/';
+				$banner = $category_banners[ $category->slug ];
+				$catalog_image_markup = sprintf(
+					'<img src="%1$s" srcset="%2$s 720w, %1$s 1400w" sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1200px) calc(100vw - 80px), 1104px" width="1400" height="788" class="ff-shop-header__image" alt="%3$s" loading="eager" decoding="async" />',
+					esc_url( $asset_base . $banner . '.webp' ),
+					esc_url( $asset_base . $banner . '-720.webp' ),
+					esc_attr( $image_alt )
+				);
+			}
+		}
+	}
+	if ( is_shop() ) {
+		$image_id  = absint( foxfire_get_managed_content( 'catalog_brand_image', '0' ) );
+		$image_alt = foxfire_get_managed_content( 'catalog_brand_image_alt', __( 'Foxfire research compounds and branded packaging displayed in the product inventory', 'foxfire-child' ) );
+
+		if ( $image_id && wp_attachment_is_image( $image_id ) ) {
+			$catalog_image_markup = wp_get_attachment_image(
+				$image_id,
+				'large',
+				false,
+				array(
+					'class'    => 'ff-shop-header__image',
+					'alt'      => $image_alt,
+					'loading'  => 'eager',
+					'decoding' => 'async',
+					'sizes'    => '(max-width: 767px) calc(100vw - 32px), (max-width: 1200px) calc(100vw - 80px), 1104px',
+				)
+			);
+		}
+
+		if ( '' === $catalog_image_markup ) {
+			$asset_base = get_stylesheet_directory_uri() . '/assets/images/';
+			$catalog_image_markup = sprintf(
+				'<img src="%1$s" srcset="%2$s 720w, %1$s 1400w" sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1200px) calc(100vw - 80px), 1104px" width="1400" height="788" class="ff-shop-header__image" alt="%3$s" loading="eager" decoding="async" />',
+				esc_url( $asset_base . 'research-compounds.webp' ),
+				esc_url( $asset_base . 'research-compounds-720.webp' ),
+				esc_attr( $image_alt )
+			);
+		}
+	}
 	// Internal taxonomy notes are not customer-facing category descriptions.
 	if ( false !== stripos( $subtitle, '[PLACEHOLDER]' ) ) {
-		$subtitle = $catalog_description;
+		$subtitle = is_product_category() && 'blends' === get_queried_object()->slug
+			? __( 'Specialized research compound blends for laboratory use.', 'foxfire-child' )
+			: $catalog_description;
 	}
 	?>
-	<header class="ff-shop-header">
+	<header class="ff-shop-header <?php echo $catalog_image_markup ? 'ff-shop-header--with-media' : ''; ?><?php echo is_product_category() ? ' ff-shop-header--category' : ''; ?>">
 		<div class="ff-shop-header__content">
 			<h1 class="ff-shop-header__title"><?php echo esc_html( $title ); ?></h1>
 			<?php if ( ! empty( $subtitle ) ) : ?>
@@ -134,6 +204,11 @@ function foxfire_render_shop_header(): void {
 				</div>
 			<?php endif; ?>
 		</div>
+		<?php if ( $catalog_image_markup ) : ?>
+			<figure class="ff-shop-header__media">
+				<?php echo $catalog_image_markup; // Escaped Media Library image or local fallback. ?>
+			</figure>
+		<?php endif; ?>
 	</header>
 	<?php
 	foxfire_render_category_pills();

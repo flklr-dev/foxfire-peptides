@@ -15,23 +15,78 @@ get_header();
 
 $coa_items = function_exists( 'foxfire_get_coa_catalog_items' ) ? foxfire_get_coa_catalog_items() : array();
 $shop_url  = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() : home_url( '/shop/' );
+
+/**
+ * Render a managed Testing & COAs image or the reviewed local brand asset.
+ * WordPress Media Library replacements retain responsive image support.
+ */
+$testing_image = static function ( string $slot, string $alt, string $class, string $sizes, string $loading = 'lazy' ): string {
+	$attachment_id = absint( foxfire_get_managed_content( 'testing_' . $slot . '_image', '0' ) );
+	$alt           = foxfire_get_managed_content( 'testing_' . $slot . '_image_alt', $alt );
+
+	if ( $attachment_id && wp_attachment_is_image( $attachment_id ) ) {
+		$image = wp_get_attachment_image(
+			$attachment_id,
+			'large',
+			false,
+			array(
+				'class'    => $class,
+				'alt'      => $alt,
+				'loading'  => $loading,
+				'decoding' => 'async',
+				'sizes'    => $sizes,
+			)
+		);
+
+		if ( $image ) {
+			return $image;
+		}
+	}
+
+	$assets = array(
+		'primary' => array( 'full' => 'testing-coa-primary.webp', 'small' => 'testing-coa-primary-720.webp', 'width' => 1200, 'height' => 900 ),
+		'secondary' => array( 'full' => 'testing-coa-secondary.webp', 'small' => 'testing-coa-secondary-720.webp', 'width' => 1400, 'height' => 788 ),
+	);
+	$asset = $assets[ $slot ];
+	$base  = get_stylesheet_directory_uri() . '/assets/images/';
+
+	return sprintf(
+		'<img src="%1$s" srcset="%2$s 720w, %1$s %3$dw" sizes="%4$s" width="%3$d" height="%5$d" class="%6$s" alt="%7$s" loading="%8$s" decoding="async" />',
+		esc_url( $base . $asset['full'] ),
+		esc_url( $base . $asset['small'] ),
+		absint( $asset['width'] ),
+		esc_attr( $sizes ),
+		absint( $asset['height'] ),
+		esc_attr( $class ),
+		esc_attr( $alt ),
+		esc_attr( $loading )
+	);
+};
 ?>
 
 <div class="ff-testing-page">
 	<!-- 1. Hero Header -->
 	<header class="ff-testing-hero">
 		<div class="ff-testing-hero__inner">
-			<p class="ff-testing-hero__eyebrow">
-				<?php esc_html_e( 'Quality & Batch Verification', 'foxfire-child' ); ?>
-			</p>
+			<div class="ff-testing-hero__intro">
+				<div class="ff-testing-hero__copy">
+					<p class="ff-testing-hero__eyebrow">
+						<?php esc_html_e( 'Quality & Batch Verification', 'foxfire-child' ); ?>
+					</p>
 
-			<h1 class="ff-testing-hero__title">
-				<?php esc_html_e( 'Testing & COA Documentation', 'foxfire-child' ); ?>
-			</h1>
+					<h1 class="ff-testing-hero__title">
+						<?php esc_html_e( 'Testing & COA Documentation', 'foxfire-child' ); ?>
+					</h1>
 
-			<p class="ff-testing-hero__lead">
-				<?php esc_html_e( 'Access available third-party testing and batch-specific documentation for Foxfire research compounds.', 'foxfire-child' ); ?>
-			</p>
+					<p class="ff-testing-hero__lead">
+						<?php esc_html_e( 'Access available third-party testing and batch-specific documentation for Foxfire research compounds.', 'foxfire-child' ); ?>
+					</p>
+				</div>
+
+				<figure class="ff-testing-hero__media">
+					<?php echo $testing_image( 'primary', 'Foxfire research compounds beside blurred testing documentation', 'ff-testing-hero__image', '(max-width: 767px) calc(100vw - 40px), 46vw', 'eager' ); // Escaped image markup from WordPress or the local fallback. ?>
+				</figure>
+			</div>
 
 			<!-- Quality Approach Pillars -->
 			<div class="ff-testing-benchmarks">
@@ -181,7 +236,19 @@ $shop_url  = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() 
 		<?php endif; ?>
 	</section>
 
-	<!-- 3. Research Compliance Notice -->
+	<!-- 3. Supporting documentation image, separated from the page introduction -->
+	<section class="ff-testing-documentation" aria-labelledby="ff-testing-documentation-title">
+		<div class="ff-testing-documentation__media">
+			<?php echo $testing_image( 'secondary', 'Foxfire packaging, research vials, and a deliberately blurred Certificate of Analysis', 'ff-testing-documentation__image', '(max-width: 767px) calc(100vw - 40px), 56vw' ); // Escaped image markup from WordPress or the local fallback. ?>
+		</div>
+		<div class="ff-testing-documentation__content">
+			<p class="ff-testing-documentation__eyebrow"><?php esc_html_e( 'Documentation & Transparency', 'foxfire-child' ); ?></p>
+			<h2 id="ff-testing-documentation-title" class="ff-testing-documentation__title"><?php esc_html_e( 'Match Documentation to the Batch.', 'foxfire-child' ); ?></h2>
+			<p class="ff-testing-documentation__text"><?php esc_html_e( 'Use the searchable directory above to review available documentation by product and batch or lot number. When a COA is available, select View COA for that listing.', 'foxfire-child' ); ?></p>
+		</div>
+	</section>
+
+	<!-- 4. Research Compliance Notice -->
 	<section class="ff-compliance-notice" aria-label="<?php esc_attr_e( 'Regulatory Notice', 'foxfire-child' ); ?>">
 		<div class="ff-compliance-notice__inner">
 			<div class="ff-compliance-notice__icon" aria-hidden="true">

@@ -144,33 +144,33 @@ function foxfire_operations_public_content_schema(): array {
 			'description' => __( 'Text in the near-black About collage card.', 'foxfire-operations' ),
 		),
 		'about_image_portrait' => array(
-			'section' => 'about', 'label' => __( 'Portrait collage image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
+			'section' => 'about', 'label' => __( 'Founder working image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
 			'default' => '',
-			'description' => __( 'Choose/upload a replacement in Media, then Save site content. Remove selection to restore the development placeholder. This is not an approved founder portrait.', 'foxfire-operations' ),
+			'description' => __( 'Choose or upload the main founder/working image, then save site content. Keep the founder’s face, hands, vial, and packaging visible in the selected crop.', 'foxfire-operations' ),
 		),
 		'about_image_portrait_alt' => array(
-			'section' => 'about', 'label' => __( 'Portrait image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
-			'default' => __( 'Development placeholder portrait in a bright studio workspace', 'foxfire-operations' ),
+			'section' => 'about', 'label' => __( 'Founder image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
+			'default' => __( 'Foxfire founder preparing a branded vial and package', 'foxfire-operations' ),
 			'description' => __( 'Describe the selected image for visitors using assistive technology.', 'foxfire-operations' ),
 		),
 		'about_image_product' => array(
 			'section' => 'about', 'label' => __( 'Product collage image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
 			'default' => '',
-			'description' => __( 'Choose/upload a replacement in Media, then Save site content. Remove selection to restore the development placeholder. This is not an approved founder portrait.', 'foxfire-operations' ),
+			'description' => __( 'Choose or upload the supporting Foxfire product image, then save site content.', 'foxfire-operations' ),
 		),
 		'about_image_product_alt' => array(
 			'section' => 'about', 'label' => __( 'Product image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
-			'default' => __( 'Development placeholder research vial photography', 'foxfire-operations' ),
+			'default' => __( 'Three Foxfire research vials beside branded packaging', 'foxfire-operations' ),
 			'description' => __( 'Describe the selected image for visitors using assistive technology.', 'foxfire-operations' ),
 		),
 		'about_image_team' => array(
-			'section' => 'about', 'label' => __( 'Team collage image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
+			'section' => 'about', 'label' => __( 'Packaging process image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
 			'default' => '',
-			'description' => __( 'Choose/upload a replacement in Media, then Save site content. Remove selection to restore the development placeholder. This is not an approved founder portrait.', 'foxfire-operations' ),
+			'description' => __( 'Choose or upload the close-up behind-the-scenes fulfillment or packaging image, then save site content.', 'foxfire-operations' ),
 		),
 		'about_image_team_alt' => array(
-			'section' => 'about', 'label' => __( 'Team image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
-			'default' => __( 'Development placeholder team collaboration photography', 'foxfire-operations' ),
+			'section' => 'about', 'label' => __( 'Packaging image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
+			'default' => __( 'Hands packing Foxfire vials into branded packaging', 'foxfire-operations' ),
 			'description' => __( 'Describe the selected image for visitors using assistive technology.', 'foxfire-operations' ),
 		),
 		'about_hero_title' => array(
@@ -353,6 +353,36 @@ function foxfire_operations_public_content_schema(): array {
 			'default' => __( 'VIEW TESTING & COAs', 'foxfire-operations' ),
 			'description' => __( 'The destination remains the Testing/COA page.', 'foxfire-operations' ),
 		),
+		'testing_primary_image' => array(
+			'section' => 'testing', 'label' => __( 'Main Testing & COAs image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
+			'default' => '',
+			'description' => __( 'Choose or upload the main product and testing-documentation image shown beside the page introduction.', 'foxfire-operations' ),
+		),
+		'testing_primary_image_alt' => array(
+			'section' => 'testing', 'label' => __( 'Main image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
+			'default' => __( 'Foxfire research compounds beside blurred testing documentation', 'foxfire-operations' ),
+			'description' => __( 'Describe the selected image for visitors using assistive technology.', 'foxfire-operations' ),
+		),
+		'testing_secondary_image' => array(
+			'section' => 'testing', 'label' => __( 'Secondary testing image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
+			'default' => '',
+			'description' => __( 'Choose or upload the horizontal image shown below the searchable batch directory.', 'foxfire-operations' ),
+		),
+		'testing_secondary_image_alt' => array(
+			'section' => 'testing', 'label' => __( 'Secondary image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
+			'default' => __( 'Foxfire packaging, research vials, and a deliberately blurred Certificate of Analysis', 'foxfire-operations' ),
+			'description' => __( 'Describe the selected image for visitors using assistive technology.', 'foxfire-operations' ),
+		),
+		'catalog_brand_image' => array(
+			'section' => 'catalog', 'label' => __( 'Research Compounds banner image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
+			'default' => '',
+			'description' => __( 'Choose or upload the general Foxfire product and inventory image shown in the main Shop introduction. Product cards continue using each product’s own WooCommerce image.', 'foxfire-operations' ),
+		),
+		'catalog_brand_image_alt' => array(
+			'section' => 'catalog', 'label' => __( 'Catalog image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
+			'default' => __( 'Foxfire research compounds and branded packaging displayed in the product inventory', 'foxfire-operations' ),
+			'description' => __( 'Describe the selected image for visitors using assistive technology.', 'foxfire-operations' ),
+		),
 		'contact_eyebrow' => array(
 			'section' => 'contact', 'label' => __( 'Contact page eyebrow', 'foxfire-operations' ), 'type' => 'text', 'max' => 80,
 			'default' => __( 'Customer Care & Inquiries', 'foxfire-operations' ),
@@ -367,6 +397,16 @@ function foxfire_operations_public_content_schema(): array {
 			'section' => 'contact', 'label' => __( 'Contact page introduction', 'foxfire-operations' ), 'type' => 'textarea', 'max' => 300,
 			'default' => __( 'Have questions about products, batch documentation, or your order? We are here to help.', 'foxfire-operations' ),
 			'description' => __( 'Introduction shown above the contact information and form.', 'foxfire-operations' ),
+		),
+		'contact_founder_image' => array(
+			'section' => 'contact', 'label' => __( 'Contact founder image', 'foxfire-operations' ), 'type' => 'image', 'max' => 20,
+			'default' => '',
+			'description' => __( 'Choose or upload the approachable founder portrait displayed beside the contact form, then save site content.', 'foxfire-operations' ),
+		),
+		'contact_founder_image_alt' => array(
+			'section' => 'contact', 'label' => __( 'Contact founder image description', 'foxfire-operations' ), 'type' => 'text', 'max' => 160,
+			'default' => __( 'Foxfire founder beside the Foxfire Peptides logo', 'foxfire-operations' ),
+			'description' => __( 'Describe the image for visitors using assistive technology.', 'foxfire-operations' ),
 		),
 		'contact_direct_title' => array(
 			'section' => 'contact', 'label' => __( 'Direct-contact heading', 'foxfire-operations' ), 'type' => 'text', 'max' => 100,
@@ -765,6 +805,8 @@ function foxfire_operations_render_content_page(): void {
 	$sections = array(
 		'seo'      => __( 'Search & social previews', 'foxfire-operations' ),
 		'homepage' => __( 'Homepage', 'foxfire-operations' ),
+		'catalog'   => __( 'Research Compounds catalog', 'foxfire-operations' ),
+		'testing'  => __( 'Testing & COAs', 'foxfire-operations' ),
 		'about'    => __( 'About', 'foxfire-operations' ),
 		'about_archive' => __( 'Archived About content — not displayed in the reviewed layout', 'foxfire-operations' ),
 		'contact'  => __( 'Contact', 'foxfire-operations' ),
