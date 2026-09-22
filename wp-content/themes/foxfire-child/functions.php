@@ -19,6 +19,7 @@ require_once FOXFIRE_CHILD_DIR . '/inc/product-fields.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/shop.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/pdp.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/homepage.php';
+require_once FOXFIRE_CHILD_DIR . '/inc/newsletter.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/testing-coa.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/cart.php';
 require_once FOXFIRE_CHILD_DIR . '/inc/checkout.php';

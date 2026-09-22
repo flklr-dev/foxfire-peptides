@@ -35,16 +35,17 @@ function foxfire_render_category_pills(): void {
 	$product_counts = wp_count_posts( 'product' );
 	$total_count    = isset( $product_counts->publish ) ? (int) $product_counts->publish : 0;
 	?>
-	<nav class="ff-category-pills" aria-label="<?php esc_attr_e( 'Product categories', 'foxfire-child' ); ?>">
+	<nav class="ff-category-pills" aria-labelledby="ff-category-pills-heading">
+		<div class="ff-category-pills__intro">
+			<h2 class="ff-category-pills__title" id="ff-category-pills-heading"><?php esc_html_e( 'Explore by Category', 'foxfire-child' ); ?></h2>
+		</div>
 		<div class="ff-category-pills__wrapper">
-			<div class="ff-category-pills__scroll" role="tablist">
+			<div class="ff-category-pills__scroll">
 				<a
 					href="<?php echo esc_url( $shop_url ); ?>"
 					class="ff-category-pills__item <?php echo $is_all_active ? 'ff-category-pills__item--active' : ''; ?>"
 					<?php echo $is_all_active ? 'aria-current="page"' : ''; ?>
 					aria-label="<?php echo esc_attr( sprintf( __( 'Filter by All Compounds, %d products available', 'foxfire-child' ), $total_count ) ); ?>"
-					role="tab"
-					aria-selected="<?php echo $is_all_active ? 'true' : 'false'; ?>"
 				>
 					<span class="ff-category-pills__label"><?php esc_html_e( 'All Compounds', 'foxfire-child' ); ?></span>
 					<span class="ff-category-pills__count"><?php echo esc_html( (string) $total_count ); ?></span>
@@ -64,8 +65,6 @@ function foxfire_render_category_pills(): void {
 						class="ff-category-pills__item <?php echo $is_active ? 'ff-category-pills__item--active' : ''; ?>"
 						<?php echo $is_active ? 'aria-current="page"' : ''; ?>
 						aria-label="<?php echo esc_attr( sprintf( __( 'Filter by %s, %d products available', 'foxfire-child' ), $clean_name, $cat_count ) ); ?>"
-						role="tab"
-						aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
 					>
 						<span class="ff-category-pills__label"><?php echo esc_html( $clean_name ); ?></span>
 						<span class="ff-category-pills__count"><?php echo esc_html( (string) $cat_count ); ?></span>

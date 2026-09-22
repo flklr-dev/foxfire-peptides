@@ -21,14 +21,6 @@ defined( 'ABSPATH' ) || exit;
 			<span class="ff-cart-summary-value"><?php wc_cart_totals_subtotal_html(); ?></span>
 		</div>
 
-		<!-- Coupons -->
-		<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
-			<div class="ff-cart-summary-row cart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
-				<span class="ff-cart-summary-label"><?php wc_cart_totals_coupon_label( $coupon ); ?></span>
-				<span class="ff-cart-summary-value ff-cart-summary-value--discount"><?php wc_cart_totals_coupon_html( $coupon ); ?></span>
-			</div>
-		<?php endforeach; ?>
-
 		<!-- Automatically selected shipping amount -->
 		<?php if ( WC()->cart->needs_shipping() ) : ?>
 			<div class="ff-cart-summary-row ff-cart-shipping-row">
@@ -77,6 +69,14 @@ defined( 'ABSPATH' ) || exit;
 			}
 		}
 		?>
+
+		<!-- Coupons -->
+		<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
+			<div class="ff-cart-summary-row cart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
+				<span class="ff-cart-summary-label"><?php wc_cart_totals_coupon_label( $coupon ); ?></span>
+				<span class="ff-cart-summary-value ff-cart-summary-value--discount"><?php wc_cart_totals_coupon_html( $coupon ); ?></span>
+			</div>
+		<?php endforeach; ?>
 
 		<?php do_action( 'woocommerce_cart_totals_before_order_total' ); ?>
 

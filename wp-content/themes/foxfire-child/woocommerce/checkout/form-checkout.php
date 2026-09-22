@@ -65,6 +65,8 @@ $formatted_address = implode( ', ', $address_parts );
 		<h1 class="ff-checkout-header__title"><?php esc_html_e( 'Checkout', 'foxfire-child' ); ?></h1>
 	</header>
 
+	<?php woocommerce_checkout_coupon_form(); ?>
+
 	<form name="checkout" method="post" class="checkout woocommerce-checkout ff-checkout-form" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
 
 		<div class="ff-checkout-flow">
@@ -201,11 +203,10 @@ $formatted_address = implode( ', ', $address_parts );
 							</label>
 						</p>
 					</div>
-
 					<?php if ( ! is_user_logged_in() && $checkout->is_registration_enabled() ) : ?>
 						<div class="ff-checkout-account-fields">
 							<?php if ( ! $checkout->is_registration_required() ) : ?>
-								<p class="form-row form-row-wide create-account ff-checkbox-row">
+								<p class="form-row form-row-wide create-account ff-checkbox-row ff-default-address-row">
 									<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
 										<input class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" id="createaccount" <?php checked( ( true === $checkout->get_value( 'createaccount' ) || ( true === apply_filters( 'woocommerce_create_account_default_checked', false ) ) ), true ); ?> type="checkbox" name="createaccount" value="1" />
 										<span><?php esc_html_e( 'Save my information for faster checkout', 'foxfire-child' ); ?></span>

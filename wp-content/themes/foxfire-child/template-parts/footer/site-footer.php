@@ -26,20 +26,18 @@ $year        = (string) gmdate( 'Y' );
 $footer_tagline = foxfire_get_managed_content( 'footer_tagline', __( 'Research compounds with transparent testing, clear documentation, and straightforward ordering.', 'foxfire-child' ) );
 $research_notice = foxfire_get_managed_content( 'footer_research_notice', __( 'For laboratory research use only. Not for human consumption.', 'foxfire-child' ) );
 $contact_email = foxfire_get_managed_content( 'support_email', 'info@foxfirepeptides.com' );
-$footer_logo_url = foxfire_get_brand_asset_url( 'foxfire-logo-400.webp' );
+$footer_logo_url = foxfire_get_brand_asset_url( 'foxfire-footer-logo.webp' );
 if ( '' === $footer_logo_url ) {
-	$footer_logo_url = foxfire_get_brand_asset_url( 'foxfire-logo.png' );
+	$footer_logo_url = foxfire_get_brand_asset_url( 'foxfire-logo-400.webp' );
 }
 ?>
 
 <div class="ff-site-footer">
 	<div class="ff-site-footer__inner">
 		<div class="ff-site-footer__brand">
-			<?php if ( has_custom_logo() ) : ?>
-				<div class="ff-site-footer__logo"><?php echo get_custom_logo(); // WordPress-generated logo link. ?></div>
-			<?php elseif ( '' !== $footer_logo_url ) : ?>
+			<?php if ( '' !== $footer_logo_url ) : ?>
 				<a class="ff-site-footer__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php esc_attr_e( 'Foxfire Peptides home', 'foxfire-child' ); ?>">
-					<img src="<?php echo esc_url( $footer_logo_url ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="140" height="140" loading="lazy" decoding="async" />
+					<img src="<?php echo esc_url( $footer_logo_url ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="620" height="230" loading="lazy" decoding="async" />
 				</a>
 			<?php else : ?>
 				<p class="ff-site-footer__name"><?php bloginfo( 'name' ); ?></p>
@@ -50,6 +48,11 @@ if ( '' === $footer_logo_url ) {
 			<ul class="ff-site-footer__links">
 				<li><a href="mailto:<?php echo esc_attr( $contact_email ); ?>"><?php echo esc_html( $contact_email ); ?></a></li>
 			</ul>
+			<div id="newsletter-footer" class="ff-site-footer__newsletter" aria-labelledby="ff-footer-newsletter-heading">
+				<h2 id="ff-footer-newsletter-heading"><?php esc_html_e( 'Stay informed', 'foxfire-child' ); ?></h2>
+				<p><?php esc_html_e( 'Foxfire updates, testing news, and research compound announcements.', 'foxfire-child' ); ?></p>
+				<?php get_template_part( 'template-parts/newsletter/form', null, array( 'source' => 'footer' ) ); ?>
+			</div>
 		</div>
 
 		<nav class="ff-site-footer__nav" aria-labelledby="ff-footer-shop-heading">

@@ -153,7 +153,6 @@ function foxfire_render_quantity_tiers(): void {
 				</button>
 			<?php endforeach; ?>
 		</div>
-		<p class="ff-tier-selection-total" aria-live="polite"><?php esc_html_e( 'Selected total:', 'foxfire-child' ); ?> <strong class="ff-tier-selected-price"></strong></p>
 		<p class="ff-quantity-stock-note" role="status" hidden><?php esc_html_e( 'The available quantity options exceed current stock. Please check back or contact us.', 'foxfire-child' ); ?></p>
 	</div>
 	<?php

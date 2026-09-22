@@ -17,6 +17,7 @@
 	--color-brand-warm-white: #fafaf7;
 	--color-brand-green-tint: #f4fbea;
 	--color-brand-neutral: #f3f4f2;
+	--color-brand-neutral-soft: #f3f4f2;
 	/* --- Color: backgrounds & text --- */
 	--color-bg: var(--color-brand-warm-white);
 	--color-bg-subtle: var(--color-brand-neutral);
@@ -90,6 +91,7 @@
 
 	--size-touch-min: 44px;          /* DESIGN.md §13 / §14 */
 	--input-height: 3rem;            /* 48px — generous field height */
+	--header-height: 72px;           /* Sticky site header height on desktop */
 
 	--shadow-none: none;
 	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);

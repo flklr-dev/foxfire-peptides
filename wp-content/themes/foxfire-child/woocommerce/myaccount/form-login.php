@@ -158,6 +158,13 @@ $enable_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_regis
 						</label>
 					</div>
 
+					<div class="ff-form-group ff-form-group--terms ff-form-group--marketing">
+						<label class="ff-checkbox-label" for="foxfire_registration_marketing_optin">
+							<input class="woocommerce-form__input woocommerce-form__input-checkbox" name="foxfire_marketing_optin" type="checkbox" id="foxfire_registration_marketing_optin" value="1" />
+							<span><?php echo esc_html( foxfire_marketing_consent_text() ); ?></span>
+						</label>
+					</div>
+
 					<div class="ff-form-submit-wrap">
 						<?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
 						<button type="submit" class="ff-btn ff-btn--primary ff-btn--full woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Create Account', 'foxfire-child' ); ?>">

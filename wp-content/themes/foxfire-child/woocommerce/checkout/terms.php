@@ -23,5 +23,11 @@ if ( ! $terms_url ) $terms_url = home_url( '/terms-and-conditions/' );
 			<span><?php esc_html_e( 'I confirm that I am 21 years of age or older and acknowledge that all products are sold strictly for laboratory research and analytical purposes only and are not intended for human consumption or medical use.', 'foxfire-child' ); ?></span><span class="required" aria-hidden="true">*</span>
 		</label>
 	</p>
+	<p class="form-row ff-checkout-acknowledgement ff-checkout-marketing-optin">
+		<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox" for="foxfire_marketing_optin">
+			<input type="checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" name="foxfire_marketing_optin" id="foxfire_marketing_optin" value="1" />
+			<span><?php echo esc_html( foxfire_marketing_consent_text() ); ?></span>
+		</label>
+	</p>
 	<input type="hidden" name="terms-field" value="1" />
 </div>

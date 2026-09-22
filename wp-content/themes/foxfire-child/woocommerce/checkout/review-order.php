@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 
-<div class="ff-checkout-review-wrap">
+<div class="ff-checkout-review-wrap woocommerce-checkout-review-order-table">
 
 	<!-- Products Ordered Header -->
 	<div class="ff-checkout-review-header">
@@ -72,14 +72,6 @@ defined( 'ABSPATH' ) || exit;
 			<span class="ff-checkout-row__value"><?php wc_cart_totals_subtotal_html(); ?></span>
 		</div>
 
-		<!-- Coupons -->
-		<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
-			<div class="ff-checkout-row cart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
-				<span class="ff-checkout-row__label"><?php wc_cart_totals_coupon_label( $coupon ); ?></span>
-				<span class="ff-checkout-row__value ff-checkout-row__value--discount"><?php wc_cart_totals_coupon_html( $coupon ); ?></span>
-			</div>
-		<?php endforeach; ?>
-
 		<!-- Automatically selected shipping amount -->
 		<?php if ( WC()->cart->needs_shipping() ) : ?>
 			<?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
@@ -116,6 +108,14 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 			<?php endif; ?>
 		<?php endif; ?>
+
+		<!-- Coupons -->
+		<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
+			<div class="ff-checkout-row cart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
+				<span class="ff-checkout-row__label"><?php wc_cart_totals_coupon_label( $coupon ); ?></span>
+				<span class="ff-checkout-row__value ff-checkout-row__value--discount"><?php wc_cart_totals_coupon_html( $coupon ); ?></span>
+			</div>
+		<?php endforeach; ?>
 
 		<?php do_action( 'woocommerce_review_order_before_order_total' ); ?>
 

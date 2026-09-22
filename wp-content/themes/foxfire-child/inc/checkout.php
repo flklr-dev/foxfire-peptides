@@ -548,3 +548,12 @@ add_action( 'wp_enqueue_scripts', 'foxfire_disable_checkout_select2', 100 );
 
 // Terms and conditions must be unchecked by default
 add_filter( 'woocommerce_terms_is_checked_default', '__return_false', 999 );
+
+/**
+ * Ensure coupon codes are always capitalized in order totals and review breakdown.
+ */
+add_filter( 'woocommerce_cart_totals_coupon_label', function ( $label, $coupon ) {
+	$code = is_a( $coupon, 'WC_Coupon' ) ? $coupon->get_code() : (string) $coupon;
+	/* translators: %s: uppercase coupon code */
+	return sprintf( esc_html__( 'Coupon: %s', 'foxfire-child' ), esc_html( strtoupper( $code ) ) );
+}, 10, 2 );

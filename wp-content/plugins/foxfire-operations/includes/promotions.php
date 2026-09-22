@@ -1,11 +1,103 @@
 <?php
 /**
- * Native WooCommerce coupon workflow guidance.
+ * Native WooCommerce coupon workflow and Foxfire account restriction.
  *
  * @package Foxfire_Operations
  */
 
 defined( 'ABSPATH' ) || exit;
+
+/** Whether this coupon requires a signed-in Foxfire customer. */
+function foxfire_operations_coupon_requires_login( WC_Coupon $coupon ): bool {
+	return $coupon->get_id() > 0 && 'yes' === get_post_meta( $coupon->get_id(), '_foxfire_requires_login', true );
+}
+
+/** Add the opt-in restriction to the native coupon editor. */
+function foxfire_operations_coupon_login_option( int $coupon_id, WC_Coupon $coupon ): void {
+	unset( $coupon_id );
+
+	woocommerce_wp_checkbox(
+		array(
+			'id'          => '_foxfire_requires_login',
+			'label'       => __( 'Requires Foxfire login', 'foxfire-operations' ),
+			'description' => __( 'Only signed-in Foxfire customers can use this code. For one use per account, also set Usage limit per user to 1.', 'foxfire-operations' ),
+			'desc_tip'    => false,
+			'value'       => foxfire_operations_coupon_requires_login( $coupon ) ? 'yes' : 'no',
+		)
+	);
+}
+add_action( 'woocommerce_coupon_options', 'foxfire_operations_coupon_login_option', 10, 2 );
+
+/** Save only the checkbox from WooCommerce's nonce- and capability-checked coupon editor. */
+function foxfire_operations_save_coupon_login_option( int $coupon_id, WC_Coupon $coupon ): void {
+	unset( $coupon );
+
+	if ( ! current_user_can( 'edit_post', $coupon_id ) ) {
+		return;
+	}
+
+	$requires_login = isset( $_POST['_foxfire_requires_login'] ) && 'yes' === wc_clean( wp_unslash( $_POST['_foxfire_requires_login'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	update_post_meta( $coupon_id, '_foxfire_requires_login', $requires_login ? 'yes' : 'no' );
+}
+add_action( 'woocommerce_coupon_options_save', 'foxfire_operations_save_coupon_login_option', 10, 2 );
+
+/** Error with a direct link to the Foxfire account sign-in page. */
+function foxfire_operations_coupon_login_message(): string {
+	return sprintf(
+		/* translators: %s: link to Foxfire account sign-in */
+		__( 'This promo code requires a Foxfire account. %s to use it.', 'foxfire-operations' ),
+		'<a href="' . esc_url( wc_get_page_permalink( 'myaccount' ) ) . '">' . esc_html__( 'Log in', 'foxfire-operations' ) . '</a>'
+	);
+}
+
+/** WooCommerce calls this for cart, checkout, and direct coupon requests. */
+function foxfire_operations_validate_coupon_login( bool $valid, WC_Coupon $coupon ): bool {
+	return $valid && ( ! foxfire_operations_coupon_requires_login( $coupon ) || is_user_logged_in() );
+}
+add_filter( 'woocommerce_coupon_is_valid', 'foxfire_operations_validate_coupon_login', 10, 2 );
+
+/** Replace WooCommerce's generic filtered-coupon error only for this restriction. */
+function foxfire_operations_coupon_login_error( string $message, int $error_code, $coupon ): string {
+	if ( WC_Coupon::E_WC_COUPON_INVALID_FILTERED === $error_code && $coupon instanceof WC_Coupon && foxfire_operations_coupon_requires_login( $coupon ) && ! is_user_logged_in() ) {
+		return foxfire_operations_coupon_login_message();
+	}
+
+	return $message;
+}
+add_filter( 'woocommerce_coupon_error', 'foxfire_operations_coupon_login_error', 10, 3 );
+
+/** Find an applied restricted code without changing the cart. */
+function foxfire_operations_guest_applied_login_coupon(): bool {
+	if ( is_user_logged_in() || ! WC()->cart ) {
+		return false;
+	}
+
+	foreach ( WC()->cart->get_applied_coupons() as $code ) {
+		if ( foxfire_operations_coupon_requires_login( new WC_Coupon( $code ) ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/** Block a stale signed-in cart if the customer logged out before submitting. */
+function foxfire_operations_validate_checkout_coupon_login(): void {
+	if ( foxfire_operations_guest_applied_login_coupon() ) {
+		wc_add_notice( foxfire_operations_coupon_login_message(), 'error' );
+	}
+}
+add_action( 'woocommerce_checkout_process', 'foxfire_operations_validate_checkout_coupon_login', 1 );
+
+/** Final classic-checkout guard before WooCommerce creates a customer or order. */
+function foxfire_operations_validate_checkout_coupon_login_final( $data, WP_Error $errors ): void {
+	unset( $data );
+
+	if ( foxfire_operations_guest_applied_login_coupon() ) {
+		$errors->add( 'foxfire_coupon_login_required', foxfire_operations_coupon_login_message() );
+	}
+}
+add_action( 'woocommerce_after_checkout_validation', 'foxfire_operations_validate_checkout_coupon_login_final', 2, 2 );
 
 /**
  * Add a read-only promotion review panel to the native coupon editor.
@@ -53,20 +145,21 @@ function foxfire_operations_render_coupon_review_metabox( WP_Post $post ): void 
 		return;
 	}
 
-	$discount_type = $coupon->get_discount_type();
-	$amount        = (float) $coupon->get_amount();
-	$amount_label  = 'percent' === $discount_type
+	$discount_type  = $coupon->get_discount_type();
+	$amount         = (float) $coupon->get_amount();
+	$amount_label   = 'percent' === $discount_type
 		? wc_format_decimal( $amount, 2 ) . '%'
 		: wp_strip_all_tags( wc_price( $amount ) );
-	$expiry        = $coupon->get_date_expires();
-	$usage_limit   = (int) $coupon->get_usage_limit();
-	$per_user      = (int) $coupon->get_usage_limit_per_user();
-	$restricted    = ! empty( $coupon->get_product_ids() )
+	$expiry         = $coupon->get_date_expires();
+	$usage_limit    = (int) $coupon->get_usage_limit();
+	$per_user       = (int) $coupon->get_usage_limit_per_user();
+	$login_required = foxfire_operations_coupon_requires_login( $coupon );
+	$restricted     = ! empty( $coupon->get_product_ids() )
 		|| ! empty( $coupon->get_excluded_product_ids() )
 		|| ! empty( $coupon->get_product_categories() )
 		|| ! empty( $coupon->get_excluded_product_categories() )
-		|| '' !== (string) $coupon->get_minimum_amount()
-		|| '' !== (string) $coupon->get_maximum_amount()
+		|| (float) $coupon->get_minimum_amount() > 0
+		|| (float) $coupon->get_maximum_amount() > 0
 		|| ! empty( $coupon->get_email_restrictions() );
 
 	$review_items = array(
@@ -94,6 +187,11 @@ function foxfire_operations_render_coupon_review_metabox( WP_Post $post ): void 
 			'label'  => __( 'Per customer', 'foxfire-operations' ),
 			'value'  => $per_user > 0 ? (string) $per_user : __( 'Unlimited — confirm intentionally', 'foxfire-operations' ),
 			'status' => $per_user > 0 ? 'pass' : 'review',
+		),
+		array(
+			'label'  => __( 'Foxfire login', 'foxfire-operations' ),
+			'value'  => $login_required ? __( 'Required', 'foxfire-operations' ) : __( 'Not required', 'foxfire-operations' ),
+			'status' => 'pass',
 		),
 		array(
 			'label'  => __( 'Sale stacking', 'foxfire-operations' ),

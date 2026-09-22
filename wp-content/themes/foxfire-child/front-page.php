@@ -15,6 +15,7 @@ get_header();
 $shop_url    = function_exists( 'foxfire_get_shop_url' ) ? foxfire_get_shop_url() : home_url( '/shop/' );
 $testing_url = function_exists( 'foxfire_get_page_url' ) ? foxfire_get_page_url( 'testing-coa', '/testing-coa/' ) : home_url( '/testing-coa/' );
 $about_url   = function_exists( 'foxfire_get_page_url' ) ? foxfire_get_page_url( 'about', '/about/' ) : home_url( '/about/' );
+$faq_url     = function_exists( 'foxfire_get_page_url' ) ? foxfire_get_page_url( 'faq', '/faq/' ) : home_url( '/faq/' );
 $hero_file   = FOXFIRE_CHILD_DIR . '/assets/images/home-hero.webp';
 $hero_ver    = '?v=' . ( file_exists( $hero_file ) ? filemtime( $hero_file ) : 1 );
 $hero_img    = FOXFIRE_CHILD_URI . '/assets/images/home-hero.webp' . $hero_ver;
@@ -74,7 +75,7 @@ $managed_faqs = foxfire_get_homepage_faqs();
 						<source
 							media="(max-width: 959px)"
 							srcset="<?php echo esc_attr( $hero_img_sm . ' 480w, ' . $hero_img_mo . ' 720w' ); ?>"
-							sizes="calc(100vw - 48px)"
+							sizes="100vw"
 						/>
 						<img
 							src="<?php echo esc_url( $hero_img ); ?>"
@@ -93,7 +94,8 @@ $managed_faqs = foxfire_get_homepage_faqs();
 		</div>
 	</section>
 
-	<!-- 2. Trust Value Band -->
+	<?php /*
+	<!-- 2. Trust Value Band (Temporarily removed for visual review) -->
 	<section class="ff-trust-band ff-reveal" aria-label="<?php esc_attr_e( 'Trust and Quality Commitments', 'foxfire-child' ); ?>">
 		<div class="ff-trust-band__grid">
 			<div class="ff-trust-band__col ff-reveal ff-reveal--delay-1">
@@ -151,43 +153,46 @@ $managed_faqs = foxfire_get_homepage_faqs();
 			</div>
 		</div>
 	</section>
+	*/ ?>
 
 	<!-- 3. Quality & Verification Approach -->
-	<section class="ff-home-standards" aria-labelledby="ff-standards-heading">
+	<section class="ff-home-standards ff-home-standards--logo-watermark" aria-labelledby="ff-standards-heading">
 		<div class="ff-home-standards__inner">
-			<div class="ff-home-standards__header ff-reveal">
-				<span class="ff-home-standards__eyebrow"><?php esc_html_e( 'Quality Approach', 'foxfire-child' ); ?></span>
-				<h2 id="ff-standards-heading" class="ff-home-standards__title">
-					<?php esc_html_e( 'More Than a Storefront.', 'foxfire-child' ); ?>
-				</h2>
-				<p class="ff-home-standards__description">
-					<?php esc_html_e( 'Foxfire was built around a simple idea: make research products straightforward, make testing easy to find, and put a real person behind the company.', 'foxfire-child' ); ?>
-				</p>
-			</div>
-
-			<div class="ff-standards-grid">
-				<div class="ff-standard-card ff-reveal ff-reveal--delay-1">
-					<span class="ff-standard-card__step" aria-hidden="true">1</span>
-					<h3 class="ff-standard-card__title"><?php esc_html_e( 'Testing Information', 'foxfire-child' ); ?></h3>
-					<p class="ff-standard-card__text">
-						<?php esc_html_e( 'Review available third-party testing and batch documentation for Foxfire research compounds.', 'foxfire-child' ); ?>
+			<div class="ff-home-standards__content">
+				<div class="ff-home-standards__header ff-reveal">
+					<span class="ff-home-standards__eyebrow"><?php esc_html_e( 'Quality Approach', 'foxfire-child' ); ?></span>
+					<h2 id="ff-standards-heading" class="ff-home-standards__title">
+						<?php esc_html_e( 'More Than a Storefront.', 'foxfire-child' ); ?>
+					</h2>
+					<p class="ff-home-standards__description">
+						<?php esc_html_e( 'Foxfire was built around a simple idea: make research products straightforward, make testing easy to find, and put a real person behind the company.', 'foxfire-child' ); ?>
 					</p>
 				</div>
 
-				<div class="ff-standard-card ff-reveal ff-reveal--delay-2">
-					<span class="ff-standard-card__step" aria-hidden="true">2</span>
-					<h3 class="ff-standard-card__title"><?php esc_html_e( 'Batch Identification', 'foxfire-child' ); ?></h3>
-					<p class="ff-standard-card__text">
-						<?php esc_html_e( 'Clearly marked batch numbers make it easy to match each product with its available testing documentation.', 'foxfire-child' ); ?>
-					</p>
-				</div>
+				<div class="ff-standards-grid">
+					<div class="ff-standard-card ff-reveal ff-reveal--delay-1">
+						<span class="ff-standard-card__step" aria-hidden="true">1</span>
+						<h3 class="ff-standard-card__title"><?php esc_html_e( 'Testing Information', 'foxfire-child' ); ?></h3>
+						<p class="ff-standard-card__text">
+							<?php esc_html_e( 'Review available third-party testing and batch documentation for Foxfire research compounds.', 'foxfire-child' ); ?>
+						</p>
+					</div>
 
-				<div class="ff-standard-card ff-reveal ff-reveal--delay-3">
-					<span class="ff-standard-card__step" aria-hidden="true">3</span>
-					<h3 class="ff-standard-card__title"><?php esc_html_e( 'Straightforward Ordering', 'foxfire-child' ); ?></h3>
-					<p class="ff-standard-card__text">
-						<?php esc_html_e( 'Choose available quantities directly from the product page with clear pricing and no unnecessary complexity.', 'foxfire-child' ); ?>
-					</p>
+					<div class="ff-standard-card ff-reveal ff-reveal--delay-2">
+						<span class="ff-standard-card__step" aria-hidden="true">2</span>
+						<h3 class="ff-standard-card__title"><?php esc_html_e( 'Batch Identification', 'foxfire-child' ); ?></h3>
+						<p class="ff-standard-card__text">
+							<?php esc_html_e( 'Clearly marked batch numbers make it easy to match each product with its available testing documentation.', 'foxfire-child' ); ?>
+						</p>
+					</div>
+
+					<div class="ff-standard-card ff-reveal ff-reveal--delay-3">
+						<span class="ff-standard-card__step" aria-hidden="true">3</span>
+						<h3 class="ff-standard-card__title"><?php esc_html_e( 'Straightforward Ordering', 'foxfire-child' ); ?></h3>
+						<p class="ff-standard-card__text">
+							<?php esc_html_e( 'Choose available quantities directly from the product page with clear pricing and no unnecessary complexity.', 'foxfire-child' ); ?>
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -232,9 +237,23 @@ $managed_faqs = foxfire_get_homepage_faqs();
 	</section>
 
 	<!-- 5. Testing & COA Callout Banner -->
-	<section class="ff-home-coa-banner ff-reveal" aria-labelledby="ff-coa-banner-heading">
+	<section id="home-testing-coas" class="ff-home-coa-banner ff-reveal" aria-labelledby="ff-coa-banner-heading">
 		<div class="ff-home-coa-banner__inner">
-			<div>
+			<div class="ff-home-coa-banner__media">
+				<picture>
+					<source media="(max-width: 600px)" srcset="<?php echo esc_url( FOXFIRE_CHILD_URI . '/assets/images/testing-coa-secondary-720.webp' ); ?>">
+					<img
+						src="<?php echo esc_url( FOXFIRE_CHILD_URI . '/assets/images/testing-coa-secondary.webp' ); ?>"
+						alt="<?php esc_attr_e( 'Foxfire Peptides research vials, branded packaging, and Certificate of Analysis documentation', 'foxfire-child' ); ?>"
+						width="1400"
+						height="788"
+						loading="lazy"
+						decoding="async"
+					>
+				</picture>
+			</div>
+
+			<div class="ff-home-coa-banner__content">
 				<div class="ff-home-coa-banner__header">
 					<span class="ff-home-coa-banner__icon" aria-hidden="true">
 						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -250,35 +269,40 @@ $managed_faqs = foxfire_get_homepage_faqs();
 				<p class="ff-home-coa-banner__desc">
 					<?php echo esc_html( foxfire_get_managed_content( 'home_coa_description', __( 'Access available third-party testing and batch-specific documentation for Foxfire research compounds. Search by product, batch, or lot number to find the available COA.', 'foxfire-child' ) ) ); ?>
 				</p>
-			</div>
 
-			<div class="ff-home-coa-banner__actions">
-				<a href="<?php echo esc_url( $testing_url ); ?>" class="ff-home-coa-banner__cta">
-					<span><?php esc_html_e( 'VIEW TESTING & COAs', 'foxfire-child' ); ?></span>
-					<span aria-hidden="true">→</span>
-				</a>
+				<div class="ff-home-coa-banner__actions">
+					<a href="<?php echo esc_url( $testing_url ); ?>" class="ff-home-coa-banner__cta">
+						<span><?php esc_html_e( 'VIEW TESTING & COAs', 'foxfire-child' ); ?></span>
+						<span aria-hidden="true">→</span>
+					</a>
+				</div>
 			</div>
 		</div>
 	</section>
 
 	<!-- 6. Frequently Asked Questions -->
-	<section class="ff-home-faq ff-reveal" aria-labelledby="ff-home-faq-heading">
+	<section class="ff-home-faq ff-home-faq--editorial ff-reveal" aria-labelledby="ff-home-faq-heading">
 		<div class="ff-home-faq__inner">
 			<div class="ff-home-faq__header">
-				<span class="ff-home-faq__eyebrow"><?php esc_html_e( 'Help & Information', 'foxfire-child' ); ?></span>
+				<span class="ff-home-faq__eyebrow"><?php esc_html_e( 'Common Questions?', 'foxfire-child' ); ?></span>
 				<h2 id="ff-home-faq-heading" class="ff-home-faq__title">
 					<?php esc_html_e( 'Frequently Asked Questions', 'foxfire-child' ); ?>
 				</h2>
+				<p class="ff-home-faq__description"><?php esc_html_e( 'Quick answers about our products, testing, orders, and research use.', 'foxfire-child' ); ?></p>
+				<a class="ff-home-faq__all-link" href="<?php echo esc_url( $faq_url ); ?>">
+					<?php esc_html_e( 'VIEW ALL FAQs', 'foxfire-child' ); ?>
+					<span aria-hidden="true">→</span>
+				</a>
 			</div>
 
 			<div class="ff-home-faq__list">
 				<?php if ( ! empty( $managed_faqs ) ) : ?>
 					<?php foreach ( $managed_faqs as $faq_position => $faq ) : ?>
-						<details class="ff-home-faq__item" <?php echo 0 === $faq_position ? 'open' : ''; ?>>
+						<details class="ff-home-faq__item">
 							<summary class="ff-home-faq__question">
 								<span class="ff-home-faq__q-text"><?php echo esc_html( $faq['question'] ); ?></span>
 								<span class="ff-home-faq__icon" aria-hidden="true">
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
 								</span>
 							</summary>
 							<div class="ff-home-faq__answer"><p><?php echo esc_html( $faq['answer'] ); ?></p></div>
@@ -286,17 +310,41 @@ $managed_faqs = foxfire_get_homepage_faqs();
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</div>
+
+			<div class="ff-home-faq__media">
+				<img
+					src="<?php echo esc_url( FOXFIRE_CHILD_URI . '/assets/images/home-faq-mountain.webp' ); ?>"
+					alt="<?php esc_attr_e( 'Hiker overlooking a mountain lake at sunrise', 'foxfire-child' ); ?>"
+					width="1400"
+					height="788"
+					loading="lazy"
+					decoding="async"
+				/>
+			</div>
 		</div>
 	</section>
 
 	<!-- 7. Long-term brand message -->
 	<section class="ff-home-long-road ff-reveal" aria-labelledby="ff-home-long-road-heading">
 		<div class="ff-home-long-road__inner">
-			<h2 id="ff-home-long-road-heading" class="ff-home-long-road__title">
-				<?php echo esc_html( foxfire_get_managed_content( 'home_long_road_title', __( 'Built for the Long Road', 'foxfire-child' ) ) ); ?>
-			</h2>
+			<div class="ff-home-long-road__image">
+				<picture>
+					<source media="(max-width: 600px)" srcset="<?php echo esc_url( FOXFIRE_CHILD_URI . '/assets/images/about-founder-480.webp' ); ?>">
+					<img
+						src="<?php echo esc_url( FOXFIRE_CHILD_URI . '/assets/images/about-founder.webp' ); ?>"
+						alt="<?php esc_attr_e( 'Foxfire Peptides founder preparing a branded research order', 'foxfire-child' ); ?>"
+						width="800"
+						height="731"
+						loading="lazy"
+						decoding="async"
+					>
+				</picture>
+			</div>
 
 			<div class="ff-home-long-road__content">
+				<h2 id="ff-home-long-road-heading" class="ff-home-long-road__title">
+					<?php echo esc_html( foxfire_get_managed_content( 'home_long_road_title', __( 'Built for the Long Road', 'foxfire-child' ) ) ); ?>
+				</h2>
 				<p class="ff-home-long-road__description">
 					<?php echo esc_html( foxfire_get_managed_content( 'home_long_road_description', __( 'Finding a vendor is easy. Finding one you trust enough to stay with is different. Foxfire is built around consistency, transparency, accessible testing, and real communication—because we believe the right relationship should matter beyond the next order.', 'foxfire-child' ) ) ); ?>
 				</p>
@@ -324,6 +372,22 @@ $managed_faqs = foxfire_get_homepage_faqs();
 				<a href="<?php echo esc_url( $shop_url ); ?>" class="ff-site-cta__button ff-site-cta__button--primary">
 					<?php esc_html_e( 'BROWSE RESEARCH COMPOUNDS', 'foxfire-child' ); ?>
 				</a>
+		</div>
+	</section>
+
+	<!-- 9. Email updates -->
+	<section id="newsletter-home" class="ff-home-newsletter" aria-labelledby="ff-home-newsletter-heading">
+		<div class="ff-home-newsletter__inner">
+			<div class="ff-home-newsletter__brand" aria-hidden="true">
+				<img src="<?php echo esc_url( foxfire_get_brand_asset_url( 'foxfire-header-logo.webp' ) ); ?>" alt="" loading="lazy" decoding="async" />
+			</div>
+			<div class="ff-home-newsletter__copy">
+				<h2 id="ff-home-newsletter-heading"><?php esc_html_e( 'Stay Connected With Foxfire', 'foxfire-child' ); ?></h2>
+				<p class="ff-home-newsletter__description"><?php esc_html_e( 'Get Foxfire updates, new research compound announcements, testing updates, and company news delivered by email.', 'foxfire-child' ); ?></p>
+			</div>
+			<div class="ff-home-newsletter__signup">
+				<?php get_template_part( 'template-parts/newsletter/form', null, array( 'source' => 'home' ) ); ?>
+			</div>
 		</div>
 	</section>
 </div>
